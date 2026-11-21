@@ -1,0 +1,6 @@
+独立审计应修项修复记录：
+- S1/S2: 22 个文件、37 处全角 slide 标记恢复为 ASCII（（**->(**、**）->**)；（~~->(~~、~~）->~~)）
+- S3: mlp.md、mlp-implementation.md 各 1 处 [**…**] 恢复为 (**…**)
+- S4: bert.md、bert-dataset.md 拼接而成->连结而成（concatenate 语境）
+- S5: autorec.md、seq2seq.md 掩蔽->掩码
+修复后：verify 192/192 PASS 0 error；check_marks 问题文件 0；构建 HTML 残留 0。
