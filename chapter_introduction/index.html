@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+<!-- d2l-site-styles -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>1. 引言 &#8212; 动手学深度学习</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2. 预备知识" href="../chapter_preliminaries/index.html" />
+    <link rel="prev" title="符号" href="../chapter_notation/index.html" /> 
+  <link rel="stylesheet" href="../_static/site.css" type="text/css" />
+<script src="../_static/site.js" defer></script>
+<!-- d2l-site-script -->
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active"><span class="section-number">1. </span>引言</a>
+        <span class="d2l-zh-badge">简体中文全译本</span></nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      快速搜索
+      </div>
+</form>
+        
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://d2l.ai">
+                  <i class="fas fa-book"></i>
+                  英文原书
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://github.com/fau-linrui/dive-into-deep-learning-zh">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://discuss.d2l.ai">
+                  <i class="fas fa-comments"></i>
+                  讨论社区
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <section id="chap-introduction">
+<span id="id1"></span><h1><span class="section-number">1. </span>引言<a class="headerlink" href="#chap-introduction" title="此标题的永久链接">¶</a></h1>
+<p>直到最近，你在平常一天里可能与之交互的几乎每一个计算机程序，都是作为一套刚性的规则编写出来的，这些规则精确地规定了程序应当如何行事。假设我们想编写一个应用来管理电子商务平台。围在白板前思考几个小时之后，我们可能会定下可行解决方案的大致轮廓，例如：（i）用户通过运行在网页浏览器或移动应用里的界面与应用交互；（ii）应用与商用级数据库引擎交互，以跟踪每个用户的状态，并维护历史交易记录；（iii）在应用的核心处，应用的<em>业务逻辑</em>（你或许会称之为应用的<em>大脑</em>）明确列出一组规则，把每一种可能想到的情形映射到程序应当采取的相应动作。</p>
+<p>要构建应用的大脑，我们可能会枚举程序应当处理的所有常见事件。例如，每当顾客点击把商品加入购物车时，程序就应当在购物车数据库表中添加一条记录，把该用户的ID与所请求商品的ID关联起来。此后，我们可能会尝试逐一走遍所有可能的边角情形，检验规则是否恰当，并做必要的修改。如果用户用空购物车发起购买，会发生什么？尽管很少有开发者能一次就完全写对（可能需要反复测试运行才能解决这些毛病），但大多数情况下，我们确实能写出这类程序，并在真正见到客户<em>之前</em>就放心地发布。人类能够手工设计出驱动产品和系统正常运转的自动化系统，而且往往是在新情境下做到这一点，这是一种非凡的认知成就。而当你能够设计出<span class="math notranslate nohighlight">\(100\%\)</span>情况下都有效的解决方案时，通常就不必再为机器学习操心了。</p>
+<p>对于不断壮大的机器学习科学家群体来说幸运的是，我们想要自动化的许多任务，并不那么容易被人力巧思所折服。想象一下，你和所认识的最聪明的一群人围在白板前，但这一次，你要解决的是下列问题之一：</p>
+<ul class="simple">
+<li><p>编写一个程序，根据地理信息、卫星图像和过去一段时间的天气记录来预测明天的天气。</p></li>
+<li><p>编写一个程序，接收以自由形式文本表述的一个事实型问题，并正确作答。</p></li>
+<li><p>编写一个程序，给定一张图像，识别出图中描绘的每一个人，并分别在每个人周围画出轮廓。</p></li>
+<li><p>编写一个程序，向用户展示他们可能喜欢、但在自然浏览过程中不太可能遇到的产品。</p></li>
+</ul>
+<p>面对这些问题，即使是精英程序员，从头编写解决方案也会很吃力。原因可能各不相同。有时，我们要找的程序所遵循的模式会随时间变化，因此根本不存在固定不变的正确答案！在这种情况下，任何成功的解决方案都必须能优雅地适应不断变化的世界。另一些时候，各种关系（比如像素与抽象类别之间的关系）可能过于复杂，需要成千上万次乃至上百万次计算，而且遵循我们未知的原理。以图像识别为例，完成任务所需的确切步骤超出了我们有意识的理解范围，尽管我们下意识的认知过程能毫不费力地完成这项任务。</p>
+<p><em>机器学习</em>是研究能够从经验中学习的算法的学科。随着机器学习算法积累更多经验——通常以观测数据或与环境交互的形式出现——它的性能会得到提升。与之形成对照的是我们那个确定性的电子商务平台：无论积累多少经验，它都会遵循同样的业务逻辑，直到开发者自身学到了新东西并决定是时候更新软件为止。在本书中，我们将教你机器学习的基础知识，并特别聚焦于<em>深度学习</em>——这是一组强大的技术，正推动着计算机视觉、自然语言处理、医疗保健和基因组学等各个领域的创新。</p>
+<section id="id2">
+<h2><span class="section-number">1.1. </span>一个激励人心的例子<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>在开始写作之前，本书作者也像大多数上班族一样，得先摄入一点咖啡因。我们钻进车里，开始开车。Alex用iPhone喊了一声“嘿，Siri”，唤醒了手机的语音识别系统。接着，Mu命令道“导航到Blue
+Bottle咖啡店”。手机很快显示出了对他这条命令的转写结果。它还识别出我们是在请求指路，于是启动了地图应用（app）来满足我们的请求。地图应用启动后，确定出了若干条路线。在每条路线旁边，手机都显示了预测的通行时间。虽然这个故事是为了教学方便而虚构的，但它说明，在短短几秒钟之内，我们与智能手机的日常交互就可能用到好几个机器学习模型。</p>
+<p>想象一下，仅仅编写一个程序来响应<em>唤醒词</em>（wake
+word），比如“Alexa”“OK
+Google”和“嘿，Siri”。试着独自待在一个房间里，除了一台计算机和一个代码编辑器之外什么都没有，动手把它编写出来，如
+<a class="reference internal" href="#fig-wake-word"><span class="std std-numref">图1.1.1</span></a>
+所示。你会怎样从第一性原理出发编写这样一个程序？想一想……这个问题很难。麦克风每秒钟大约会采集44000个样本。每个样本都是对声波振幅的一次测量。什么样的规则才能可靠地把一小段原始音频映射为关于该片段是否包含唤醒词的确定预测<span class="math notranslate nohighlight">\(\{\textrm{yes}, \textrm{no}\}\)</span>？如果你卡住了，不必担心。我们也不知道该如何从零编写这样的程序。这正是我们要使用机器学习的原因。</p>
+<figure class="align-default" id="id72">
+<span id="fig-wake-word"></span><img alt="../_images/wake-word.svg" src="../_images/wake-word.svg" /><figcaption>
+<p><span class="caption-number">图1.1.1 </span><span class="caption-text">识别唤醒词。</span><a class="headerlink" href="#id72" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>诀窍就在这里。很多时候，即使我们不知道如何明确地告诉计算机怎样把输入映射到输出，我们自己却仍然能够完成这一认知壮举。换句话说，即使你不知道如何给计算机编程，让它识别出“Alexa”这个词，你本人却是能够识别出它的。有了这种能力，我们就可以收集一个庞大的<em>数据集</em>（dataset），其中包含音频片段的样例以及关联的标签，指明哪些片段包含唤醒词。在当前主流的机器学习方法中，我们并不试图<em>明确地</em>设计一个用来识别唤醒词的系统。相反，我们定义一个灵活的程序，它的行为由许多<em>参数</em>（parameter）决定。然后我们用数据集来确定尽可能好的参数值，即在某个选定的性能度量下能够改善程序性能的那些参数值。</p>
+<p>你可以把参数想象成我们可以转动的旋钮，用来操纵程序的行为。一旦参数固定下来，我们就称这个程序为一个<em>模型</em>（model）。仅仅通过操纵参数就能产生的所有不同程序（输入到输出的映射）的集合，称为模型的<em>族</em>（family）。而那个利用我们的数据集来选择参数的“元程序”，则称为<em>学习算法</em>（learning
+algorithm）。</p>
+<p>在我们着手运行学习算法之前，必须先精确地定义问题：确定输入与输出的确切性质，并选择合适的模型族。在这个例子中，模型接收一小段音频作为<em>输入</em>，并在<span class="math notranslate nohighlight">\(\{\textrm{yes}, \textrm{no}\}\)</span>之中作出选择作为<em>输出</em>。如果一切按计划进行，那么对于该片段是否包含唤醒词，模型的猜测通常会是正确的。</p>
+<p>如果我们选择了正确的模型族，那么应当存在一种旋钮设置，使得模型每次听到“Alexa”这个词时都会给出“yes”。由于唤醒词的具体选择是任意的，我们很可能需要一个足够丰富的模型族：通过另一种旋钮设置，它可以在只听到“Apricot”这个词时才给出“yes”。我们期望同一个模型族既适用于识别“Alexa”，也适用于识别“Apricot”，因为直觉上它们似乎是相似的任务。然而，如果想处理根本不同的输入或输出，我们可能就需要一个完全不同的模型族，比如想把图像映射为说明文字，或者把英文句子映射为中文句子。</p>
+<p>你或许已经猜到，如果我们只是随机地设置所有的旋钮，模型不太可能识别出“Alexa”“Apricot”或任何其他英语单词。在机器学习中，<em>学习</em>指的是这样一个过程：我们发现旋钮的正确设置，从而迫使模型表现出我们想要的行为。换句话说，我们用数据来<em>训练</em>模型。如
+<a class="reference internal" href="#fig-ml-loop"><span class="std std-numref">图1.1.2</span></a> 所示，训练过程通常如下所示：</p>
+<ol class="arabic simple">
+<li><p>从一个随机初始化的模型开始，它还做不了任何有用的事。</p></li>
+<li><p>抓取一些数据（例如音频片段及对应的<span class="math notranslate nohighlight">\(\{\textrm{yes}, \textrm{no}\}\)</span>标签）。</p></li>
+<li><p>调整旋钮，使模型在这些样例上的表现更好。</p></li>
+<li><p>重复第2步和第3步，直到模型变得很棒。</p></li>
+</ol>
+<figure class="align-default" id="id73">
+<span id="fig-ml-loop"></span><img alt="../_images/ml-loop.svg" src="../_images/ml-loop.svg" /><figcaption>
+<p><span class="caption-number">图1.1.2 </span><span class="caption-text">一个典型的训练过程。</span><a class="headerlink" href="#id73" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>总结一下：与其编写一个唤醒词识别器，我们不如编写一个能够<em>学习</em>识别唤醒词的程序，前提是提供给它一个大型的有标签数据集。你可以把通过提供数据集来确定程序行为这一做法，看作<em>用数据编程</em>（programming
+with
+data）。也就是说，我们可以通过向机器学习系统提供大量猫和狗的样例，来“编写”一个猫检测器。这样一来，检测器最终会学会：如果输入是猫，就给出一个很大的正数；如果是狗，就给出一个很大的负数；如果拿不准，就给出接近零的数。这还只是略窥机器学习能力的一角。我们稍后会详细讲解的深度学习，只是解决机器学习问题的众多流行方法之一。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">1.2. </span>关键组件<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h2>
+<p>在我们那个唤醒词的例子中，我们描述了一个由音频片段和二元标签组成的数据集，并且粗略地给出了一个思路：如何训练模型来逼近从片段到类别的映射。这类问题——给定一个由已知标签的样例组成的数据集，我们试图根据已知的输入来预测某个指定的未知标签——称为<em>监督学习</em>（supervised
+learning）。它只是众多机器学习问题中的一种。在探讨其他类型之前，我们希望进一步阐明几个核心组件，无论我们处理哪种机器学习问题，它们都会一直伴随我们：</p>
+<ol class="arabic simple">
+<li><p>可供我们从中学习的<em>数据</em>。</p></li>
+<li><p>关于如何变换数据的<em>模型</em>。</p></li>
+<li><p>量化模型表现好（或差）程度的<em>目标函数</em>。</p></li>
+<li><p>调整模型参数以优化目标函数的<em>算法</em>。</p></li>
+</ol>
+<section id="id4">
+<h3><span class="section-number">1.2.1. </span>数据<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<p>不言而喻，没有数据就无法从事数据科学。我们本可以花上几百页去琢磨数据<em>究竟</em>是什么，但眼下，我们将聚焦于所关注数据集的关键性质。一般来说，我们关注的是一个由样例构成的集合。为了有效地利用数据，我们通常需要给出一种合适的数值表示。每个<em>样例</em>（example，又称<em>数据点</em>
+data point、<em>数据实例</em> data instance、<em>样本</em>
+sample）通常由一组称为<em>特征</em>（feature，有时称为<em>协变量</em> covariate
+或<em>输入</em>
+input）的属性构成，模型必须根据这些属性作出预测。在监督学习问题中，我们的目标是预测某个特殊属性的值，这个属性称为<em>标签</em>（label，或称<em>目标值</em>
+target），它不属于模型的输入。</p>
+<p>如果处理的是图像数据，那么每个样例可能由一张单独的图片（特征）以及一个表示该图片所属类别的数字（标签）构成。这张图片会被数值化地表示为三个数值网格，分别表示每个像素位置上红、绿、蓝光的亮度。例如，一张<span class="math notranslate nohighlight">\(200\times 200\)</span>像素的彩色图片将由<span class="math notranslate nohighlight">\(200\times200\times3=120000\)</span>个数值组成。</p>
+<p>另一种情形是处理电子健康记录数据，并解决预测给定病人在未来30天内存活可能性这一任务。这里，我们的特征可能由一组随时可获取的属性和经常记录的测量值构成，包括年龄、生命体征、合并症、当前用药以及近期手术。可用于训练的标签将是一个二元值，表示历史数据中的每位病人是否在30天窗口内存活。</p>
+<p>在这类情形中，当每个样例都由相同数目的数值特征刻画时，我们说输入是定长向量，并把向量（恒定的）长度称为数据的<em>维数</em>（dimensionality）。可以想象，定长输入会带来便利，让我们少操心一个麻烦。不过，并非所有数据都能轻易表示成<em>定长</em>向量。我们或许可以期望显微镜图像来自标准设备，但不能指望从互联网上挖来的图像都具有相同的分辨率或形状。对于图像，我们或许可以考虑裁剪成标准尺寸，但这种策略只能解决部分问题。我们有可能丢失被裁掉部分中的信息。此外，文本数据对定长表示的抗拒更为顽固。想想Amazon、IMDb和TripAdvisor等电商网站上留下的顾客评论。有些很短：“太糟了！”。另一些则长篇大论好几页。深度学习相对于传统方法的一大优势在于，现代模型能够比较从容地处理<em>变长</em>数据。</p>
+<p>一般说来，我们拥有的数据越多，任务就变得越容易。数据更多时，我们能够训练更强大的模型，并更少地依赖先入为主的假设。从（相对）小数据到大数据这一格局的转变，是现代深度学习取得成功的一大促进因素。为了强调这一点：深度学习中许多最令人兴奋的模型，没有大型数据集就无法工作。另外一些模型或许能在小数据情形下工作，但并不比传统方法更好。</p>
+<p>最后，拥有大量数据并加以巧妙处理还不够。我们需要的是<em>正确的</em>数据。如果数据充满错误，或者所选择的特征无法预测所关注的目标量，学习就会失败。这一情形用那句老话概括得恰到好处：<em>垃圾进，垃圾出</em>（garbage
+in, garbage
+out）。此外，预测性能差并不是唯一可能的后果。在机器学习的敏感应用中，例如预测性警务、简历筛选以及用于放贷的风险模型，我们必须格外警惕垃圾数据带来的后果。一种常见的失败模式涉及这样一些数据集：其中某些群体在训练数据中代表性不足。想象一下，把一个从未见过黑色皮肤的皮肤癌识别系统投入使用会怎样。当数据不仅对某些群体代表不足，而且还反映了社会偏见时，同样会出问题。例如，如果用过去的招聘决策来训练一个将用于筛选简历的预测模型，那么机器学习模型就可能不经意间习得并自动化历史上的不公正做法。请注意，这一切都可能在数据科学家并未主动密谋、甚至毫不知情的情况下发生。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">1.2.2. </span>模型<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<p>大多数机器学习都涉及在某种意义上变换数据。我们可能想构建一个系统，摄入照片并预测其“微笑程度”。或者，我们可能想摄入一组传感器读数，并预测这些读数有多正常、多异常。所谓<em>模型</em>（model），我们指的是摄入一种类型的数据、并输出可能是另一种类型的预测的计算机制。特别地，我们感兴趣的是能够从数据中估计的<em>统计模型</em>（statistical
+model）。虽然简单的模型完全能够处理相应简单的问题，但本书关注的问题会挑战经典方法的极限。深度学习与经典方法的区别主要在于它所聚焦的那一组强大模型。这些模型由许多相继的数据变换构成，自上而下地串联在一起，因此得名<em>深度学习</em>（deep
+learning）。在讨论深度模型的过程中，我们也会讨论一些更传统的方法。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">1.2.3. </span>目标函数<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<p>前面我们把机器学习介绍为从经验中学习。这里的<em>学习</em>，指的是随着时间推移在某个任务上有所改进。但谁来界定什么算“改进”呢？你可能会想，我们可以提出更新模型，而另一些人可能对我们提出的更新算不算改进意见不一。</p>
+<p>为了建立起关于学习机器的形式化数学体系，我们需要有形式化的度量来衡量模型有多好（或多差）。在机器学习以及更一般的优化中，我们把这些度量称为<em>目标函数</em>（objective
+function）。按照惯例，我们通常定义目标函数时让较小值更好。这仅仅是一种惯例。你可以取任意一个较大值更好的函数，通过翻转符号把它变成一个新函数，二者在性质上完全相同，只是新函数以较小值为好。因为我们选择较小值为好，所以这些函数有时被称为<em>损失函数</em>（loss
+function）。</p>
+<p>当试图预测数值时，最常见的损失函数是<em>平方误差</em>（squared
+error），即预测值与真实目标值之差的平方。对于分类问题，最常见的目标是最小化错误率，即预测结果与真实标签不一致的样例所占比例。有些目标（例如平方误差）容易优化，而另一些目标（例如错误率）由于不可微或其他复杂性而难以直接优化。在这些情况下，常用的做法是转而优化一个<em>替代目标</em>（surrogate
+objective）。</p>
+<p>在优化过程中，我们把损失看作模型参数的函数，并把训练数据集视为常量。我们通过在由为训练而收集的若干样例组成的集合上最小化所产生的损失，来学习模型参数的最佳取值。然而，在训练数据上表现良好，并不保证我们在未见过的数据上也能表现良好。因此，我们通常希望把可用数据分成两个划分：用于学习模型参数的<em>训练数据集</em>（training
+dataset，或<em>训练集</em> training
+set）；以及留作评估之用的<em>测试数据集</em>（test dataset，或<em>测试集</em>
+test
+set）。归根结底，我们通常会报告模型在这两个划分上的表现。你可以把训练表现类比为学生为备战某场期末大考而在模拟考试中取得的分数。即使模拟考试成绩喜人，也不能保证期末大考一定成功。在学习过程中，学生可能开始背诵练习题，表面上掌握了主题，但在期末大考中面对此前没见过的问题时却败下阵来。当一个模型在训练集上表现良好，却无法泛化到未见过的数据时，我们说它对训练数据<em>过拟合</em>（overfitting）。</p>
+</section>
+<section id="id7">
+<h3><span class="section-number">1.2.4. </span>优化算法<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<p>一旦我们有了某种数据来源与表示、一个模型以及一个定义良好的目标函数，我们就需要一种算法，能够搜索出使损失函数最小化的最佳参数。深度学习流行的优化算法基于一种称为<em>梯度下降</em>（gradient
+descent）的方法。简而言之，在每一步，该方法会对每个参数检查：如果仅仅对该参数施加一小点扰动，训练集损失会如何变化。然后，它朝着使损失降低的方向更新该参数。</p>
+</section>
+</section>
+<section id="id8">
+<h2><span class="section-number">1.3. </span>各种机器学习问题<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h2>
+<p>我们开头那个激励人心的例子中的唤醒词问题，只是机器学习能够解决的众多问题之一。为了进一步激发读者的兴趣，并为大家提供一些贯穿全书的共同语言，我们现在对机器学习问题的全貌作一个概述。</p>
+<section id="id9">
+<h3><span class="section-number">1.3.1. </span>监督学习<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p>监督学习描述的是这样一类任务：我们给定一个同时包含特征和标签的数据集，要求产生一个模型，在给定输入特征时能够预测标签。每个特征—标签对称为一个样例。有时，当语境清楚时，我们可能用术语<em>样例</em>来指一组输入，即使对应的标签未知。监督之所以起作用，是因为为了选择参数，我们（监督者）向模型提供由带标签样例组成的数据集。用概率的语言来说，我们通常感兴趣的是估计给定输入特征时标签的条件概率。虽然监督学习只是若干范式之一，但工业界机器学习的大部分成功应用都属于监督学习。部分原因是许多重要任务都可以清晰地描述为：给定一组可用的特定数据，估计某个未知量的概率：</p>
+<ul class="simple">
+<li><p>给定一张计算机断层扫描图像，预测是癌症还是不是癌症。</p></li>
+<li><p>给定一个英文句子，预测正确的法文翻译。</p></li>
+<li><p>根据本月的财务报告数据，预测下个月的股票价格。</p></li>
+</ul>
+<p>虽然所有监督学习问题都能被“给定输入特征预测标签”这一简单描述所涵盖，但监督学习本身可以采取多种形式，并需要大量的建模决策，这取决于（除其他考虑之外）输入和输出的类型、大小和数量。例如，处理任意长度序列与处理定长向量表示所用的模型就不同。本书将深入探讨其中许多问题。</p>
+<p>非正式地说，学习过程大致如下。首先，收集一个规模很大的、特征已知的样例集合，并从中选取一个随机子集，获取每个样例的真实标签。有时这些标签可能是已经收集好的现成数据（例如，病人是否在随后的一年内死亡？），另一些时候我们可能需要雇用人工标注员来标注数据（例如，把图像分配到类别）。这些输入连同对应的标签一起构成训练集。我们把训练数据集输入一个监督学习算法——它是一个以数据集为输入、并输出另一个函数（即学到的模型）的函数。最后，我们可以把此前从未见过的输入喂给学到的模型，用它的输出作为相应标签的预测。整个过程如
+<a class="reference internal" href="#fig-supervised-learning"><span class="std std-numref">图1.3.1</span></a> 所示。</p>
+<figure class="align-default" id="id74">
+<span id="fig-supervised-learning"></span><img alt="../_images/supervised-learning.svg" src="../_images/supervised-learning.svg" /><figcaption>
+<p><span class="caption-number">图1.3.1 </span><span class="caption-text">监督学习。</span><a class="headerlink" href="#id74" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<section id="id10">
+<h4><span class="section-number">1.3.1.1. </span>回归<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h4>
+<p>也许最容易让你理解的监督学习任务是<em>回归</em>（regression）。例如，考虑从房屋销售数据库中收集来的一组数据。我们可以构造一张表，其中每一行对应一栋不同的房屋，每一列对应某个相关属性，比如房屋的平方英尺数、卧室数、浴室数，以及步行到市中心的分钟数。在这个数据集中，每个样例将是一栋具体的房屋，而对应的特征向量将是表中的一行。如果你住在纽约或旧金山，而且你不是Amazon、Google、Microsoft或Facebook的CEO，那么你家的（平方英尺数、卧室数、浴室数、步行距离）特征向量可能看起来像：<span class="math notranslate nohighlight">\([600, 1, 1, 60]\)</span>。然而，如果你住在匹兹堡，它可能更像是<span class="math notranslate nohighlight">\([3000, 4, 3, 10]\)</span>。这样的定长特征向量对于大多数经典机器学习算法是必不可少的。</p>
+<p>实际上，决定一个问题是不是回归的，是目标值的形式。假设你正在市场上物色新房。你可能想根据上述一些特征来估计一栋房屋的公平市场价值。这里的数据可能由历史房屋挂牌信息构成，而标签可能是观察到的销售价格。当标签取任意数值（即使是在某个区间内）时，我们称这是一个<em>回归</em>问题。目标是产生一个模型，其预测能紧密地逼近实际的标签值。</p>
+<p>许多实际问题都很容易描述为回归问题。预测用户会给一部电影打多少分，可以看作一个回归问题；如果你在2009年设计出一种能完成此壮举的优秀算法，你也许就赢得了<a class="reference external" href="https://en.wikipedia.org/wiki/Netflix_Prize">百万美元
+Netflix
+大奖</a>。预测病人在医院住院的时长也是一个回归问题。一条好的经验法则是：任何<em>多少</em>（how
+much）或<em>多少个</em>（how many）的问题，都可能是回归问题。例如：</p>
+<ul class="simple">
+<li><p>这台手术需要多少小时？</p></li>
+<li><p>这个城镇未来六小时会有多少降雨？</p></li>
+</ul>
+<p>即使你以前从未接触过机器学习，你很可能也非正式地处理过一个回归问题。例如，设想你请人修好了下水道，而承包商花了3个小时清除你污水管里的污垢。然后他们给你寄来一张350美元的账单。现在再设想你的朋友雇了同一位承包商2个小时，收到了一张250美元的账单。如果这时有人问你，他们即将到来的清污账单预计是多少，你可能会作出一些合理的假设，比如工作时间越长花费越多。你可能还会假设存在某种基础费用，然后承包商按小时收费。如果这些假设成立，那么给定这两个数据样例，你就已经能确定承包商的定价结构：每小时100美元，外加50美元的上门费。如果你能理解到这一步，那么你就已经懂了<em>线性</em>回归（linear
+regression）背后的高层思想。</p>
+<p>在这个例子中，我们能够给出与承包商价格精确吻合的参数。有时这做不到，例如，如果部分变化来自你这两个特征之外的其他因素。在这些情况下，我们会尝试学习模型，使我们的预测与观测值之间的距离最小。在本书的大多数章节中，我们将聚焦于最小化平方误差损失函数。我们后面会看到，这种损失对应于如下假设：我们的数据被高斯噪声污染了。</p>
+</section>
+<section id="id11">
+<h4><span class="section-number">1.3.1.2. </span>分类<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h4>
+<p>虽然回归模型非常适合回答<em>多少</em>的问题，但许多问题并不能轻松地套进这个模板。例如，考虑一家银行想为其移动应用开发一项支票扫描功能。理想情况下，顾客只需给支票拍张照片，应用就会自动从图像中识别出文字。假设我们有某种能力，能够分割出对应每个手写字符的图像块，那么剩下的主要任务就是确定每个图像块中描绘的是某个已知字符集中的哪一个字符。这类<em>哪一个</em>（which
+one）的问题称为<em>分类</em>（classification），它需要一套与回归不同的工具，尽管许多技术可以沿用。</p>
+<p>在<em>分类</em>中，我们希望模型查看特征（例如图像中的像素值），然后预测样例属于某个离散选项集合中的哪个<em>类别</em>（category，有时称为<em>类</em>
+class）。对于手写数字，我们可能有十个类，对应数字0到9。分类最简单的形式是只有两个类，我们把这样的问题称为<em>二元分类</em>（binary
+classification）。例如，我们的数据集可以由动物的图像组成，而标签可能是类别<span class="math notranslate nohighlight">\(\textrm{\{cat, dog\}}\)</span>。在回归中我们要找一个回归器来输出一个数值，而在分类中我们要找一个分类器，其输出是预测出的类别归属。</p>
+<p>由于某些原因——随着本书越来越深入技术细节，我们将会详细讨论——优化一个只能输出<em>确定的</em>类别归属（例如要么是“猫”要么是“狗”）的模型可能会很困难。在这些情况下，用概率的语言来表达模型通常要容易得多。给定一个样例的特征，我们的模型为每个可能的类别分配一个概率。回到类别为<span class="math notranslate nohighlight">\(\textrm{\{cat, dog\}}\)</span>的动物分类例子，分类器可能看到一张图像后，输出该图像是猫的概率为0.9。我们可以这样解释这个数字：分类器有90%的把握认为该图像描绘的是一只猫。预测类别的概率大小传达了一种不确定性。这并不是唯一可用的不确定性度量，我们将在涉及更高级主题的章节中讨论其他度量。</p>
+<p>当可能的类别多于两个时，我们称该问题为<em>多类分类</em>（multiclass
+classification）。常见的例子包括手写字符识别<span class="math notranslate nohighlight">\(\textrm{\{0, 1, 2, ... 9, a, b, c, ...\}}\)</span>。我们通过最小化平方误差损失函数来处理回归问题，而分类问题常用的损失函数称为<em>交叉熵</em>（cross-entropy），它的名字将在后面的章节引入信息论时揭开面纱。</p>
+<p>请注意，最可能的类别不一定就是你要用来作决策的那个类别。假设你在后院里发现了一朵漂亮的蘑菇，如图
+<a class="reference internal" href="#fig-death-cap"><span class="std std-numref">图1.3.2</span></a> 所示。</p>
+<figure class="align-default" id="id75">
+<span id="fig-death-cap"></span><a class="reference internal image-reference" href="../_images/death-cap.jpg"><img alt="../_images/death-cap.jpg" src="../_images/death-cap.jpg" style="width: 200px;" /></a>
+<figcaption>
+<p><span class="caption-number">图1.3.2 </span><span class="caption-text">毒鹅膏——切勿食用！</span><a class="headerlink" href="#id75" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>现在，假设你构建了一个分类器，并训练它根据照片预测蘑菇是否有毒。假定我们的毒性检测分类器输出：<a class="reference internal" href="#fig-death-cap"><span class="std std-numref">图1.3.2</span></a>
+所展示的是毒鹅膏的概率为0.2。换句话说，分类器有80%的把握认为我们的蘑菇不是毒鹅膏。尽管如此，你要是把它吃下去，那就是犯傻。这是因为一顿美餐带来的确定收益，不值得冒20%为之丧命的风险。换句话说，不确定风险的影响远远超过了收益。因此，为了决定要不要吃这朵蘑菇，我们需要计算每种动作相关的预期损害，这既取决于可能的结果，也取决于每种结果关联的收益或危害。在这种情况下，吃掉蘑菇招致的损害可能是<span class="math notranslate nohighlight">\(0.2 \times \infty + 0.8 \times 0 = \infty\)</span>，而丢弃它的损失是<span class="math notranslate nohighlight">\(0.2 \times 0 + 0.8 \times 1 = 0.8\)</span>。我们的谨慎是有道理的：正如任何真菌学家都会告诉我们的，<a class="reference internal" href="#fig-death-cap"><span class="std std-numref">图1.3.2</span></a>
+中的蘑菇实际上正是一朵毒鹅膏。</p>
+<p>分类可以比二元分类或多类分类复杂得多。例如，有一些分类变体专门处理层次化结构的类别。在这类情况下，并非所有错误都是等价的——如果我们必须犯错，我们可能更愿意误分到相近的类别，而不是相差很远的类别。通常，这被称为<em>层次分类</em>（hierarchical
+classification）。为了获得启发，你可以想想<a class="reference external" href="https://en.wikipedia.org/wiki/Carl_Linnaeus">林奈</a>，他按层次组织动物群。</p>
+<p>在动物分类的情形中，把一只贵宾犬误认成雪纳瑞也许还不算太糟，但如果我们的模型把贵宾犬和恐龙搞混，那就要付出巨大的代价。哪种层次结构相关，可能取决于你打算怎样使用模型。例如，响尾蛇和束带蛇在系统发生树上可能很接近，但把响尾蛇误认成束带蛇可能带来致命的后果。</p>
+</section>
+<section id="id12">
+<h4><span class="section-number">1.3.1.3. </span>标注<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h4>
+<p>有些分类问题恰好适合二元分类或多类分类的设置。例如，我们可以训练一个普通的二元分类器来区分猫和狗。以计算机视觉的现状而言，我们可以借助现成的工具轻松做到这一点。然而，无论我们的模型变得多么准确，当分类器遇到<em>不来梅的城市乐手</em>（Town
+Musicians of
+Bremen）——一个流行的德国童话，里面有四只动物（<a class="reference internal" href="#fig-stackedanimals"><span class="std std-numref">图1.3.3</span></a>）——的图像时，我们可能会发现自己陷入麻烦。</p>
+<figure class="align-default" id="id76">
+<span id="subsec-recommender-systems"></span><span id="fig-stackedanimals"></span><a class="reference internal image-reference" href="../_images/stackedanimals.png"><img alt="../_images/stackedanimals.png" src="../_images/stackedanimals.png" style="width: 300px;" /></a>
+<figcaption>
+<p><span class="caption-number">图1.3.3 </span><span class="caption-text">一头驴、一条狗、一只猫和一只公鸡。</span><a class="headerlink" href="#id76" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>如你所见，这张照片中有一头驴、一只猫、一条狗和一只公鸡，背景里还有一些树。如果我们预计会遇到这样的图像，那么多类分类可能就不是正确的问题表述。相反，我们可能想让模型有这样一种选择：说这张图像描绘了一只猫、一条狗、一头驴<em>和</em>一只公鸡。</p>
+<p>学习预测并非互斥的类别的这一问题，称为<em>多标签分类</em>（multi-label
+classification）。自动标注问题通常最适合用多标签分类来描述。想一想人们可能会给技术博客上的文章打上的标签，例如“机器学习”“技术”“小玩意”“编程语言”“Linux”“云计算”“AWS”。一篇典型的文章可能被打上5–10个标签。通常，标签会表现出某种相关结构。关于“云计算”的文章很可能提到“AWS”，而关于“机器学习”的文章很可能提到“GPU”。</p>
+<p>有时这类标注问题会涉及极其庞大的标签集。美国国家医学图书馆雇用了许多专业标注员，他们为每篇将收录进PubMed的论文关联一组从医学主题词表（MeSH）本体中抽取的标签，该本体大约包含28,000个标签。正确地标注论文很重要，因为它使研究人员能够对文献进行穷尽式综述。这是一个耗时的过程，通常从论文入库到完成标注之间有一年的滞后。机器学习可以提供临时标签，直到每篇论文都经过适当的人工审查。事实上，BioASQ组织已经连续多年为该任务<a class="reference external" href="http://bioasq.org/">举办竞赛</a>。</p>
+</section>
+<section id="id13">
+<h4><span class="section-number">1.3.1.4. </span>搜索<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h4>
+<p>在信息检索领域，我们常常要对一组物品进行排序。以网页搜索为例。其目标与其说是确定某个特定页面是否与查询相关，不如说是在一组相关结果当中，哪一个应当最醒目地展示给某个特定用户。一种做法可能是先为集合中的每个元素分配一个分数，然后取出评分最高的元素。<a class="reference external" href="https://en.wikipedia.org/wiki/PageRank">PageRank</a>是Google搜索引擎最初的秘密武器，也是这种评分系统的早期例子。奇怪的是，PageRank提供的评分并不依赖于实际的查询。相反，他们依靠一个简单的相关性过滤器来确定相关候选的集合，然后用PageRank来优先排列更权威的页面。如今，搜索引擎使用机器学习和行为模型来获得依赖于查询的相关性分数。已经有专门的学术会议致力于这一课题。</p>
+</section>
+<section id="id14">
+<h4><span class="section-number">1.3.1.5. </span>推荐系统<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h4>
+<p>推荐系统是与搜索和排序相关的另一类问题设置。这些问题的相似之处在于，目标都是展示一组与用户相关的物品。主要区别在于，在推荐系统的语境下，强调对特定用户的<em>个性化</em>（personalization）。例如，对于电影推荐，科幻迷看到的结果页面与彼得·塞勒斯喜剧行家看到的结果页面可能会有显著差异。类似的问题也会出现在其他推荐场景中，例如零售商品、音乐和新闻推荐。</p>
+<p>在某些情况下，顾客提供显式反馈，表明他们对某个特定产品的喜爱程度（例如Amazon、IMDb或Goodreads上的产品评分和评论）。另一些情况下，他们提供隐式反馈，例如跳过播放列表中的曲目，这可能表示不满，也可能只是表明这首歌在当时的语境下不合适。在最简单的表述中，这些系统被训练来估计某个分数，例如预期的星级评分，或者给定用户购买特定物品的概率。</p>
+<p>有了这样的模型，对于任何给定用户，我们都可以检索出分数最大的那组对象，然后推荐给该用户。生产系统要先进得多，在计算这类分数时会考虑到详细的用户活动和物品特征。<a class="reference internal" href="#fig-deeplearning-amazon"><span class="std std-numref">图1.3.4</span></a>
+展示了Amazon推荐的深度学习书籍，这些推荐基于为捕捉Aston偏好而调校的个性化算法。</p>
+<figure class="align-default" id="id77">
+<span id="fig-deeplearning-amazon"></span><img alt="../_images/deeplearning-amazon.jpg" src="../_images/deeplearning-amazon.jpg" />
+<figcaption>
+<p><span class="caption-number">图1.3.4 </span><span class="caption-text">Amazon推荐的深度学习书籍。</span><a class="headerlink" href="#id77" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>尽管推荐系统具有巨大的经济价值，但简单地建立在预测模型之上的推荐系统存在一些严重的概念缺陷。首先，我们只观测到<em>删失反馈</em>（censored
+feedback）：用户会优先评价那些他们有强烈感受的电影。例如，在一个五分制评分尺度上，你可能会注意到，物品会收到很多一星和五星评分，但三星评分却少得引人注目。此外，当前的购买习惯往往是当前在用的推荐算法造成的结果，而学习算法并不总能考虑到这一细节。因此，反馈回路有可能形成：推荐系统优先推送某个物品，该物品由于购买量更大而被认为更好，进而又更频繁地被推荐。这类问题中的许多——如何应对删失、激励和反馈回路——都是重要的开放研究问题。</p>
+</section>
+<section id="id15">
+<h4><span class="section-number">1.3.1.6. </span>序列学习<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h4>
+<p>到目前为止，我们考察的问题都是输入数目固定、输出数目固定的问题。例如，我们考虑过在给定一组固定特征（平方英尺数、卧室数、浴室数以及到市中心的通行时间）的情况下预测房价。我们还讨论过从（固定维数的）图像映射到它属于固定数目类别中每一类的预测概率，以及仅根据用户ID和产品ID预测与购买相关的星级评分。在这些情况下，模型一旦训练完成，每个测试样例被喂入模型之后就会被立即遗忘。我们假设相继的观测是独立的，因此没有必要保留这一上下文。</p>
+<p>但是，我们应当如何处理视频片段呢？在这种情况下，每个片段可能由数目不同的帧组成。而如果我们考虑前后相邻的帧，那么对每一帧中正在发生什么的判断可能会可靠得多。语言也是如此。例如，一个流行的深度学习问题是机器翻译：即摄入某种源语言的句子，并预测它们在另一种语言中的译文这一任务。</p>
+<p>这类问题在医学中也会出现。我们可能希望用一个模型来监测重症监护室的病人，并在他们未来24小时内的死亡风险超过某个阈值时发出警报。这里，我们不会每个小时都把所知道的病人历史全部丢掉，因为我们可能不想只根据最新的测量值来作预测。</p>
+<p>诸如此类的问题属于机器学习最令人兴奋的应用之列，它们是<em>序列学习</em>（sequence
+learning）的实例。这些问题要求模型要么摄入输入序列，要么产生输出序列（或者两者兼有）。具体来说，<em>序列到序列学习</em>（sequence-to-sequence
+learning）考虑的是输入和输出都由变长序列构成的问题。例子包括机器翻译和语音到文本的转写。虽然不可能把所有类型的序列变换都考虑在内，但以下特殊情况值得提及。</p>
+<p><strong>标注与解析</strong>。这涉及用属性标注一个文本序列。这里，输入和输出是<em>对齐的</em>，即它们数目相同，并按照对应的顺序出现。例如，在<em>词性标注</em>（part-of-speech
+tagging，PoS
+tagging）中，我们为句子中的每个单词标注相应的词性，即“名词”或“直接宾语”。或者，我们可能想知道哪些连续词组成的组指代命名实体，比如<em>人物</em>、<em>地点</em>或<em>组织</em>。在下面这个卡通般简单的例子中，我们可能只想指出句子中是否有任何单词属于某个命名实体（标记为“Ent”）。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tom has dinner in Washington with Sally
+Ent  -    -    -     Ent      -    Ent
+</pre></div>
+</div>
+<p><strong>自动语音识别</strong>。在语音识别中，输入序列是说话人的一段音频录音（<a class="reference internal" href="#fig-speech"><span class="std std-numref">图1.3.5</span></a>），输出是说话人所说内容的转写文本。挑战在于，音频帧的数量比文本多得多（声音通常以8kHz或16kHz采样），即音频和文本之间没有一一对应的关系，因为数千个样本可能只对应一个说出的单词。这些是序列到序列学习问题，其中输出比输入短得多。虽然人类在识别语音方面表现出色，即使音频质量很低也能识别，但让计算机完成同样的壮举却是一个艰巨的挑战。</p>
+<figure class="align-default" id="id78">
+<span id="fig-speech"></span><a class="reference internal image-reference" href="../_images/speech.png"><img alt="../_images/speech.png" src="../_images/speech.png" style="width: 700px;" /></a>
+<figcaption>
+<p><span class="caption-number">图1.3.5 </span><span class="caption-text">一段音频录音中的<code class="docutils literal notranslate"><span class="pre">-D-e-e-p-</span> <span class="pre">L-ea-r-ni-ng-</span></code>。</span><a class="headerlink" href="#id78" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p><strong>文本到语音</strong>。这是自动语音识别的逆过程。这里输入是文本，输出是音频文件。在这种情况下，输出比输入长得多。</p>
+<p><strong>机器翻译</strong>。与语音识别中输入和输出按相同顺序出现的情形不同，在机器翻译中，未对齐的数据构成了新的挑战。这里输入序列和输出序列的长度可以不同，而且各自序列中相对应的区域可能以不同的顺序出现。考虑下面这个说明性例子，它展示了德语把动词放在句末的奇特倾向：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>German:           Haben Sie sich schon dieses grossartige Lehrwerk angeschaut?
+English:          Have you already looked at this excellent textbook?
+Wrong alignment:  Have you yourself already this excellent textbook looked at?
+</pre></div>
+</div>
+<p>其他学习任务中也会冒出许多相关问题。例如，确定用户阅读一个网页的顺序，是一个二维布局分析问题。对话问题会表现出各种额外的复杂性：要确定接下来该说什么，需要考虑现实世界的知识，以及跨越长时间距离的对话先前状态。这类主题是活跃的研究领域。</p>
+</section>
+</section>
+<section id="id16">
+<h3><span class="section-number">1.3.2. </span>无监督学习与自监督学习<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h3>
+<p>前面的例子都聚焦于监督学习，我们把一个同时包含特征和对应标签值的大型数据集喂给模型。你可以把监督学习器想象成拥有一份极其专门的工作，以及一位极其专制的老板。老板站在学习器身后，在每种情形下都确切地告诉它该做什么，直到它学会从情境到动作的映射。为这样一位老板工作听起来相当无趣。另一方面，取悦这样一位老板却很容易。你只要尽快认出模式，模仿老板的动作就行了。</p>
+<p>考虑相反的情形，为一位根本不知道自己想让你做什么的老板工作，可能会令人沮丧。然而，如果你打算成为一名数据科学家，你最好习惯这种情况。老板可能只是丢给你一大堆数据，然后对你说：<em>用它做点数据科学吧！</em>这听起来含糊，因为它本来就含糊。我们把这一类问题称为<em>无监督学习</em>（unsupervised
+learning），而我们可以提出的问题的类型和数量只受我们创造力的限制。我们将在后面的章节中讨论无监督学习技术。为了先吊起你的胃口，我们描述你可能会问的以下几个问题。</p>
+<ul class="simple">
+<li><p>我们能否找到少量的原型，来准确地概括这些数据？给定一组照片，我们能否把它们分成风景照、狗的照片、婴儿照片、猫的照片和山峰照片？同样地，给定一组用户的浏览活动，我们能否把他们分成行为相似的用户？这个问题通常称为<em>聚类</em>（clustering）。</p></li>
+<li><p>我们能否找到少量参数，来准确地刻画数据的相关性质？球的轨迹可以用球的速度、直径和质量很好地描述。裁缝们已经总结出少量参数，能够相当准确地描述人体形状，以便量身制衣。这些问题被称为<em>子空间估计</em>（subspace
+estimation）。如果依赖关系是线性的，则称为<em>主成分分析</em>（principal
+component analysis）。</p></li>
+<li><p>是否存在一种（任意结构）对象在欧几里得空间中的表示，使得符号属性能够得到很好的匹配？这种表示可用于描述实体及其关系，例如“Rome”<span class="math notranslate nohighlight">\(-\)</span>“Italy”<span class="math notranslate nohighlight">\(+\)</span>“France”<span class="math notranslate nohighlight">\(=\)</span>“Paris”。</p></li>
+<li><p>对于我们观测到的许多数据，是否存在对其根本原因的描述？例如，如果我们拥有关房价、污染、犯罪、位置、教育和薪资的人口统计数据，我们能否仅凭经验数据就发现它们之间是如何关联的？关注<em>因果性</em>（causality）和<em>概率图模型</em>（probabilistic
+graphical models）的领域研究的就是这类问题。</p></li>
+<li><p>无监督学习近期另一个重要而令人兴奋的发展，是<em>深度生成模型</em>（deep
+generative
+model）的出现。这些模型显式地或<em>隐式地</em>估计数据的密度。训练完成后，我们可以用生成模型根据样例的似然程度为其打分，或者从学到的分布中采样合成样例。生成建模领域早期的深度学习突破来自<em>变分自编码器</em>（variational
+autoencoder）的发明
+<span id="id17">(<a class="reference internal" href="../chapter_references/zreferences.html#id149" title="Kingma, D. P., &amp; Welling, M. (2014). Auto-encoding variational Bayes. International Conference on Learning Representations (ICLR).">Kingma and Welling, 2014</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id476" title="Rezende, D. J., Mohamed, S., &amp; Wierstra, D. (2014). Stochastic backpropagation and approximate inference in deep generative models. International Conference on Machine Learning (pp. 1278–1286).">Rezende <em>et al.</em>, 2014</a>)</span>，随后又随着<em>生成对抗网络</em>（generative
+adversarial network）的发展而延续
+<span id="id18">(<a class="reference internal" href="../chapter_references/zreferences.html#id92" title="Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., … Bengio, Y. (2014). Generative adversarial nets. Advances in Neural Information Processing Systems (pp. 2672–2680).">Goodfellow <em>et al.</em>, 2014</a>)</span>。更近期的进展包括规范化流
+<span id="id19">(<a class="reference internal" href="../chapter_references/zreferences.html#id478" title="Dinh, L., Krueger, D., &amp; Bengio, Y. (2014). NICE: non-linear independent components estimation. ArXiv:1410.8516.">Dinh <em>et al.</em>, 2014</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id479" title="Dinh, L., Sohl-Dickstein, J., &amp; Bengio, S. (2017). Density estimation using real NVP. International Conference on Learning Representations.">Dinh <em>et al.</em>, 2017</a>)</span> 和扩散模型
+<span id="id20">(<a class="reference internal" href="../chapter_references/zreferences.html#id462" title="Ho, J., Jain, A., &amp; Abbeel, P. (2020). Denoising diffusion probabilistic models. Advances in Neural Information Processing Systems, 33, 6840–6851.">Ho <em>et al.</em>, 2020</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id461" title="Sohl-Dickstein, J., Weiss, E., Maheswaranathan, N., &amp; Ganguli, S. (2015). Deep unsupervised learning using nonequilibrium thermodynamics. International Conference on Machine Learning (pp. 2256–2265).">Sohl-Dickstein <em>et al.</em>, 2015</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id463" title="Song, Y., &amp; Ermon, S. (2019). Generative modeling by estimating gradients of the data distribution. Advances in Neural Information Processing Systems, 32.">Song and Ermon, 2019</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id477" title="Song, Y., Sohl-Dickstein, J., Kingma, D. P., Kumar, A., Ermon, S., &amp; Poole, B. (2021). Score-based generative modeling through stochastic differential equations. International Conference on Learning Representations.">Song <em>et al.</em>, 2021</a>)</span>。</p></li>
+</ul>
+<p>无监督学习的进一步发展是<em>自监督学习</em>（self-supervised
+learning）的兴起，这类技术利用无标签数据的某些方面来提供监督。对于文本，我们可以训练模型在大型语料库中利用周围单词（上下文）来预测随机掩码的单词，从而“填空”，无需任何标注工作
+<span id="id21">(<a class="reference internal" href="../chapter_references/zreferences.html#id58" title="Devlin, J., Chang, M.-W., Lee, K., &amp; Toutanova, K. (2018). BERT: Pre-training of deep bidirectional transformers for language understanding. ArXiv:1810.04805.">Devlin <em>et al.</em>, 2018</a>)</span>！对于图像，我们可以训练模型判断同一张图像的两个裁剪区域之间的相对位置
+<span id="id22">(<a class="reference internal" href="../chapter_references/zreferences.html#id59" title="Doersch, C., Gupta, A., &amp; Efros, A. A. (2015). Unsupervised visual representation learning by context prediction. Proceedings of the IEEE International Conference on Computer Vision (pp. 1422–1430).">Doersch <em>et al.</em>, 2015</a>)</span>，根据图像的其余部分预测被遮挡的部分，或者预测两个样例是否是同一底层图像经过扰动的版本。自监督模型往往能学到一些表示，随后通过在某些感兴趣的下游任务上微调所得模型来加以利用。</p>
+</section>
+<section id="id23">
+<h3><span class="section-number">1.3.3. </span>与环境交互<a class="headerlink" href="#id23" title="此标题的永久链接">¶</a></h3>
+<p>到目前为止，我们还没有讨论数据究竟从何而来，也没有讨论当机器学习模型产生输出时究竟会发生什么。这是因为监督学习和无监督学习都没有以非常精细的方式处理这些问题。在这两种情况下，我们都在事先抓取一大堆数据，然后就让模式识别机器运转起来，不再与环境发生任何交互。因为所有的学习都发生在算法与环境断开连接之后，所以这有时被称为<em>离线学习</em>（offline
+learning）。例如，监督学习假设存在 <a class="reference internal" href="#fig-data-collection"><span class="std std-numref">图1.3.6</span></a>
+所描绘的简单交互模式。</p>
+<figure class="align-default" id="id79">
+<span id="fig-data-collection"></span><img alt="../_images/data-collection.svg" src="../_images/data-collection.svg" /><figcaption>
+<p><span class="caption-number">图1.3.6 </span><span class="caption-text">从环境中收集监督学习所需的数据。</span><a class="headerlink" href="#id79" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>离线学习的这种简单性有其魅力。好处在于，我们可以孤立地关心模式识别，不必担心与动态环境交互所产生的复杂性。但这种问题表述是有局限的。如果你是读着阿西莫夫的机器人小说长大的，那么你脑海中的人工智能体大概不仅能作出预测，还能在世界上采取行动。我们想考虑的是智能<em>体</em>（agent），而不仅仅是预测模型。这意味着我们需要考虑选择<em>动作</em>，而不仅仅是作出预测。与单纯的预测不同，动作实际会作用于环境。如果我们想训练一个智能体，就必须考虑它的动作可能如何影响它未来的观测，因此离线学习并不合适。</p>
+<p>考虑与环境交互，会引出一整套新的建模问题。下面仅举几个例子。</p>
+<ul class="simple">
+<li><p>环境会记住我们之前做过什么吗？</p></li>
+<li><p>环境是想帮助我们吗？例如，一个用户正在把文本读给语音识别器听。</p></li>
+<li><p>环境是想击败我们吗？例如，垃圾邮件发送者会调整他们的邮件以躲避垃圾邮件过滤器。</p></li>
+<li><p>环境的动态会变化吗？例如，未来的数据是否总是与过去相似，还是模式会随时间变化——无论是自然变化，还是因我们的自动化工具而变化？</p></li>
+</ul>
+<p>这些问题引出了<em>分布偏移</em>（distribution
+shift）问题，即训练数据与测试数据不同。一个例子我们许多人可能都遇到过：课程作业由助教出题，而考试题却由讲师出。接下来，我们简要介绍强化学习——一个在智能体与环境交互的情形下提出学习问题的丰富框架。</p>
+</section>
+<section id="id24">
+<h3><span class="section-number">1.3.4. </span>强化学习<a class="headerlink" href="#id24" title="此标题的永久链接">¶</a></h3>
+<p>如果你有兴趣用机器学习来开发一个与环境交互并采取动作的智能体，那么你很可能最终会聚焦于<em>强化学习</em>（reinforcement
+learning）。这可能包括机器人、对话系统方面的应用，甚至包括为电子游戏开发人工智能（AI）。把深度学习应用于强化学习问题的<em>深度强化学习</em>（deep
+reinforcement
+learning）已经迅速流行起来。仅凭视觉输入就在Atari游戏中击败人类的突破性深度Q网络
+<span id="id25">(<a class="reference internal" href="../chapter_references/zreferences.html#id418" title="Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., … et al. (2015). Human-level control through deep reinforcement learning. Nature, 518(7540), 529–533.">Mnih <em>et al.</em>, 2015</a>)</span>，以及在棋盘游戏围棋中击败世界冠军的AlphaGo程序
+<span id="id26">(<a class="reference internal" href="../chapter_references/zreferences.html#id259" title="Silver, D., Huang, A., Maddison, C. J., Guez, A., Sifre, L., Van Den Driessche, G., … et al. (2016). Mastering the game of Go with deep neural networks and tree search. Nature, 529(7587), 484.">Silver <em>et al.</em>, 2016</a>)</span>，就是两个著名的例子。</p>
+<p>强化学习对如下问题给出一种非常一般的表述：智能体在一系列时间步中与环境交互。在每个时间步，智能体从环境中接收某种<em>观测</em>，并且必须选择一个<em>动作</em>，该动作随后通过某种机制（有时称为<em>执行器</em>
+actuator）传回环境；每轮循环之后，智能体会从环境收到一个奖励。这一过程如
+<a class="reference internal" href="#fig-rl-environment"><span class="std std-numref">图1.3.7</span></a>
+所示。智能体随后接收下一个观测，并选择下一个动作，如此往复。强化学习智能体的行为由<em>策略</em>（policy）支配。简而言之，<em>策略</em>不过是一个从环境观测到动作的映射函数。强化学习的目标是产生好的策略。</p>
+<figure class="align-default" id="id80">
+<span id="fig-rl-environment"></span><img alt="../_images/rl-environment.svg" src="../_images/rl-environment.svg" /><figcaption>
+<p><span class="caption-number">图1.3.7 </span><span class="caption-text">强化学习与环境之间的交互。</span><a class="headerlink" href="#id80" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>强化学习框架的一般性怎么强调都不为过。例如，监督学习可以重新表述为强化学习。假设我们有一个分类问题。我们可以创建一个强化学习智能体，为每个类别对应一个动作。然后，我们可以创建一个环境，它给出的奖励恰好等于原监督学习问题中的损失函数。</p>
+<p>此外，强化学习还能处理许多监督学习无法处理的问题。例如，在监督学习中，我们总是期望训练输入伴随着正确的标签。但在强化学习中，我们并不假设环境会针对每个观测告诉我们最优动作。一般来说，我们只是得到某个奖励。而且，环境甚至可能不会告诉我们哪些动作带来了这个奖励。</p>
+<p>考虑国际象棋。唯一真正的奖励信号出现在对局结束时：我们要么赢了，得到比如说<span class="math notranslate nohighlight">\(1\)</span>的奖励；要么输了，得到比如说<span class="math notranslate nohighlight">\(-1\)</span>的奖励。因此，强化学习器必须处理<em>信用分配</em>（credit
+assignment）问题：确定哪些动作应当为某个结果记功或担责。对一位在10月11日获得晋升的员工来说，道理也是一样。那次晋升很可能反映了过去一年里一系列精心选择的动作。想要在未来获得晋升，就需要弄清楚一路走来哪些动作导致了先前的晋升。</p>
+<p>强化学习器还可能要处理部分可观测性问题。也就是说，当前的观测可能不会告诉你关于当前状态的一切。假设你的清洁机器人发现自己被困在你家中许多一模一样的壁橱之一里。要营救这个机器人，就需要推断它的精确位置，这可能需要考虑它进入壁橱之前的更早观测。</p>
+<p>最后，在任何给定时刻，强化学习器可能知道一个好策略，但可能还存在许多它从未尝试过的更好策略。强化学习器必须不断选择：是把（当前）已知最好的策略作为策略加以<em>利用</em>（exploit），还是在策略空间中<em>探索</em>（explore），可能放弃一些短期奖励以换取知识。</p>
+<p>一般的强化学习问题具有非常一般的设定。动作会影响后续观测。奖励只有在与所选动作相对应时才会被观测到。环境可能是完全可观测的，也可能是部分可观测的。一次性考虑所有这些复杂性，可能要求过高。此外，并非每个实际问题都表现出所有这些复杂性。因此，研究者研究了许多强化学习问题的特殊情况。</p>
+<p>当环境完全可观测时，我们把该强化学习问题称为<em>马尔可夫决策过程</em>（Markov
+decision
+process）。当状态不依赖于先前的动作时，我们称之为<em>上下文赌博机问题</em>（contextual
+bandit
+problem）。当没有状态，只有一组初始奖励未知的可用动作时，我们面对的就是经典的<em>多臂赌博机问题</em>（multi-armed
+bandit problem）。</p>
+</section>
+</section>
+<section id="id27">
+<h2><span class="section-number">1.4. </span>起源<a class="headerlink" href="#id27" title="此标题的永久链接">¶</a></h2>
+<p>我们刚刚回顾了机器学习能够处理的一小部分问题。对于各种不同的机器学习问题，深度学习提供了强大的求解工具。尽管许多深度学习方法是近期的发明，但从数据中学习的核心思想却已经被研究了几个世纪。事实上，人类分析和预测未来结果的愿望由来已久，正是这种愿望构成了大部分自然科学和数学的根基。两个例子是得名于<a class="reference external" href="https://en.wikipedia.org/wiki/Jacob_Bernoulli">雅各布·伯努利（Jacob
+Bernoulli，1655–1705）</a>的伯努利分布，以及由<a class="reference external" href="https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss">卡尔·弗里德里希·高斯（Carl
+Friedrich
+Gauss，1777–1855）</a>发现的高斯分布。例如，高斯发明了最小均方算法，直至今日，从保险计算到医学诊断的众多问题仍在使用它。这些工具增强了自然科学中的实验方法——例如，描述电阻中电流与电压关系的欧姆定律，就可以用线性模型完美地描述。</p>
+<p>即使在中世纪，数学家们对估计也有着敏锐的直觉。例如，<a class="reference external" href="https://www.maa.org/press/periodicals/convergence/mathematical-treasures-jacob-kobels-geometry">雅各布·克贝尔（Jacob
+Köbel，1460–1533）</a>的几何书就展示了这样一种做法：对16位成年男子的脚长取平均，来估计人群中典型的脚长（<a class="reference internal" href="#fig-koebel"><span class="std std-numref">图1.4.1</span></a>）。</p>
+<figure class="align-default" id="id81">
+<span id="fig-koebel"></span><a class="reference internal image-reference" href="../_images/koebel.jpg"><img alt="../_images/koebel.jpg" src="../_images/koebel.jpg" style="width: 500px;" /></a>
+<figcaption>
+<p><span class="caption-number">图1.4.1 </span><span class="caption-text">估计脚的长度。</span><a class="headerlink" href="#id81" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>当一群人从教堂里走出来时，16位成年男子被要求排成一排，测量他们的脚长。然后把这些测量值之和除以16，就得到对如今所谓“一英尺”的估计。这个“算法”后来得到了改进，以应对畸形的脚：脚最短和脚最长的两名男子被请走，只对剩下的人取平均。这是最早一批截尾均值估计的例子之一。</p>
+<p>随着数据的获取与收集，统计学真正起飞了。其先驱之一<a class="reference external" href="https://en.wikipedia.org/wiki/Ronald_Fisher">罗纳德·费希尔（Ronald
+Fisher，1890–1962）</a>对统计学的理论及其在遗传学中的应用作出了重大贡献。他的许多算法（如线性判别分析）和概念（如费希尔信息矩阵）在现代统计学的基础中仍然占据显著地位。连他的数据资源也产生了持久的影响。费希尔在1936年发布的Iris数据集至今有时仍被用来演示机器学习算法。费希尔还是一位优生学的拥护者，这提醒我们：数据科学在伦理上可疑的用法，与其在工业和自然科学中富有成效的用法一样，都有着同样悠久而持续的历史。</p>
+<p>机器学习的其他影响来自<a class="reference external" href="https://en.wikipedia.org/wiki/Claude_Shannon">克劳德·香农（Claude
+Shannon，1916–2001）</a>的信息论，以及<a class="reference external" href="https://en.wikipedia.org/wiki/Alan_Turing">艾伦·图灵（Alan
+Turing，1912–1954）</a>提出的计算理论。图灵在其著名论文<em>Computing
+Machinery and Intelligence</em> <span id="id28">(<a class="reference internal" href="../chapter_references/zreferences.html#id290" title="Turing, A. (1950). Computing machinery and intelligence. Mind, 59(236), 433.">Turing, 1950</a>)</span>
+中提出了“机器能思考吗？”这一问题。在描述如今被称为图灵测试的东西时，他提出：如果人类评估者仅凭文本交互，很难区分机器的回复与人类的回复，那么就可以认为这台机器是<em>智能的</em>。</p>
+<p>进一步的影响来自神经科学和心理学。毕竟，人类显然表现出智能行为。许多学者都问过：能否解释、乃至逆向工程出这种能力？最早的受生物学启发的算法之一由<a class="reference external" href="https://en.wikipedia.org/wiki/Donald_O._Hebb">唐纳德·赫布（Donald
+Hebb，1904–1985）</a>提出。在其开创性著作<em>The
+Organization of Behavior</em> <span id="id29">(<a class="reference internal" href="../chapter_references/zreferences.html#id111" title="Hebb, D. O. (1949). The Organization of Behavior. Wiley.">Hebb, 1949</a>)</span>
+中，他假设神经元通过正强化进行学习。这后来被称为赫布学习规则。这些思想启发了后来的工作，比如Rosenblatt的感知机学习算法，并为如今支撑深度学习的许多随机梯度下降算法奠定了基础：强化期望的行为、削弱不期望的行为，从而得到神经网络中参数的良好设置。</p>
+<p>生物学灵感正是<em>神经网络</em>得名的由来。一个多世纪以来（可追溯到Alexander
+Bain 1873年和James Sherrington
+1890年的模型），研究者们一直试图组装出类似于相互作用的神经元网络的计算回路。随着时间推移，对生物学的解读越来越少地照字面进行，但这个名字保留了下来。其核心是几条关键原则，在当今大多数网络中都能找到：</p>
+<ul class="simple">
+<li><p>线性和非线性处理单元的交替，通常称为<em>层</em>（layer）。</p></li>
+<li><p>使用链式法则（也称为<em>反向传播</em>
+backpropagation）来一次性调整整个网络中的参数。</p></li>
+</ul>
+<p>在最初的快速进展之后，从大约1995年到2005年，神经网络研究陷入了停滞。这主要有两个原因。第一，训练网络在计算上非常昂贵。上世纪末时随机存取存储器已经相当充足，但计算能力却很稀缺。第二，数据集相对较小。事实上，费希尔1936年的Iris数据集仍然是检验算法效力的常用工具。含60000个手写数字的MNIST数据集当时被认为是巨大的。</p>
+<p>鉴于数据和计算的稀缺，核方法、决策树和图模型等强大的统计工具在许多应用中从实证上看更为优越。此外，与神经网络不同，它们不需要训练数周，并且能在强理论保证下给出可预测的结果。</p>
+</section>
+<section id="id30">
+<h2><span class="section-number">1.5. </span>迈向深度学习之路<a class="headerlink" href="#id30" title="此标题的永久链接">¶</a></h2>
+<p>随着万维网的出现、在线服务数亿用户的企业兴起、低成本高质量传感器的普及、
+廉价的数据存储（Kryder 定律）以及便宜的计算（摩尔定律），
+海量数据的可用性使这一切发生了很大变化。 特别是，原本为电脑游戏而设计的
+GPU 的进步， 彻底改变了深度学习的计算格局。
+突然之间，那些曾被认为在计算上不可行的算法和模型变得触手可及。
+<code class="xref std std-numref docutils literal notranslate"><span class="pre">tab_intro_decade</span></code> 对此做了最好的说明。</p>
+<p>:数据集与计算机内存、算力的对比</p>
+<table class="docutils align-default" id="id82">
+<caption><span class="caption-number">表1.5.1 </span><span class="caption-text">label:<code class="docutils literal notranslate"><span class="pre">tab_intro_decade</span></code></span><a class="headerlink" href="#id82" title="此表格的永久链接">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>十年</p></th>
+<th class="head"><p>数据集</p></th>
+<th class="head"><p>内存</p></th>
+<th class="head"><p>每秒浮点运算次数</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1970</p></td>
+<td><p>100（Iris 数据集）</p></td>
+<td><p>1 KB</p></td>
+<td><p>100 KF（Intel 8080）</p></td>
+</tr>
+<tr class="row-odd"><td><p>1980</p></td>
+<td><p>1 K（波士顿房价）</p></td>
+<td><p>100 KB</p></td>
+<td><p>1 MF（Intel 80186）</p></td>
+</tr>
+<tr class="row-even"><td><p>1990</p></td>
+<td><p>10 K（光学字符识别）</p></td>
+<td><p>10 MB</p></td>
+<td><p>10 MF（Intel 80486）</p></td>
+</tr>
+<tr class="row-odd"><td><p>2000</p></td>
+<td><p>10 M（网页）</p></td>
+<td><p>100 MB</p></td>
+<td><p>1 GF（Intel Core）</p></td>
+</tr>
+<tr class="row-even"><td><p>2010</p></td>
+<td><p>10 G（广告）</p></td>
+<td><p>1 GB</p></td>
+<td><p>1 TF（NVIDIA C2050）</p></td>
+</tr>
+<tr class="row-odd"><td><p>2020</p></td>
+<td><p>1 T（社交网络）</p></td>
+<td><p>100 GB</p></td>
+<td><p>1 PF（NVIDIA DGX-2）</p></td>
+</tr>
+</tbody>
+</table>
+<p>需要注意的是，随机存取存储器的发展并没有跟上数据增长的速度。
+与此同时，算力的增长却超过了数据集的增长。
+这意味着统计模型需要变得更加节省内存， 同时由于可用的计算预算增加了，
+它们可以自由地把更多计算机周期花在优化参数上。
+因此，机器学习与统计学的最佳平衡点
+从（广义）线性模型和核方法转移到了深度神经网络。
+这也是深度学习中的许多中坚技术， 例如多层感知机
+<span id="id31">(<a class="reference internal" href="../chapter_references/zreferences.html#id187" title="McCulloch, W. S., &amp; Pitts, W. (1943). A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics, 5(4), 115–133.">McCulloch and Pitts, 1943</a>)</span>、 卷积神经网络
+<span id="id32">(<a class="reference internal" href="../chapter_references/zreferences.html#id162" title="LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998). Gradient-based learning applied to document recognition. Proceedings of the IEEE, 86(11), 2278–2324.">LeCun <em>et al.</em>, 1998</a>)</span>、 长短期记忆网络
+<span id="id33">(<a class="reference internal" href="../chapter_references/zreferences.html#id118" title="Hochreiter, S., &amp; Schmidhuber, J. (1997). Long short-term memory. Neural Computation, 9(8), 1735–1780.">Hochreiter and Schmidhuber, 1997</a>)</span> 以及 Q 学习
+<span id="id34">(<a class="reference internal" href="../chapter_references/zreferences.html#id310" title="Watkins, C. J., &amp; Dayan, P. (1992). Q-learning. Machine Learning, 8(3–4), 279–292.">Watkins and Dayan, 1992</a>)</span>， 在相对沉寂了相当长一段时间之后，
+过去十年里本质上被”重新发现”的原因之一。</p>
+<p>近来统计模型、应用和算法方面的进展， 有时被比作寒武纪大爆发：
+物种进化的一个突飞猛进时期。 的确，当前的最先进水平并不仅仅是
+把可用资源投入几十年前的算法所产生的结果。 请注意，下面列举的思路
+只是过去十年间帮助研究者取得巨大进展的诸多因素中的冰山一角。</p>
+<ul class="simple">
+<li><p>抑制过拟合的新方法，例如 <em>暂退法</em>（dropout）
+<span id="id35">(<a class="reference internal" href="../chapter_references/zreferences.html#id266" title="Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., &amp; Salakhutdinov, R. (2014). Dropout: a simple way to prevent neural networks from overfitting. Journal of Machine Learning Research, 15(1), 1929–1958.">Srivastava <em>et al.</em>, 2014</a>)</span>，
+帮助缓解了过拟合问题。 其做法是在训练期间向整个神经网络中注入噪声
+<span id="id36">(<a class="reference internal" href="../chapter_references/zreferences.html#id18" title="Bishop, C. M. (1995). Training with noise is equivalent to Tikhonov regularization. Neural Computation, 7(1), 108–116.">Bishop, 1995</a>)</span>。</p></li>
+<li><p><em>注意力机制</em>（attention
+mechanism）解决了困扰统计学一个多世纪的第二个问题：
+如何在不增加可学习参数数量的情况下 增加系统的记忆容量和复杂度。
+研究者找到了一种优雅的解决方案， 即使用一种只能被称为
+<em>可学习指针结构</em> <span id="id37">(<a class="reference internal" href="../chapter_references/zreferences.html#id11" title="Bahdanau, D., Cho, K., &amp; Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. ArXiv:1409.0473.">Bahdanau <em>et al.</em>, 2014</a>)</span> 的东西。
+例如，对于机器翻译，模型不必再用固定维度的表示 记住整个文本序列，
+而只需存储一个指向翻译过程中间状态的指针。
+由于模型在开始生成新序列之前 不再需要记住整个序列，
+因此对于长序列，准确率可以显著提高。</p></li>
+<li><p><em>Transformer</em> 架构 <span id="id38">(<a class="reference internal" href="../chapter_references/zreferences.html#id303" title="Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., … Polosukhin, I. (2017). Attention is all you need. Advances in Neural Information Processing Systems (pp. 5998–6008).">Vaswani <em>et al.</em>, 2017</a>)</span>
+完全建立在注意力机制之上，
+表现出了更优的<em>扩展</em>行为：随着数据集规模、模型规模和训练计算量的增加，它的表现会更好
+<span id="id39">(<a class="reference internal" href="../chapter_references/zreferences.html#id394" title="Kaplan, J., McCandlish, S., Henighan, T., Brown, T. B., Chess, B., Child, R., … Amodei, D. (2020). Scaling laws for neural language models. ArXiv:2001.08361.">Kaplan <em>et al.</em>, 2020</a>)</span>。
+该架构在广泛领域中都取得了令人瞩目的成功， 例如自然语言处理
+<span id="id40">(<a class="reference internal" href="../chapter_references/zreferences.html#id381" title="Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., … et al. (2020). Language models are few-shot learners. Advances in Neural Information Processing Systems, 33, 1877–1901.">Brown <em>et al.</em>, 2020</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id58" title="Devlin, J., Chang, M.-W., Lee, K., &amp; Toutanova, K. (2018). BERT: Pre-training of deep bidirectional transformers for language understanding. ArXiv:1810.04805.">Devlin <em>et al.</em>, 2018</a>)</span>、计算机视觉
+<span id="id41">(<a class="reference internal" href="../chapter_references/zreferences.html#id60" title="Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., … et al. (2021). An image is worth 16 x 16 words: transformers for image recognition at scale. International Conference on Learning Representations.">Dosovitskiy <em>et al.</em>, 2021</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id366" title="Liu, Z., Lin, Y., Cao, Y., Hu, H., Wei, Y., Zhang, Z., … Guo, B. (2021). Swin transformer: hierarchical vision transformer using shifted windows. Proceedings of the IEEE/CVF International Conference on Computer Vision (pp. 10012–10022).">Liu <em>et al.</em>, 2021</a>)</span>、语音识别
+<span id="id42">(<a class="reference internal" href="../chapter_references/zreferences.html#id456" title="Gulati, A., Qin, J., Chiu, C.-C., Parmar, N., Zhang, Y., Yu, J., … et al. (2020). Conformer: convolution-augmented transformer for speech recognition. Proc. Interspeech 2020, pp. 5036–5040.">Gulati <em>et al.</em>, 2020</a>)</span>、强化学习 <span id="id43">(<a class="reference internal" href="../chapter_references/zreferences.html#id457" title="Chen, L., Lu, K., Rajeswaran, A., Lee, K., Grover, A., Laskin, M., … Mordatch, I. (2021). Decision transformer: reinforcement learning via sequence modeling. Advances in Neural Information Processing Systems, 34, 15084–15097.">Chen <em>et al.</em>, 2021</a>)</span>
+以及图神经网络 <span id="id44">(<a class="reference internal" href="../chapter_references/zreferences.html#id458" title="Dwivedi, V. P., &amp; Bresson, X. (2020). A generalization of transformer networks to graphs. ArXiv:2012.09699.">Dwivedi and Bresson, 2020</a>)</span>。
+例如，一个在文本、图像、关节力矩和按键操作等如此多样的模态上预训练的单一
+Transformer， 就能玩 Atari 游戏、为图像生成说明文字、进行对话，
+还能控制机器人 <span id="id45">(<a class="reference internal" href="../chapter_references/zreferences.html#id411" title="Reed, S., Zolna, K., Parisotto, E., Colmenarejo, S. G., Novikov, A., Barth-Maron, G., … et al. (2022). A generalist agent. ArXiv:2205.06175.">Reed <em>et al.</em>, 2022</a>)</span>。</p></li>
+<li><p>对文本序列的概率进行建模的<em>语言模型</em>可以根据其他文本预测文本。
+扩大数据、模型和计算规模，释放了语言模型越来越多的能力，
+使其能够基于输入文本生成类人文本，从而完成期望的任务
+<span id="id46">(<a class="reference internal" href="../chapter_references/zreferences.html#id481" title="Anil, R., Dai, A. M., Firat, O., Johnson, M., Lepikhin, D., Passos, A., … et al. (2023). PaLM 2 Technical Report. ArXiv:2305.10403.">Anil <em>et al.</em>, 2023</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id381" title="Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., … et al. (2020). Language models are few-shot learners. Advances in Neural Information Processing Systems, 33, 1877–1901.">Brown <em>et al.</em>, 2020</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id402" title="Chowdhery, A., Narang, S., Devlin, J., Bosma, M., Mishra, G., Roberts, A., … et al. (2022). PaLM: scaling language modeling with pathways. ArXiv:2204.02311.">Chowdhery <em>et al.</em>, 2022</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id400" title="Hoffmann, J., Borgeaud, S., Mensch, A., Buchatskaya, E., Cai, T., Rutherford, E., … et al. (2022). Training compute-optimal large language models. ArXiv:2203.15556.">Hoffmann <em>et al.</em>, 2022</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id480" title="OpenAI. (2023). GPT-4 Technical Report. ArXiv:2303.08774.">OpenAI, 2023</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id395" title="Rae, J. W., Borgeaud, S., Cai, T., Millican, K., Hoffmann, J., Song, F., … et al. (2021). Scaling language models: methods, analysis &amp; insights from training gopher. ArXiv:2112.11446.">Rae <em>et al.</em>, 2021</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id486" title="Touvron, H., Lavril, T., Izacard, G., Martinet, X., Lachaux, M.-A., Lacroix, T., … et al. (2023a). LLaMA: open and efficient foundation language models. ArXiv:2302.13971.">Touvron <em>et al.</em>, 2023a</a>, <a class="reference internal" href="../chapter_references/zreferences.html#id487" title="Touvron, H., Martin, L., Stone, K., Albert, P., Almahairi, A., Babaei, Y., … et al. (2023b). LLaMA 2: open foundation and fine-tuned chat models. ArXiv:2307.09288.">Touvron <em>et al.</em>, 2023b</a>)</span>。
+例如，通过与人类意图对齐语言模型 <span id="id47">(<a class="reference internal" href="../chapter_references/zreferences.html#id468" title="Ouyang, L., Wu, J., Jiang, X., Almeida, D., Wainwright, C. L., Mishkin, P., … et al. (2022). Training language models to follow instructions with human feedback. ArXiv:2203.02155.">Ouyang <em>et al.</em>, 2022</a>)</span>，
+OpenAI 的 <a class="reference external" href="https://chat.openai.com/">ChatGPT</a>
+允许用户以对话方式与之交互来解决问题， 例如调试代码和创意写作。</p></li>
+<li><p>多阶段设计，例如通过记忆网络
+<span id="id48">(<a class="reference internal" href="../chapter_references/zreferences.html#id269" title="Sukhbaatar, S., Weston, J., &amp; Fergus, R. (2015). End-to-end memory networks. Advances in Neural Information Processing Systems (pp. 2440–2448).">Sukhbaatar <em>et al.</em>, 2015</a>)</span> 和神经程序员-解释器
+<span id="id49">(<a class="reference internal" href="../chapter_references/zreferences.html#id233" title="Reed, S., &amp; De Freitas, N. (2015). Neural programmer-interpreters. ArXiv:1511.06279.">Reed and De Freitas, 2015</a>)</span>，
+使统计建模者能够描述迭代式的推理方法。
+这些工具允许深度神经网络的内部状态被反复修改，
+从而执行一连串推理中的后续步骤，
+就像处理器可以为一次计算而修改内存一样。</p></li>
+<li><p><em>深度生成建模</em>（deep generative modeling）的一个关键发展
+是<em>生成对抗网络</em>（generative adversarial network）
+<span id="id50">(<a class="reference internal" href="../chapter_references/zreferences.html#id92" title="Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., … Bengio, Y. (2014). Generative adversarial nets. Advances in Neural Information Processing Systems (pp. 2672–2680).">Goodfellow <em>et al.</em>, 2014</a>)</span> 的发明。
+传统上，用于密度估计和生成模型的统计方法 侧重于寻找恰当的概率分布，
+以及（通常是近似的）从这些分布中采样的算法。
+因此，这些算法在很大程度上受制于统计模型固有的灵活性不足。
+生成对抗网络的关键创新在于，
+用一个带有可微参数的任意算法来代替采样器。
+然后调整这些参数，使得判别器 （实际上是一个双样本检验）
+无法区分假数据和真数据。 由于能够使用任意算法来生成数据，
+密度估计由此向各种各样的技术敞开了大门。 飞奔的斑马
+<span id="id51">(<a class="reference internal" href="../chapter_references/zreferences.html#id339" title="Zhu, J.-Y., Park, T., Isola, P., &amp; Efros, A. A. (2017). Unpaired image-to-image translation using cycle-consistent adversarial networks. Proceedings of the IEEE International Conference on Computer Vision (pp. 2223–2232).">Zhu <em>et al.</em>, 2017</a>)</span> 和以假乱真的名人面孔
+<span id="id52">(<a class="reference internal" href="../chapter_references/zreferences.html#id144" title="Karras, T., Aila, T., Laine, S., &amp; Lehtinen, J. (2017). Progressive growing of GANs for improved quality, stability, and variation. ArXiv:1710.10196.">Karras <em>et al.</em>, 2017</a>)</span> 的例子，都是这一进展的明证。
+即使是业余涂鸦者，也能仅凭描述场景布局的草图 生成照片级的图像
+<span id="id53">(<a class="reference internal" href="../chapter_references/zreferences.html#id209" title="Park, T., Liu, M.-Y., Wang, T.-C., &amp; Zhu, J.-Y. (2019). Semantic image synthesis with spatially-adaptive normalization. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (pp. 2337–2346).">Park <em>et al.</em>, 2019</a>)</span>。</p></li>
+<li><p>此外，<em>扩散模型</em>（diffusion
+model）:cite:<cite>sohl2015deep,ho2020denoising</cite>
+通过逐步向数据样本添加随机噪声的扩散过程，
+学习如何反转该扩散过程、从随机噪声中逐步构造数据样本。
+在较新的深度生成模型中，它们已开始取代生成对抗网络， 诸如 DALL-E 2
+<span id="id54">(<a class="reference internal" href="../chapter_references/zreferences.html#id408" title="Ramesh, A., Dhariwal, P., Nichol, A., Chu, C., &amp; Chen, M. (2022). Hierarchical text-conditional image generation with clip latents. ArXiv:2204.06125.">Ramesh <em>et al.</em>, 2022</a>)</span> 和 Imagen
+<span id="id55">(<a class="reference internal" href="../chapter_references/zreferences.html#id410" title="Saharia, C., Chan, W., Saxena, S., Li, L., Whang, J., Denton, E., … et al. (2022). Photorealistic text-to-image diffusion models with deep language understanding. ArXiv:2205.11487.">Saharia <em>et al.</em>, 2022</a>)</span>
+等模型已被用于基于文本描述的创意艺术与图像生成。</p></li>
+<li><p>在许多情况下，单块 GPU 不足以处理训练可用的大量数据。
+过去十年间，构建并行和分布式训练算法的能力有了显著提高。
+设计可扩展算法的一个关键挑战在于， 深度学习的优化主力——随机梯度下降——
+依赖于相对较小的数据小批量。 与此同时，小批量又限制了 GPU 的效率。
+因此，用 1024 块 GPU 训练、每批比如 32 张图像， 合计就相当于约 32000
+张图像的小批量。 最初由 <span id="id56">Li (<a class="reference internal" href="../chapter_references/zreferences.html#id166" title="Li, M. (2017). Scaling Distributed Machine Learning with System and Algorithm Co-design (Doctoral dissertation). PhD Thesis, CMU.">2017</a>)</span>、随后由
+<span id="id57">You <em>et al.</em> (<a class="reference internal" href="../chapter_references/zreferences.html#id327" title="You, Y., Gitman, I., &amp; Ginsburg, B. (2017). Large batch training of convolutional networks. ArXiv:1708.03888.">2017</a>)</span> 和 <span id="id58">Jia <em>et al.</em> (<a class="reference internal" href="../chapter_references/zreferences.html#id140" title="Jia, X., Song, S., He, W., Wang, Y., Rong, H., Zhou, F., … et al. (2018). Highly scalable deep learning training system with mixed-precision: training ImageNet in four minutes. ArXiv:1807.11205.">2018</a>)</span>
+开展的工作将规模推高到 64000 个观测， 使 ResNet-50 模型在 ImageNet
+数据集上的训练时间缩短到不足 7 分钟。
+相比之下，最初的训练时间以天计。</p></li>
+<li><p>并行计算能力的提升也促进了<em>强化学习</em>的进展。
+这使计算机在围棋、Atari 游戏、星际争霸等任务，
+以及在可使用环境模拟器的物理仿真（例如使用 MuJoCo）中，
+取得了超越人类的性能。 例如，参见
+<span id="id59">Silver <em>et al.</em> (<a class="reference internal" href="../chapter_references/zreferences.html#id259" title="Silver, D., Huang, A., Maddison, C. J., Guez, A., Sifre, L., Van Den Driessche, G., … et al. (2016). Mastering the game of Go with deep neural networks and tree search. Nature, 529(7587), 484.">2016</a>)</span> 对 AlphaGo
+中此类成就的描述。 简而言之，当有大量（状态、动作、奖励）元组可用时，
+强化学习效果最好。 仿真提供了这样一条途径。</p></li>
+<li><p>深度学习框架在传播思想方面发挥了关键作用。
+第一代用于神经网络建模的开源框架 由
+<a class="reference external" href="https://github.com/BVLC/caffe">Caffe</a>、
+<a class="reference external" href="https://github.com/torch">Torch</a> 和
+<a class="reference external" href="https://github.com/Theano/Theano">Theano</a> 组成。
+许多开创性论文都是用这些工具写成的。 它们现在已被
+<a class="reference external" href="https://github.com/tensorflow/tensorflow">TensorFlow</a>（常通过其高级
+API <a class="reference external" href="https://github.com/keras-team/keras">Keras</a>
+使用）、<a class="reference external" href="https://github.com/Microsoft/CNTK">CNTK</a>、<a class="reference external" href="https://github.com/caffe2/caffe2">Caffe
+2</a> 和 <a class="reference external" href="https://github.com/apache/incubator-mxnet">Apache
+MXNet</a> 所取代。
+第三代框架由所谓的深度学习<em>命令式</em>工具组成， 这一趋势可以说始于
+<a class="reference external" href="https://github.com/chainer/chainer">Chainer</a>， 它使用类似
+Python NumPy 的语法来描述模型。 这一思想随后被
+<a class="reference external" href="https://github.com/pytorch/pytorch">PyTorch</a>、 MXNet 的 <a class="reference external" href="https://github.com/apache/incubator-mxnet">Gluon
+API</a> 以及
+<a class="reference external" href="https://github.com/google/jax">JAX</a> 所采纳。</p></li>
+</ul>
+<p>系统研究者构建更好的工具、
+统计建模者构建更好的神经网络，这种分工极大地简化了事情。
+例如，训练一个线性逻辑回归模型 曾经是一件不简单的课后作业， 2014
+年时足以布置给卡内基梅隆大学新入学机器学习博士生。 如今，这项任务用不到
+10 行代码就能完成， 任何程序员都能轻松胜任。</p>
+</section>
+<section id="id60">
+<h2><span class="section-number">1.6. </span>成功案例<a class="headerlink" href="#id60" title="此标题的永久链接">¶</a></h2>
+<p>人工智能有着悠久的历史，它在许多原本难以完成的任务上取得了成果。
+例如，使用光学字符识别的邮件分拣系统 自 20 世纪 90 年代起就已投入使用。
+毕竟，著名的 MNIST 手写数字数据集 正是来源于此。
+读取银行储蓄支票以及对申请人进行信用评分也是如此。
+金融交易会自动接受欺诈检查。 这构成了许多电子商务支付系统的骨干， 例如
+PayPal、Stripe、支付宝、微信支付、Apple Pay、Visa 和 MasterCard。
+几十年来，国际象棋计算机程序一直具备与人类棋手一较高下的实力。
+机器学习为互联网上的搜索、推荐、个性化和排序提供支撑。
+换句话说，机器学习无处不在，尽管它常常隐藏在幕后。</p>
+<p>直到最近，人工智能才成为人们关注的焦点，
+这主要是因为一些曾经被认为难以解决、
+且与消费者直接相关的问题得到了解决。 许多这样的进展都归功于深度学习。</p>
+<ul class="simple">
+<li><p>智能助手，例如苹果的 Siri、 亚马逊的 Alexa 和谷歌助理，
+能够以相当高的准确度响应口头请求。 这既包括打开电灯开关之类的琐事，
+也包括更复杂的任务，例如预约理发师 以及提供电话客服对话。
+这很可能是人工智能正在影响我们生活的最明显迹象。</p></li>
+<li><p>数字助手的一个关键要素 是准确识别语音的能力。
+这类系统的准确率已经逐步提高， 在某些应用中达到了与人类相当的水平
+<span id="id61">(<a class="reference internal" href="../chapter_references/zreferences.html#id323" title="Xiong, W., Wu, L., Alleva, F., Droppo, J., Huang, X., &amp; Stolcke, A. (2018). The Microsoft 2017 conversational speech recognition system. 2018 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) (pp. 5934–5938).">Xiong <em>et al.</em>, 2018</a>)</span>。</p></li>
+<li><p>物体识别同样取得了长足进步。 在 2010 年，识别图像中的物体
+还是一项相当有挑战性的任务。 在 ImageNet 基准上，来自 NEC 实验室
+和伊利诺伊大学厄巴纳-香槟分校的研究者 取得了 28% 的前五错误率
+<span id="id62">(<a class="reference internal" href="../chapter_references/zreferences.html#id172" title="Lin, Y., Lv, F., Zhu, S., Yang, M., Cour, T., Yu, K., … others. (2010). ImageNet classification: fast descriptor coding and large-scale SVM training. Large Scale Visual Recognition Challenge.">Lin <em>et al.</em>, 2010</a>)</span>。 到 2017 年，这一错误率已降至 2.25%
+<span id="id63">(<a class="reference internal" href="../chapter_references/zreferences.html#id127" title="Hu, J., Shen, L., &amp; Sun, G. (2018). Squeeze-and-excitation networks. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (pp. 7132–7141).">Hu <em>et al.</em>, 2018</a>)</span>。
+同样，在识别鸟鸣和诊断皮肤癌方面也取得了令人惊叹的成果。</p></li>
+<li><p>博弈能力曾经是衡量人类能力的标尺。 从 TD-Gammon
+开始——这是一个使用时序差分强化学习玩西洋双陆棋的程序——
+算法和计算方面的进步 催生了适用于广泛应用的算法。
+与西洋双陆棋相比，国际象棋具有 复杂得多的状态空间和动作集合。
+深蓝（DeepBlue）利用大规模并行计算、 专用硬件以及对博弈树的高效搜索
+击败了加里·卡斯帕罗夫 <span id="id64">(<a class="reference internal" href="../chapter_references/zreferences.html#id34" title="Campbell, M., Hoane Jr, A. J., &amp; Hsu, F.-h. (2002). Deep blue. Artificial Intelligence, 134(1-2), 57–83.">Campbell <em>et al.</em>, 2002</a>)</span>。
+围棋则更加困难，因为其状态空间极其庞大。 2015 年，AlphaGo
+将深度学习与蒙特卡洛树采样相结合， 达到了人类同等水平
+<span id="id65">(<a class="reference internal" href="../chapter_references/zreferences.html#id259" title="Silver, D., Huang, A., Maddison, C. J., Guez, A., Sifre, L., Van Den Driessche, G., … et al. (2016). Mastering the game of Go with deep neural networks and tree search. Nature, 529(7587), 484.">Silver <em>et al.</em>, 2016</a>)</span>。
+扑克牌的挑战在于状态空间很大， 而且只能被部分观测
+（我们不知道对手手里的牌）。 Libratus 利用高效的结构化策略，
+在扑克上超越了人类表现 <span id="id66">(<a class="reference internal" href="../chapter_references/zreferences.html#id31" title="Brown, N., &amp; Sandholm, T. (2017). Libratus: the superhuman AI for no-limit poker. IJCAI (pp. 5226–5228).">Brown and Sandholm, 2017</a>)</span>。</p></li>
+<li><p>人工智能进步的另一个标志 是自动驾驶车辆的出现。
+虽然完全自动驾驶尚未实现， 但这一方向已经取得了极好的进展，
+特斯拉、英伟达 和 Waymo 等公司已经推出了 支持部分自动驾驶的产品。
+完全自动驾驶之所以如此困难， 是因为正确的驾驶需要同时具备感知、推理
+以及把规则融入系统的能力。 目前，深度学习主要被用于
+这些问题的视觉方面。 其余部分则大量依赖工程师的调校。</p></li>
+</ul>
+<p>这只是机器学习重要应用的冰山一角。 例如，机器人学、物流、计算生物学、
+粒子物理学和天文学 近来一些最令人瞩目的进展，
+至少部分要归功于机器学习，它因此正成为
+工程师和科学家手中无处不在的工具。</p>
+<p>非技术类文章经常提出 关于人工智能末日即将到来
+以及<em>奇点</em>（singularity）是否可信的问题。
+人们担心的是，机器学习系统会不知何故产生意识并做出决策，
+脱离其程序员的控制， 从而直接影响人类的生活。
+在某种程度上，人工智能已经以直接的方式 影响着人类的生计：
+信用度被自动评估， 自动驾驶仪在多数情况下操控车辆，
+是否准予保释的决策以统计数据作为输入。 更轻松一点的例子是，我们可以让
+Alexa 打开咖啡机。</p>
+<p>幸运的是，我们离那种能有意识地操纵其人类创造者的
+有意识人工智能系统还很遥远。 首先，人工智能系统的设计、训练和部署
+都是以特定的、目标导向的方式进行的。 虽然它们的行为可能给人一种
+通用智能的错觉，但其底层设计 实际上是规则、启发式方法和统计模型的组合。
+其次，目前根本没有能够自我改进、 对自身进行推理，并能在
+尝试解决通用任务的过程中修改、 扩展和改进自身架构的<em>通用人工智能</em>
+（artificial general intelligence）工具。</p>
+<p>一个更为紧迫的关切是人工智能在我们的日常生活中正被如何使用。
+许多目前由人类完成的日常任务很可能可以而且将会被自动化。
+农业机器人可能会降低有机农场主的成本， 但它们也会使收割作业自动化。
+这一阶段的工业革命 可能对社会的大部分群体产生深远影响，
+因为在许多国家，各类卑微的工作 提供了大量就业机会。
+此外，统计模型如果不加审慎地应用， 可能导致种族、性别或年龄偏见；
+如果被自动化用于做出重大决策， 便会引发关于程序公平性的合理担忧。
+确保这些算法被审慎使用十分重要。
+就我们目前所知，这比”心怀恶意的超级智能毁灭人类” 的可能性要紧迫得多。</p>
+</section>
+<section id="id67">
+<h2><span class="section-number">1.7. </span>深度学习的本质<a class="headerlink" href="#id67" title="此标题的永久链接">¶</a></h2>
+<p>到目前为止，我们都是从广义上讨论机器学习。
+深度学习是机器学习的一个子集， 关注基于多层神经网络的模型。
+它之所以<em>深</em>，正是因为其模型 学习许多<em>层</em>变换。
+虽然这听起来可能很狭隘， 但深度学习已经催生了 令人眼花缭乱的模型、技术、
+问题表述和应用。 人们发展出许多直觉 来解释深度的好处。
+可以说，所有机器学习 都有许多层计算， 第一层由特征处理步骤组成。
+深度学习的独特之处在于， 许多表示层中的每一层所学到的操作
+都是从数据中联合学习得到的。</p>
+<p>我们迄今讨论的问题， 例如从原始音频信号中学习、
+从图像的原始像素值中学习，
+或者在任意长度的句子与其外语对应句之间建立映射， 都是深度学习擅长
+而传统方法难以胜任的问题。 事实证明，这些多层模型
+能够以以往工具无法做到的方式 处理低层感知数据。
+可以说，深度学习方法最重要的共性 是<em>端到端训练</em>（end-to-end
+training）。 也就是说，系统不是由各个分别调校的组件
+拼装而成，而是先构建整体， 再联合调校其性能。
+例如，在计算机视觉中，科学家过去 把<em>特征工程</em>（feature
+engineering）过程 与构建机器学习模型的过程分开。 Canny 边缘检测器
+<span id="id68">(<a class="reference internal" href="../chapter_references/zreferences.html#id35" title="Canny, J. (1987). A computational approach to edge detection. Readings in Computer Vision (pp. 184–203). Elsevier.">Canny, 1987</a>)</span> 和 Lowe 的 SIFT 特征提取器 <span id="id69">(<a class="reference internal" href="../chapter_references/zreferences.html#id181" title="Lowe, D. G. (2004). Distinctive image features from scale-invariant keypoints. International Journal of Computer Vision, 60(2), 91–110.">Lowe, 2004</a>)</span>
+作为将图像映射为特征向量的算法， 在十多年间占据统治地位。
+在过去，将机器学习应用于此类问题的关键部分， 是想出人工设计的方法，
+把数据变换成浅层模型可以接受的形式。
+遗憾的是，与算法在数百万种选择上自动完成的一致评估相比，
+人类依靠聪明才智所能做到的终究有限。 当深度学习接棒之后，
+这些特征提取器被自动调校的滤波器所取代， 从而获得了更高的准确率。</p>
+<p>因此，深度学习的一个关键优势在于，
+它不仅取代了传统学习流程末端的浅层模型，
+还取代了劳动密集的特征工程过程。 此外，通过取代大量领域特定的预处理，
+深度学习消除了一度分隔计算机视觉、语音识别、
+自然语言处理、医学信息学及其他应用领域的许多界线，
+从而为处理各种问题提供了一套统一的工具。</p>
+<p>除了端到端训练之外，我们正在经历
+从参数化统计描述向完全非参数化模型的转变。
+当数据稀缺时，人们需要依靠关于现实的简化假设 才能得到有用的模型。
+当数据丰富时，这些假设可以被 更好地拟合数据的非参数化模型所取代。
+在某种程度上，这与物理学在上世纪中叶
+因计算机的普及而经历的发展进程相呼应。
+人们不再手工求解电子行为的参数化近似，
+而是可以借助数值方法求解相关的偏微分方程。 这带来了准确得多的模型，
+尽管往往牺牲了可解释性。</p>
+<p>与以往工作相比的另一个不同之处在于，接受次优解、
+处理非凸非线性优化问题， 以及愿意在证明之前先进行尝试。
+这种在统计问题上新获得的经验主义， 再加上人才的大量涌入，
+推动了实用算法的快速发展， 尽管在许多情况下代价是要修改
+和重新发明已经存在了几十年的工具。</p>
+<p>最后，深度学习社区以跨越学术与产业边界 共享工具为荣，
+将许多优秀的库、统计模型 和训练好的网络作为开源软件发布。
+正是本着这种精神，构成本书的笔记本 可以自由分发和使用。
+我们一直在努力降低门槛， 让任何希望学习深度学习的人都能入门，
+希望读者能从中受益。</p>
+</section>
+<section id="id70">
+<h2><span class="section-number">1.8. </span>小结<a class="headerlink" href="#id70" title="此标题的永久链接">¶</a></h2>
+<p>机器学习研究计算机系统如何 利用经验（通常是数据）
+来提升特定任务上的表现。 它融合了统计学、数据挖掘和优化的思想。
+它常常被用作实现人工智能解决方案的手段。 作为机器学习的一类，表示学习
+关注如何自动找到 表示数据的恰当方式。 深度学习被视为通过学习许多层变换
+而实现的多级表示学习， 它不仅取代了传统机器学习流程末端的
+浅层模型，还取代了劳动密集的特征工程过程。 深度学习近来的许多进展，
+是由廉价传感器和互联网规模应用带来的 数据极大丰富， 以及计算（主要通过
+GPU）的显著进步所推动的。 此外，高效的深度学习框架的普及，
+使整个系统优化的设计与实现变得容易得多， 而这是获得高性能的关键因素。</p>
+</section>
+<section id="id71">
+<h2><span class="section-number">1.9. </span>练习<a class="headerlink" href="#id71" title="此标题的永久链接">¶</a></h2>
+<ol class="arabic simple">
+<li><p>你当前正在编写的哪些代码部分可以”学习”， 即通过学习自动确定代码中
+所做的设计选择来改进它们？ 你的代码中是否包含启发式的设计选择？
+要学习到期望的行为，可能需要哪些数据？</p></li>
+<li><p>你遇到的问题中，哪些有许多解决方案的示例， 却没有特定的自动化方法？
+这些可能是使用深度学习的首选候选问题。</p></li>
+<li><p>描述算法、数据和计算三者之间的关系。数据和当前可用计算资源的特征如何影响各种算法的适用性？</p></li>
+<li><p>举出一些目前端到端训练还不是默认做法、但可能会有用的场景。</p></li>
+</ol>
+<p><a class="reference external" href="https://discuss.d2l.ai/t/22">讨论</a></p>
+</section>
+</section>
+
+
+<!-- d2l-zh-footer -->
+<footer class="d2l-site-footer">
+  <p><strong>《动手学深度学习》简体中文全译本</strong> · 译自
+     <a href="https://d2l.ai/">Dive into Deep Learning</a> 1.0.3
+     （d2l-en@23d7a5a）</p>
+  <p>原文与插图 © 2023 D2L 作者，依
+     <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+     许可发布；本译本以相同许可共享。</p>
+  <p><a href="https://github.com/fau-linrui/dive-into-deep-learning-zh">译本仓库</a>
+     <span class="sep">·</span><a href="../index.html">返回目录</a>
+     <span class="sep">·</span>发现翻译问题？欢迎提交 Issue</p>
+</footer>
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">1. 引言</a><ul>
+<li><a class="reference internal" href="#id2">1.1. 一个激励人心的例子</a></li>
+<li><a class="reference internal" href="#id3">1.2. 关键组件</a><ul>
+<li><a class="reference internal" href="#id4">1.2.1. 数据</a></li>
+<li><a class="reference internal" href="#id5">1.2.2. 模型</a></li>
+<li><a class="reference internal" href="#id6">1.2.3. 目标函数</a></li>
+<li><a class="reference internal" href="#id7">1.2.4. 优化算法</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">1.3. 各种机器学习问题</a><ul>
+<li><a class="reference internal" href="#id9">1.3.1. 监督学习</a><ul>
+<li><a class="reference internal" href="#id10">1.3.1.1. 回归</a></li>
+<li><a class="reference internal" href="#id11">1.3.1.2. 分类</a></li>
+<li><a class="reference internal" href="#id12">1.3.1.3. 标注</a></li>
+<li><a class="reference internal" href="#id13">1.3.1.4. 搜索</a></li>
+<li><a class="reference internal" href="#id14">1.3.1.5. 推荐系统</a></li>
+<li><a class="reference internal" href="#id15">1.3.1.6. 序列学习</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id16">1.3.2. 无监督学习与自监督学习</a></li>
+<li><a class="reference internal" href="#id23">1.3.3. 与环境交互</a></li>
+<li><a class="reference internal" href="#id24">1.3.4. 强化学习</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id27">1.4. 起源</a></li>
+<li><a class="reference internal" href="#id30">1.5. 迈向深度学习之路</a></li>
+<li><a class="reference internal" href="#id60">1.6. 成功案例</a></li>
+<li><a class="reference internal" href="#id67">1.7. 深度学习的本质</a></li>
+<li><a class="reference internal" href="#id70">1.8. 小结</a></li>
+<li><a class="reference internal" href="#id71">1.9. 练习</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="../chapter_notation/index.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>符号</div>
+         </div>
+     </a>
+     <a id="button-next" href="../chapter_preliminaries/index.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>2. 预备知识</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

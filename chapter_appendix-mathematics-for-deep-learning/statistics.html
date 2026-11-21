@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+<!-- d2l-site-styles -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>22.10. 统计学 &#8212; 动手学深度学习</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="22.11. 信息论" href="information-theory.html" />
+    <link rel="prev" title="22.9. 朴素贝叶斯" href="naive-bayes.html" /> 
+  <link rel="stylesheet" href="../_static/site.css" type="text/css" />
+<script src="../_static/site.js" defer></script>
+<!-- d2l-site-script -->
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">22. </span>附录：深度学习数学</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">22.10. </span>统计学</a>
+        <span class="d2l-zh-badge">简体中文全译本</span></nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      快速搜索
+      </div>
+</form>
+        
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://d2l.ai">
+                  <i class="fas fa-book"></i>
+                  英文原书
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://github.com/fau-linrui/dive-into-deep-learning-zh">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://discuss.d2l.ai">
+                  <i class="fas fa-comments"></i>
+                  讨论社区
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">22. 附录：深度学习数学</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">22. 附录：深度学习数学</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <section id="sec-statistics">
+<span id="id1"></span><h1><span class="section-number">22.10. </span>统计学<a class="headerlink" href="#sec-statistics" title="此标题的永久链接">¶</a></h1>
+<p>毫无疑问，要成为一名顶尖的深度学习从业者，训练出最先进且高准确率的模型的能力至关重要。然而，我们往往不清楚某项改进到何时才是显著的，或者它只是训练过程中随机波动的结果。为了能够讨论估计值中的不确定性，我们必须学习一些统计学知识。</p>
+<p><em>统计学</em>（statistics）最早的文献记载可以追溯到<span class="math notranslate nohighlight">\(9^{\textrm{th}}\)</span>世纪的阿拉伯学者
+Al-Kindi，他详细描述了如何使用统计和频率分析来破译加密信息。800
+年之后，现代统计学于 1700
+年代兴起于德国，当时研究者的关注点是对人口与经济数据的收集与分析。如今，统计学是一门关于数据的收集、处理、分析、解释与可视化的科学。此外，统计学的核心理论已被广泛应用于学术界、工业界和政府的研究之中。</p>
+<p>更具体地说，统计学可以分为<em>描述性统计</em>（descriptive
+statistics）和<em>统计推断</em>（statistical
+inference）。前者侧重于概括并展示一组观测数据的特征，这组数据称为<em>样本</em>（sample）。样本取自<em>总体</em>（population），总体表示我们实验所关注的相似个体、物品或事件的全集。与描述性统计不同，<em>统计推断</em>在“样本分布能在某种程度上复现总体分布”这一假设的基础上，进一步从给定的<em>样本</em>推断总体的特征。</p>
+<p>你可能会问：“机器学习与统计学的本质区别是什么？”从根本上说，统计学关注推断问题。这类问题包括对变量之间关系建模（如因果推断），以及检验模型参数在统计上是否显著（如
+A/B
+测试）。相比之下，机器学习强调作出准确的预测，而不需要显式地编程并理解每个参数的功能。</p>
+<p>本节中，我们将介绍三种统计推断方法：评估与比较估计量、进行假设检验，以及构造置信区间。这些方法可以帮助我们推断给定总体的特征，即真实参数<span class="math notranslate nohighlight">\(\theta\)</span>。为简洁起见，我们假设给定总体的真实参数<span class="math notranslate nohighlight">\(\theta\)</span>是一个标量值。把它推广到<span class="math notranslate nohighlight">\(\theta\)</span>为向量或张量的情形是直接的，因此我们在讨论中不再赘述。</p>
+<section id="id2">
+<h2><span class="section-number">22.10.1. </span>评估与比较估计量<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>在统计学中，<em>估计量</em>（estimator）是用于估计真实参数<span class="math notranslate nohighlight">\(\theta\)</span>的给定样本的函数。我们将<span class="math notranslate nohighlight">\(\hat{\theta}_n = \hat{f}(x_1, \ldots, x_n)\)</span>记作在观测到样本{<span class="math notranslate nohighlight">\(x_1, x_2, \ldots, x_n\)</span>}之后对<span class="math notranslate nohighlight">\(\theta\)</span>的估计。</p>
+<p>我们在 <a class="reference internal" href="maximum-likelihood.html#sec-maximum-likelihood"><span class="std std-numref">22.7节</span></a>
+一节中已经见过估计量的简单例子。如果你有若干来自伯努利随机变量的样本，那么该随机变量取值为一的概率的最大似然估计，可以通过统计观测到的
+1
+的个数并除以样本总数得到。类似地，有一道练习题要求你证明：在给定若干样本的情况下，高斯分布均值的最大似然估计由所有样本的平均值给出。这些估计量几乎永远不会给出参数的真实值，但理想情况下，当样本数量很大时，估计值会接近真实值。</p>
+<p>作为一个例子，下面我们展示了均值为零、方差为一的高斯随机变量的真实密度，以及从该高斯分布抽到的若干样本。我们构造了<span class="math notranslate nohighlight">\(y\)</span>坐标，使每个点都可见，并使它与原始密度的关系更清晰。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-1-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-1-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-1-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-1-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">torch</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">pi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1">#define pi in torch</span>
+
+<span class="c1"># Sample datapoints and create y coordinate</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">8675309</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,))</span>
+
+<span class="n">ys</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>\
+               <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>\
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))])</span>
+
+<span class="c1"># Compute true density</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">yd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">xd</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'density'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'sample mean: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-1-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mxnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">np</span><span class="p">,</span> <span class="n">npx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">mxnet</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">npx</span><span class="o">.</span><span class="n">set_np</span><span class="p">()</span>
+
+<span class="c1"># Sample datapoints and create y coordinate</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">8675309</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,))</span>
+
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+             <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))]</span>
+
+<span class="c1"># Compute true density</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">yd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">xd</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'density'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'sample mean: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-1-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">tensorflow</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">pi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># define pi in TensorFlow</span>
+
+<span class="c1"># Sample datapoints and create y coordinate</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="mi">300</span><span class="p">,))</span>
+
+<span class="n">ys</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+    <span class="p">[(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> \
+               <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">epsilon</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> \
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">xs</span><span class="p">))])</span>
+
+<span class="c1"># Compute true density</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_min</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">yd</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">xd</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'density'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'sample mean: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div><p>计算参数估计量<span class="math notranslate nohighlight">\(\hat{\theta}_n\)</span>的方法可以有很多。本节中，我们介绍三种评估与比较估计量的常用方法：均方误差、标准差和统计偏差。</p>
+<section id="id3">
+<h3><span class="section-number">22.10.1.1. </span>均方误差<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h3>
+<p>评估估计量时也许最简单的指标是<em>均方误差</em>（mean squared
+error，MSE）（或<span class="math notranslate nohighlight">\(l_2\)</span>损失），它可以定义为</p>
+<div class="math notranslate nohighlight" id="equation-eq-mse-est">
+<span class="eqno">(22.10.1)<a class="headerlink" href="#equation-eq-mse-est" title="此公式的永久链接">¶</a></span>\[\textrm{MSE} (\hat{\theta}_n, \theta) = E[(\hat{\theta}_n - \theta)^2].\]</div>
+<p>这使我们能够量化偏离真实值的平均平方偏差。MSE 总是非负的。如果你读过
+<a class="reference internal" href="../chapter_linear-regression/linear-regression.html#sec-linear-regression"><span class="std std-numref">3.1节</span></a>，就会认出它是最常用的回归损失函数。作为评估估计量的度量，其值越接近零，估计量就越接近真实参数<span class="math notranslate nohighlight">\(\theta\)</span>。</p>
+</section>
+<section id="id4">
+<h3><span class="section-number">22.10.1.2. </span>统计偏差<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<p>MSE
+提供了一个自然的度量，但我们很容易想象出多种可能使它变大的不同现象。其中两个具有根本重要性的现象是：由数据集中的随机性引起的估计量波动，以及由估计过程引起的估计量的系统性误差。</p>
+<p>首先，让我们度量系统性误差。对估计量<span class="math notranslate nohighlight">\(\hat{\theta}_n\)</span>，<em>统计偏差</em>（statistical
+bias）的数学刻画可以定义为</p>
+<div class="math notranslate nohighlight" id="equation-eq-bias">
+<span class="eqno">(22.10.2)<a class="headerlink" href="#equation-eq-bias" title="此公式的永久链接">¶</a></span>\[\textrm{bias}(\hat{\theta}_n) = E(\hat{\theta}_n - \theta) = E(\hat{\theta}_n) - \theta.\]</div>
+<p>注意，当<span class="math notranslate nohighlight">\(\textrm{bias}(\hat{\theta}_n) = 0\)</span>时，估计量<span class="math notranslate nohighlight">\(\hat{\theta}_n\)</span>的期望等于参数的真实值。这时我们说<span class="math notranslate nohighlight">\(\hat{\theta}_n\)</span>是无偏估计量。一般来说，无偏估计量优于有偏估计量，因为它的期望与真实参数相同。</p>
+<p>然而，值得意识到的是，有偏估计量在实践中经常被使用。在某些情形下，若无进一步假设，无偏估计量并不存在，或者难以计算。这看起来像是估计量的一个重大缺陷，但实践中遇到的大多数估计量至少是渐近无偏的，即在可用样本数趋于无穷时偏差趋于零：<span class="math notranslate nohighlight">\(\lim_{n \rightarrow \infty} \textrm{bias}(\hat{\theta}_n) = 0\)</span>。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">22.10.1.3. </span>方差与标准差<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<p>其次，让我们度量估计量中的随机性。回想 <a class="reference internal" href="random-variables.html#sec-random-variables"><span class="std std-numref">22.6节</span></a>
+中的内容，<em>标准差</em>（standard deviation）（或<em>标准误</em>（standard
+error））定义为方差的平方根。我们可以通过度量估计量的标准差或方差来度量该估计量的波动程度。</p>
+<div class="math notranslate nohighlight" id="equation-eq-var-est">
+<span class="eqno">(22.10.3)<a class="headerlink" href="#equation-eq-var-est" title="此公式的永久链接">¶</a></span>\[\sigma_{\hat{\theta}_n} = \sqrt{\textrm{Var} (\hat{\theta}_n )} = \sqrt{E[(\hat{\theta}_n - E(\hat{\theta}_n))^2]}.\]</div>
+<p>把 <a class="reference internal" href="#equation-eq-var-est">(22.10.3)</a> 与 <a class="reference internal" href="#equation-eq-mse-est">(22.10.1)</a>
+相比较是很重要的。在这个公式中，我们不是与总体真实值<span class="math notranslate nohighlight">\(\theta\)</span>比较，而是与<span class="math notranslate nohighlight">\(E(\hat{\theta}_n)\)</span>即样本均值的期望比较。因此，我们测量的不是估计量倾向于偏离真实值多远，而是估计量自身的波动。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">22.10.1.4. </span>偏差-方差权衡<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<p>从直觉上说，这两个主要成分都会影响均方误差，这一点很清楚。而有些令人震惊的是，我们可以证明均方误差实际上可以<em>分解</em>为这两项贡献再加上第三项。也就是说，我们可以把均方误差写成偏差的平方、方差与不可约误差之和。</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-0">
+<span class="eqno">(22.10.4)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-0" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+\textrm{MSE} (\hat{\theta}_n, \theta) &amp;= E[(\hat{\theta}_n - \theta)^2] \\
+ &amp;= E[(\hat{\theta}_n)^2] + E[\theta^2] - 2E[\hat{\theta}_n\theta] \\
+ &amp;= \textrm{Var} [\hat{\theta}_n] + E[\hat{\theta}_n]^2 + \textrm{Var} [\theta] + E[\theta]^2 - 2E[\hat{\theta}_n]E[\theta] \\
+ &amp;= (E[\hat{\theta}_n] - E[\theta])^2 + \textrm{Var} [\hat{\theta}_n] + \textrm{Var} [\theta] \\
+ &amp;= (E[\hat{\theta}_n - \theta])^2 + \textrm{Var} [\hat{\theta}_n] + \textrm{Var} [\theta] \\
+ &amp;= (\textrm{bias} [\hat{\theta}_n])^2 + \textrm{Var} (\hat{\theta}_n) + \textrm{Var} [\theta].\\
+\end{aligned}\end{split}\]</div>
+<p>我们把上述公式称为<em>偏差-方差权衡</em>（bias-variance
+trade-off）。均方误差可以分为三个误差来源：高偏差带来的误差、高方差带来的误差以及不可约误差。偏差误差常见于简单模型（如线性回归模型），这类模型无法提取特征与输出之间的高维关系。如果一个模型存在高偏差误差，我们常说它<em>欠拟合</em>（underfitting）或缺乏<em>灵活性</em>（flexibility），如
+(<a class="reference internal" href="../chapter_linear-regression/generalization.html#sec-generalization-basics"><span class="std std-numref">3.6节</span></a>)
+中所介绍的那样。高方差通常源于过于复杂的模型，这种模型会过拟合训练数据。因此，<em>过拟合</em>（overfitting）模型对数据中的微小波动很敏感。如果一个模型存在高方差，我们常说它<em>过拟合</em>且缺乏<em>泛化</em>（generalization），如
+(<a class="reference internal" href="../chapter_linear-regression/generalization.html#sec-generalization-basics"><span class="std std-numref">3.6节</span></a>)
+中所介绍的那样。不可约误差来自<span class="math notranslate nohighlight">\(\theta\)</span>本身的噪声。</p>
+</section>
+<section id="id7">
+<h3><span class="section-number">22.10.1.5. </span>在代码中评估估计量<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<p>由于估计量的标准差已经可以通过对张量<code class="docutils literal notranslate"><span class="pre">a</span></code>简单地调用<code class="docutils literal notranslate"><span class="pre">a.std()</span></code>来实现，我们将跳过它，而实现统计偏差和均方误差。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-3-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-3-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-3-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-3-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Statistical bias</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stat_bias</span><span class="p">(</span><span class="n">true_theta</span><span class="p">,</span> <span class="n">est_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">est_theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)</span>
+
+<span class="c1"># Mean squared error</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">true_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-3-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Statistical bias</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stat_bias</span><span class="p">(</span><span class="n">true_theta</span><span class="p">,</span> <span class="n">est_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">est_theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)</span>
+
+<span class="c1"># Mean squared error</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">true_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-3-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Statistical bias</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stat_bias</span><span class="p">(</span><span class="n">true_theta</span><span class="p">,</span> <span class="n">est_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">est_theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)</span>
+
+<span class="c1"># Mean squared error</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">true_theta</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">true_theta</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div></div><p>为了说明偏差-方差权衡的公式，让我们用<span class="math notranslate nohighlight">\(10,000\)</span>个样本模拟正态分布<span class="math notranslate nohighlight">\(\mathcal{N}(\theta, \sigma^2)\)</span>。这里我们取<span class="math notranslate nohighlight">\(\theta = 1\)</span>、<span class="math notranslate nohighlight">\(\sigma = 4\)</span>。由于估计量是给定样本的函数，这里我们使用样本均值作为该正态分布<span class="math notranslate nohighlight">\(\mathcal{N}(\theta, \sigma^2)\)</span>中真实<span class="math notranslate nohighlight">\(\theta\)</span>的估计量。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-5-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-5-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-5-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-5-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">theta_true</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sample_len</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">theta_true</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">sample_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">theta_est</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">theta_est</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-5-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">theta_true</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sample_len</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">theta_true</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">sample_len</span><span class="p">)</span>
+<span class="n">theta_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">theta_est</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-5-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">theta_true</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sample_len</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="n">sample_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">theta_true</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+<span class="n">theta_est</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">theta_est</span>
+</pre></div>
+</div>
+</div></div><p>让我们通过计算偏差平方与估计量方差之和来验证这一权衡公式。首先，计算我们估计量的
+MSE。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-7-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-7-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-7-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-7-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mse</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">theta_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-7-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mse</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">theta_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-7-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mse</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">theta_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>接下来，我们如下计算<span class="math notranslate nohighlight">\(\textrm{Var} (\hat{\theta}_n) + [\textrm{bias} (\hat{\theta}_n)]^2\)</span>。如你所见，这两个数值在数值精度范围内一致。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-9-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-9-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-9-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-9-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bias</span> <span class="o">=</span> <span class="n">stat_bias</span><span class="p">(</span><span class="n">theta_true</span><span class="p">,</span> <span class="n">theta_est</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">unbiased</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-9-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bias</span> <span class="o">=</span> <span class="n">stat_bias</span><span class="p">(</span><span class="n">theta_true</span><span class="p">,</span> <span class="n">theta_est</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-9-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bias</span> <span class="o">=</span> <span class="n">stat_bias</span><span class="p">(</span><span class="n">theta_true</span><span class="p">,</span> <span class="n">theta_est</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_std</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div></section>
+</section>
+<section id="id8">
+<h2><span class="section-number">22.10.2. </span>进行假设检验<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h2>
+<p>统计推断中最常见的主题是假设检验。虽然假设检验在<span class="math notranslate nohighlight">\(20^{th}\)</span>世纪初才流行起来，但它的首次使用可以追溯到
+1700 年代的 John Arbuthnot。John 追踪了伦敦 80
+年的出生记录，并得出结论：每年出生的男性都多于女性。此后，现代显著性检验是
+Karl Pearson、William Gosset 和 Ronald Fisher 留下的智慧遗产：Karl
+Pearson 发明了<span class="math notranslate nohighlight">\(p\)</span>值和 Pearson 卡方检验，William Gosset 是
+Student t 分布之父，而 Ronald Fisher 开创了原假设与显著性检验。</p>
+<p><em>假设检验</em>（hypothesis
+test）是一种评估某些证据、以反对关于总体的默认陈述的方式。我们把默认陈述称为<em>原假设</em>（null
+hypothesis）<span class="math notranslate nohighlight">\(H_0\)</span>，并试图利用观测数据拒绝它。这里，我们把<span class="math notranslate nohighlight">\(H_0\)</span>作为统计显著性检验的起点。<em>备择假设</em>（alternative
+hypothesis）<span class="math notranslate nohighlight">\(H_A\)</span>（或<span class="math notranslate nohighlight">\(H_1\)</span>）是与原假设相反的陈述。原假设通常以陈述句的形式给出，设定变量之间的关系。它应当尽可能明确地反映问题要点，并且能够用统计学理论来检验。</p>
+<p>设想你是一名化学家。在实验室中花费数千小时后，你研制出一种新药，它能大幅提升一个人的数学理解能力。为了展示它的神奇效力，你需要对它进行检验。很自然，你可能需要一些志愿者服用这种药，看看它是否能帮助他们更好地学习数学。你该如何开始呢？</p>
+<p>首先，你需要仔细随机选取两组志愿者，使他们在由某些指标衡量的数学理解能力上没有差异。这两组通常称为试验组和对照组。<em>试验组</em>（test
+group）（或<em>处理组</em>（treatment
+group））是一组将接受这种药物的人，而<em>对照组</em>（control
+group）代表被留作基准的一组用户，即除服用该药物之外环境设置完全相同。这样，除处理中自变量的影响之外，所有变量的影响都被最小化了。</p>
+<p>其次，在服用一段时间药物后，你需要用相同的指标衡量两组的数学理解能力，例如让志愿者在学习一个新数学公式后做同样的测试。然后，你可以收集他们的表现并比较结果。在这种情况下，我们的原假设将是两组之间没有差异，而备择假设是存在差异。</p>
+<p>这仍然不够形式化。还有许多细节你必须仔细考虑。例如，检验他们数学理解能力的合适指标是什么？你的测试需要多少志愿者，你才能有信心宣称药物的有效性？测试应该进行多久？你如何判断两组之间是否存在差异？你只关心平均表现，还是也关心分数的波动范围？如此等等。</p>
+<p>这样，假设检验为实验设计以及对观测结果中确定性的推理提供了一个框架。如果我们现在能够证明原假设极不可能为真，那么我们就可以有把握地拒绝它。</p>
+<p>为了完整讲述如何运用假设检验，我们现在需要引入一些额外的术语，并把上面的一些概念形式化。</p>
+<section id="id9">
+<h3><span class="section-number">22.10.2.1. </span>统计显著性<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p><em>统计显著性</em>（statistical
+significance）度量的是在本不应拒绝时错误地拒绝原假设<span class="math notranslate nohighlight">\(H_0\)</span>的概率，即</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-1">
+<span class="eqno">(22.10.5)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-1" title="此公式的永久链接">¶</a></span>\[\textrm{statistical significance }= 1 - \alpha = 1 - P(\textrm{reject } H_0 \mid H_0 \textrm{ is true} ).\]</div>
+<p>它也称为<em>第一类错误</em>（type I error）或<em>假阳性</em>（false
+positive）。<span class="math notranslate nohighlight">\(\alpha\)</span>称为<em>显著性水平</em>（significance
+level），其常用值为<span class="math notranslate nohighlight">\(5\%\)</span>，即<span class="math notranslate nohighlight">\(1-\alpha = 95\%\)</span>。显著性水平可以解释为：当我们拒绝一个为真的原假设时，我们愿意承担的风险水平。</p>
+<p><a class="reference internal" href="#fig-statistical-significance"><span class="std std-numref">图22.10.1</span></a>
+展示了两样本假设检验中观测值以及给定正态分布的概率。如果观测数据样例位于<span class="math notranslate nohighlight">\(95\%\)</span>阈值之外，那么在原假设下它将是一个极不可能的观测。因此，原假设可能有问题，我们将拒绝它。</p>
+<figure class="align-default" id="id22">
+<span id="fig-statistical-significance"></span><img alt="../_images/statistical-significance.svg" src="../_images/statistical-significance.svg" /><figcaption>
+<p><span class="caption-number">图22.10.1 </span><span class="caption-text">统计显著性。</span><a class="headerlink" href="#id22" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="id10">
+<h3><span class="section-number">22.10.2.2. </span>统计功效<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<p><em>统计功效</em>（statistical
+power）（或<em>灵敏度</em>（sensitivity））度量的是在本应拒绝时拒绝原假设<span class="math notranslate nohighlight">\(H_0\)</span>的概率，即</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-2">
+<span class="eqno">(22.10.6)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-2" title="此公式的永久链接">¶</a></span>\[\textrm{statistical power }= 1 - \beta = 1 - P(\textrm{ fail to reject } H_0  \mid H_0 \textrm{ is false} ).\]</div>
+<p>回想一下，<em>第一类错误</em>是在原假设为真时拒绝它而造成的错误，而<em>第二类错误</em>（type
+II
+error）是在原假设为假时未能拒绝它而导致的错误。第二类错误通常记作<span class="math notranslate nohighlight">\(\beta\)</span>，因此相应的统计功效为<span class="math notranslate nohighlight">\(1-\beta\)</span>。</p>
+<p>从直觉上，统计功效可以解释为：在期望的统计显著性水平下，我们的检验有多大可能检测出某个最小幅度上的真实差异。<span class="math notranslate nohighlight">\(80\%\)</span>是常用的统计功效阈值。统计功效越高，我们就越有可能检测出真实差异。</p>
+<p>统计功效最常见的用途之一是确定所需样本数。原假设为假时你拒绝它的概率，取决于它为假的程度（称为<em>效应量</em>（effect
+size））以及你拥有的样本数。正如你可能预料的，小的效应量将需要非常大的样本量才能以高概率被检测到。在此简要附录中详细推导超出了范围，但举个例子：如果我们想拒绝“样本来自均值为零、方差为一的高斯分布”这一原假设，并且相信样本均值实际上接近于一，那么我们只需<span class="math notranslate nohighlight">\(8\)</span>个样本就能以可接受的错误率做到这一点。然而，如果我们认为样本总体的真实均值接近<span class="math notranslate nohighlight">\(0.01\)</span>，那么就需要将近<span class="math notranslate nohighlight">\(80000\)</span>的样本量才能检测出这一差异。</p>
+<p>我们可以把功效想象成一个水过滤器。在这个类比中，高功效的假设检验就像高质量的水过滤系统，它会尽可能减少水中的有害物质。另一方面，较小的差异就像低质量的水过滤器，一些相对较小的物质很容易从缝隙中漏过。类似地，如果统计功效不够高，那么检验可能捕捉不到较小的差异。</p>
+</section>
+<section id="id11">
+<h3><span class="section-number">22.10.2.3. </span>检验统计量<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<p><em>检验统计量</em>（test
+statistic）<span class="math notranslate nohighlight">\(T(x)\)</span>是一个标量，它概括样本数据的某些特征。定义这种统计量的目标是：它应当使我们能够区分不同的分布，并进行假设检验。回想我们的化学家例子，如果我们想表明一个总体的表现优于另一个总体，那么取均值作为检验统计量可能是合理的。检验统计量的不同选择可能带来统计功效差异极大的统计检验。</p>
+<p>通常，<span class="math notranslate nohighlight">\(T(X)\)</span>（即原假设下检验统计量的分布）在原假设下考虑时，至少近似服从一个常见的概率分布，例如正态分布。如果我们能够显式地推导出这样的分布，然后在数据集上度量我们的检验统计量，那么当统计量远远落在我们预期的范围之外时，我们就可以有把握地拒绝原假设。把这一点定量化，就引出了<span class="math notranslate nohighlight">\(p\)</span>值的概念。</p>
+</section>
+<section id="p">
+<h3><span class="section-number">22.10.2.4. </span><span class="math notranslate nohighlight">\(p\)</span>值<a class="headerlink" href="#p" title="此标题的永久链接">¶</a></h3>
+<p><span class="math notranslate nohighlight">\(p\)</span>值（或<em>概率值</em>（probability
+value））是：假定原假设为<em>真</em>，<span class="math notranslate nohighlight">\(T(X)\)</span>至少与观测到的检验统计量<span class="math notranslate nohighlight">\(T(x)\)</span>一样极端的概率，即</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-3">
+<span class="eqno">(22.10.7)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-3" title="此公式的永久链接">¶</a></span>\[p\textrm{-value} = P_{H_0}(T(X) \geq T(x)).\]</div>
+<p>如果<span class="math notranslate nohighlight">\(p\)</span>值小于或等于预先设定并固定的统计显著性水平<span class="math notranslate nohighlight">\(\alpha\)</span>，我们就可以拒绝原假设。否则，我们将得出结论：我们缺乏拒绝原假设的证据。对给定的总体分布，<em>拒绝域</em>（region
+of
+rejection）将是包含所有<span class="math notranslate nohighlight">\(p\)</span>值小于统计显著性水平<span class="math notranslate nohighlight">\(\alpha\)</span>的点的区间。</p>
+</section>
+<section id="id12">
+<h3><span class="section-number">22.10.2.5. </span>单侧检验与双侧检验<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h3>
+<p>通常有两类显著性检验：单侧检验和双侧检验。当原假设与备择假设只有一个方向时，适用<em>单侧检验</em>（one-sided
+test）（或<em>单尾检验</em>（one-tailed
+test））。例如，原假设可能陈述真实参数<span class="math notranslate nohighlight">\(\theta\)</span>小于或等于某个值<span class="math notranslate nohighlight">\(c\)</span>。备择假设则是<span class="math notranslate nohighlight">\(\theta\)</span>大于<span class="math notranslate nohighlight">\(c\)</span>。也就是说，拒绝域只在抽样分布的一侧。与单侧检验相反，当拒绝域位于抽样分布两侧时，适用<em>双侧检验</em>（two-sided
+test）（或<em>双尾检验</em>（two-tailed
+test））。这种情况的一个例子可以是：原假设陈述真实参数<span class="math notranslate nohighlight">\(\theta\)</span>等于某个值<span class="math notranslate nohighlight">\(c\)</span>。备择假设则是<span class="math notranslate nohighlight">\(\theta\)</span>不等于<span class="math notranslate nohighlight">\(c\)</span>。</p>
+</section>
+<section id="id13">
+<h3><span class="section-number">22.10.2.6. </span>假设检验的一般步骤<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<p>熟悉上述概念之后，让我们过一遍假设检验的一般步骤。</p>
+<ol class="arabic simple">
+<li><p>陈述问题并建立原假设<span class="math notranslate nohighlight">\(H_0\)</span>。</p></li>
+<li><p>设定统计显著性水平<span class="math notranslate nohighlight">\(\alpha\)</span>和统计功效（<span class="math notranslate nohighlight">\(1 - \beta\)</span>）。</p></li>
+<li><p>通过实验获取样本。所需样本数将取决于统计功效和预期的效应量。</p></li>
+<li><p>计算检验统计量和<span class="math notranslate nohighlight">\(p\)</span>值。</p></li>
+<li><p>根据<span class="math notranslate nohighlight">\(p\)</span>值和统计显著性水平<span class="math notranslate nohighlight">\(\alpha\)</span>，决定保留还是拒绝原假设。</p></li>
+</ol>
+<p>要进行假设检验，我们首先定义原假设以及我们愿意承担的风险水平。然后我们计算样本的检验统计量，把检验统计量的极端值作为反对原假设的证据。如果检验统计量落入拒绝域，我们就可以拒绝原假设，接受备择假设。</p>
+<p>假设检验适用于多种场景，例如临床试验和 A/B 测试。</p>
+</section>
+</section>
+<section id="id14">
+<h2><span class="section-number">22.10.3. </span>构造置信区间<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h2>
+<p>在估计参数<span class="math notranslate nohighlight">\(\theta\)</span>的值时，像<span class="math notranslate nohighlight">\(\hat \theta\)</span>这样的点估计量用处有限，因为它们不包含任何不确定性的概念。相反，如果我们能给出一个以高概率包含真实参数<span class="math notranslate nohighlight">\(\theta\)</span>的区间，那就好得多。如果你在一个世纪前对这些想法感兴趣，那么阅读
+Jerzy Neyman <span id="id15">(<a class="reference internal" href="../chapter_references/zreferences.html#id206" title="Neyman, J. (1937). Outline of a theory of statistical estimation based on the classical theory of probability. Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences, 236(767), 333–380.">Neyman, 1937</a>)</span> 的《Outline of a Theory of
+Statistical Estimation Based on the Classical Theory of
+Probability》会令你兴奋，他于 1937 年首次引入了置信区间的概念。</p>
+<p>要具有实用性，对给定的确定程度而言，置信区间应当尽可能小。让我们看看如何推导它。</p>
+<section id="id16">
+<h3><span class="section-number">22.10.3.1. </span>定义<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h3>
+<p>在数学上，真实参数<span class="math notranslate nohighlight">\(\theta\)</span>的<em>置信区间</em>（confidence
+interval）是由样本数据计算出的一个区间<span class="math notranslate nohighlight">\(C_n\)</span>，使得</p>
+<div class="math notranslate nohighlight" id="equation-eq-confidence">
+<span class="eqno">(22.10.8)<a class="headerlink" href="#equation-eq-confidence" title="此公式的永久链接">¶</a></span>\[P_{\theta} (C_n \ni \theta) \geq 1 - \alpha, \forall \theta.\]</div>
+<p>这里<span class="math notranslate nohighlight">\(\alpha \in (0, 1)\)</span>，而<span class="math notranslate nohighlight">\(1 - \alpha\)</span>称为该区间的<em>置信水平</em>（confidence
+level）或<em>覆盖率</em>（coverage）。这个<span class="math notranslate nohighlight">\(\alpha\)</span>与我们上文讨论的显著性水平是同一个量。</p>
+<p>注意 <a class="reference internal" href="#equation-eq-confidence">(22.10.8)</a>
+讨论的是变量<span class="math notranslate nohighlight">\(C_n\)</span>，而不是固定的<span class="math notranslate nohighlight">\(\theta\)</span>。为强调这一点，我们写作<span class="math notranslate nohighlight">\(P_{\theta} (C_n \ni \theta)\)</span>，而不是<span class="math notranslate nohighlight">\(P_{\theta} (\theta \in C_n)\)</span>。</p>
+</section>
+<section id="id17">
+<h3><span class="section-number">22.10.3.2. </span>解释<a class="headerlink" href="#id17" title="此标题的永久链接">¶</a></h3>
+<p>人们很容易把<span class="math notranslate nohighlight">\(95\%\)</span>置信区间解释为“你可以有<span class="math notranslate nohighlight">\(95\%\)</span>把握认为真实参数落在其中”的区间，然而遗憾的是，这并不正确。真实参数是固定的，随机的是区间。因此，更好的解释是：如果你按照这一程序生成大量置信区间，那么其中<span class="math notranslate nohighlight">\(95\%\)</span>的区间会包含真实参数。</p>
+<p>这听起来可能过于拘泥细节，但它对结果的解释可能有实际影响。特别是，我们可能通过构造一些我们<em>几乎确定</em>不包含真实值的区间来满足
+<a class="reference internal" href="#equation-eq-confidence">(22.10.8)</a>，只要这种情况发生得足够少即可。作为本节的结尾，我们给出三个诱人但错误的说法。关于这些观点的深入讨论可参见
+<span id="id18">Morey <em>et al.</em> (<a class="reference internal" href="../chapter_references/zreferences.html#id198" title="Morey, R. D., Hoekstra, R., Rouder, J. N., Lee, M. D., &amp; Wagenmakers, E.-J. (2016). The fallacy of placing confidence in confidence intervals. Psychonomic Bulletin &amp; Review, 23(1), 103–123.">2016</a>)</span>。</p>
+<ul class="simple">
+<li><p><strong>谬误 1</strong>。置信区间窄，意味着我们能精确地估计该参数。</p></li>
+<li><p><strong>谬误 2</strong>。置信区间内的数值比区间外的数值更可能是真实值。</p></li>
+<li><p><strong>谬误
+3</strong>。某个特定的、观测到的<span class="math notranslate nohighlight">\(95\%\)</span>置信区间包含真实值的概率是<span class="math notranslate nohighlight">\(95\%\)</span>。</p></li>
+</ul>
+<p>不用说，置信区间是微妙的对象。然而，只要你把解释讲清楚，它们就能成为强大的工具。</p>
+</section>
+<section id="id19">
+<h3><span class="section-number">22.10.3.3. </span>一个高斯例子<a class="headerlink" href="#id19" title="此标题的永久链接">¶</a></h3>
+<p>让我们讨论最经典的例子：均值未知、方差未知的高斯分布均值的置信区间。假设我们从高斯分布<span class="math notranslate nohighlight">\(\mathcal{N}(\mu, \sigma^2)\)</span>中收集<span class="math notranslate nohighlight">\(n\)</span>个样本<span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^n\)</span>。我们可以如下计算均值和方差的估计量：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-4">
+<span class="eqno">(22.10.9)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-4" title="此公式的永久链接">¶</a></span>\[\hat\mu_n = \frac{1}{n}\sum_{i=1}^n x_i \;\textrm{and}\; \hat\sigma^2_n = \frac{1}{n-1}\sum_{i=1}^n (x_i - \hat\mu)^2.\]</div>
+<p>如果我们现在考虑随机变量</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-5">
+<span class="eqno">(22.10.10)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-5" title="此公式的永久链接">¶</a></span>\[T = \frac{\hat\mu_n - \mu}{\hat\sigma_n/\sqrt{n}},\]</div>
+<p>我们就得到一个服从众所周知的分布的随机变量，该分布称为<em>自由度为</em><span class="math notranslate nohighlight">\(n-1\)</span><em>的
+Student t 分布</em>。</p>
+<p>这个分布得到了非常充分的研究，例如人们知道当<span class="math notranslate nohighlight">\(n\rightarrow \infty\)</span>时它近似为标准高斯分布，因此通过查高斯分布累积分布函数的数值表，我们可以得出结论：<span class="math notranslate nohighlight">\(T\)</span>的取值至少有<span class="math notranslate nohighlight">\(95\%\)</span>的时间落在区间<span class="math notranslate nohighlight">\([-1.96, 1.96]\)</span>内。对有限的<span class="math notranslate nohighlight">\(n\)</span>，区间需要稍大一些，但这些区间是众所周知的，并且已在表格中预先计算好。</p>
+<p>因此，我们可以得出结论：对大<span class="math notranslate nohighlight">\(n\)</span>，</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-6">
+<span class="eqno">(22.10.11)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-6" title="此公式的永久链接">¶</a></span>\[P\left(\frac{\hat\mu_n - \mu}{\hat\sigma_n/\sqrt{n}} \in [-1.96, 1.96]\right) \ge 0.95.\]</div>
+<p>把两边同乘以<span class="math notranslate nohighlight">\(\hat\sigma_n/\sqrt{n}\)</span>，再加上<span class="math notranslate nohighlight">\(\hat\mu_n\)</span>进行整理，我们得到</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-7">
+<span class="eqno">(22.10.12)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-7" title="此公式的永久链接">¶</a></span>\[P\left(\mu \in \left[\hat\mu_n - 1.96\frac{\hat\sigma_n}{\sqrt{n}}, \hat\mu_n + 1.96\frac{\hat\sigma_n}{\sqrt{n}}\right]\right) \ge 0.95.\]</div>
+<p>因此我们知道，我们已找到了<span class="math notranslate nohighlight">\(95\%\)</span>置信区间：</p>
+<div class="math notranslate nohighlight" id="equation-eq-gauss-confidence">
+<span class="eqno">(22.10.13)<a class="headerlink" href="#equation-eq-gauss-confidence" title="此公式的永久链接">¶</a></span>\[\left[\hat\mu_n - 1.96\frac{\hat\sigma_n}{\sqrt{n}}, \hat\mu_n + 1.96\frac{\hat\sigma_n}{\sqrt{n}}\right].\]</div>
+<p>可以肯定地说，<a class="reference internal" href="#equation-eq-gauss-confidence">(22.10.13)</a>
+是统计学中最常用的公式之一。让我们通过实现它来结束对统计学的讨论。为简单起见，我们假定处于渐近情形。较小的<span class="math notranslate nohighlight">\(N\)</span>值应当包含通过程序或<span class="math notranslate nohighlight">\(t\)</span>分布表得到的正确<code class="docutils literal notranslate"><span class="pre">t_star</span></code>值。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-11-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-11-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-11-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-11-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PyTorch uses Bessel's correction by default, which means the use of ddof=1</span>
+<span class="c1"># instead of default ddof=0 in numpy. We can use unbiased=False to imitate</span>
+<span class="c1"># ddof=0.</span>
+
+<span class="c1"># Number of samples</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Sample dataset</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,))</span>
+
+<span class="c1"># Lookup Students's t-distribution c.d.f.</span>
+<span class="n">t_star</span> <span class="o">=</span> <span class="mf">1.96</span>
+
+<span class="c1"># Construct interval</span>
+<span class="n">mu_hat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">unbiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mu_hat</span> <span class="o">-</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)),</span>\
+ <span class="n">mu_hat</span> <span class="o">+</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-11-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of samples</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Sample dataset</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,))</span>
+
+<span class="c1"># Lookup Students's t-distribution c.d.f.</span>
+<span class="n">t_star</span> <span class="o">=</span> <span class="mf">1.96</span>
+
+<span class="c1"># Construct interval</span>
+<span class="n">mu_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mu_hat</span> <span class="o">-</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">mu_hat</span> <span class="o">+</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-11-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of samples</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Sample dataset</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="n">N</span><span class="p">,),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Lookup Students's t-distribution c.d.f.</span>
+<span class="n">t_star</span> <span class="o">=</span> <span class="mf">1.96</span>
+
+<span class="c1"># Construct interval</span>
+<span class="n">mu_hat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_std</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mu_hat</span> <span class="o">-</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)),</span> \
+ <span class="n">mu_hat</span> <span class="o">+</span> <span class="n">t_star</span><span class="o">*</span><span class="n">sigma_hat</span><span class="o">/</span><span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div></div></section>
+</section>
+<section id="id20">
+<h2><span class="section-number">22.10.4. </span>小结<a class="headerlink" href="#id20" title="此标题的永久链接">¶</a></h2>
+<ul class="simple">
+<li><p>统计学关注推断问题，而深度学习强调作出准确的预测，无需显式地编程与理解。</p></li>
+<li><p>有三种常见的统计推断方法：评估与比较估计量、进行假设检验，以及构造置信区间。</p></li>
+<li><p>有三种最常见的估计量：统计偏差、标准差和均方误差。</p></li>
+<li><p>置信区间是真实总体参数的一个估计范围，我们可以根据给定样本构造它。</p></li>
+<li><p>假设检验是一种评估某些证据、以反对关于总体的默认陈述的方式。</p></li>
+</ul>
+</section>
+<section id="id21">
+<h2><span class="section-number">22.10.5. </span>练习<a class="headerlink" href="#id21" title="此标题的永久链接">¶</a></h2>
+<ol class="arabic">
+<li><p>设<span class="math notranslate nohighlight">\(X_1, X_2, \ldots, X_n \overset{\textrm{iid}}{\sim} \textrm{Unif}(0, \theta)\)</span>，其中“iid”代表<em>独立同分布</em>（independent
+and identically distributed）。考虑<span class="math notranslate nohighlight">\(\theta\)</span>的如下估计量：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-8">
+<span class="eqno">(22.10.14)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-8" title="此公式的永久链接">¶</a></span>\[\hat{\theta} = \max \{X_1, X_2, \ldots, X_n \};\]</div>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-statistics-9">
+<span class="eqno">(22.10.15)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-statistics-9" title="此公式的永久链接">¶</a></span>\[\tilde{\theta} = 2 \bar{X_n} = \frac{2}{n} \sum_{i=1}^n X_i.\]</div>
+<ul class="simple">
+<li><p>求<span class="math notranslate nohighlight">\(\hat{\theta}.\)</span>的统计偏差、标准差和均方误差。</p></li>
+<li><p>求<span class="math notranslate nohighlight">\(\tilde{\theta}.\)</span>的统计偏差、标准差和均方误差。</p></li>
+<li><p>哪个估计量更好？</p></li>
+</ul>
+</li>
+<li><p>对于引言中的化学家例子，你能推导出进行双侧假设检验的 5
+个步骤吗？给定统计显著性水平<span class="math notranslate nohighlight">\(\alpha = 0.05\)</span>和统计功效<span class="math notranslate nohighlight">\(1 - \beta = 0.8\)</span>。</p></li>
+<li><p>对<span class="math notranslate nohighlight">\(100\)</span>个独立生成的数据集，用<span class="math notranslate nohighlight">\(N=2\)</span>和<span class="math notranslate nohighlight">\(\alpha = 0.5\)</span>运行置信区间代码，并画出所得的区间（此时<code class="docutils literal notranslate"><span class="pre">t_star</span> <span class="pre">=</span> <span class="pre">1.0</span></code>）。你会看到若干非常短的区间，它们离包含真实均值<span class="math notranslate nohighlight">\(0\)</span>还差得很远。这是否与置信区间的解释相矛盾？你是否觉得用短区间来表明高精度估计是合适的？</p></li>
+</ol>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar text"><a href="#pytorch-13-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-13-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-13-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-13-0"><p><a class="reference external" href="https://discuss.d2l.ai/t/1102">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="mxnet-13-1"><p><a class="reference external" href="https://discuss.d2l.ai/t/419">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="tensorflow-13-2"><p><a class="reference external" href="https://discuss.d2l.ai/t/1103">讨论</a></p>
+</div></div></section>
+</section>
+
+
+<!-- d2l-zh-footer -->
+<footer class="d2l-site-footer">
+  <p><strong>《动手学深度学习》简体中文全译本</strong> · 译自
+     <a href="https://d2l.ai/">Dive into Deep Learning</a> 1.0.3
+     （d2l-en@23d7a5a）</p>
+  <p>原文与插图 © 2023 D2L 作者，依
+     <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+     许可发布；本译本以相同许可共享。</p>
+  <p><a href="https://github.com/fau-linrui/dive-into-deep-learning-zh">译本仓库</a>
+     <span class="sep">·</span><a href="../index.html">返回目录</a>
+     <span class="sep">·</span>发现翻译问题？欢迎提交 Issue</p>
+</footer>
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">22.10. 统计学</a><ul>
+<li><a class="reference internal" href="#id2">22.10.1. 评估与比较估计量</a><ul>
+<li><a class="reference internal" href="#id3">22.10.1.1. 均方误差</a></li>
+<li><a class="reference internal" href="#id4">22.10.1.2. 统计偏差</a></li>
+<li><a class="reference internal" href="#id5">22.10.1.3. 方差与标准差</a></li>
+<li><a class="reference internal" href="#id6">22.10.1.4. 偏差-方差权衡</a></li>
+<li><a class="reference internal" href="#id7">22.10.1.5. 在代码中评估估计量</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">22.10.2. 进行假设检验</a><ul>
+<li><a class="reference internal" href="#id9">22.10.2.1. 统计显著性</a></li>
+<li><a class="reference internal" href="#id10">22.10.2.2. 统计功效</a></li>
+<li><a class="reference internal" href="#id11">22.10.2.3. 检验统计量</a></li>
+<li><a class="reference internal" href="#p">22.10.2.4. <span class="math notranslate nohighlight">\(p\)</span>值</a></li>
+<li><a class="reference internal" href="#id12">22.10.2.5. 单侧检验与双侧检验</a></li>
+<li><a class="reference internal" href="#id13">22.10.2.6. 假设检验的一般步骤</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id14">22.10.3. 构造置信区间</a><ul>
+<li><a class="reference internal" href="#id16">22.10.3.1. 定义</a></li>
+<li><a class="reference internal" href="#id17">22.10.3.2. 解释</a></li>
+<li><a class="reference internal" href="#id19">22.10.3.3. 一个高斯例子</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id20">22.10.4. 小结</a></li>
+<li><a class="reference internal" href="#id21">22.10.5. 练习</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="naive-bayes.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>22.9. 朴素贝叶斯</div>
+         </div>
+     </a>
+     <a id="button-next" href="information-theory.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>22.11. 信息论</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

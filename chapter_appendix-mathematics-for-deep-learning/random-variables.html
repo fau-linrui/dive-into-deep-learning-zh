@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+<!-- d2l-site-styles -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>22.6. 随机变量 &#8212; 动手学深度学习</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="22.7. 最大似然" href="maximum-likelihood.html" />
+    <link rel="prev" title="22.5. 积分学" href="integral-calculus.html" /> 
+  <link rel="stylesheet" href="../_static/site.css" type="text/css" />
+<script src="../_static/site.js" defer></script>
+<!-- d2l-site-script -->
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">22. </span>附录：深度学习数学</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">22.6. </span>随机变量</a>
+        <span class="d2l-zh-badge">简体中文全译本</span></nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      快速搜索
+      </div>
+</form>
+        
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://d2l.ai">
+                  <i class="fas fa-book"></i>
+                  英文原书
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://github.com/fau-linrui/dive-into-deep-learning-zh">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://discuss.d2l.ai">
+                  <i class="fas fa-comments"></i>
+                  讨论社区
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">22. 附录：深度学习数学</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">22. 附录：深度学习数学</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <section id="sec-random-variables">
+<span id="id1"></span><h1><span class="section-number">22.6. </span>随机变量<a class="headerlink" href="#sec-random-variables" title="此标题的永久链接">¶</a></h1>
+<p>在 <a class="reference internal" href="../chapter_preliminaries/probability.html#sec-prob"><span class="std std-numref">2.6节</span></a>
+中，我们看到了处理离散随机变量的一些基础内容。这里的离散随机变量是指只取有限个可能值或整数值的随机变量。本节我们将建立<em>连续随机变量</em>的理论，这类随机变量可以取任意实数值。</p>
+<section id="id2">
+<h2><span class="section-number">22.6.1. </span>连续随机变量<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>连续随机变量比离散随机变量要微妙得多。一个恰当的类比是：这一技术跨越的难度，相当于从“把一串数相加”跳到“对函数积分”的难度。因此，我们需要花些时间来建立这一理论。</p>
+<section id="id3">
+<h3><span class="section-number">22.6.1.1. </span>从离散到连续<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h3>
+<p>为了理解处理连续随机变量时遇到的额外技术挑战，让我们做一个思想实验。假设我们往飞镖盘上掷飞镖，并且想知道它恰好落在距靶心
+<span class="math notranslate nohighlight">\(2 \textrm{cm}\)</span> 处的概率。</p>
+<p>首先，我们设想只测到一位数字的精度，也就是说，把结果分到
+<span class="math notranslate nohighlight">\(0 \textrm{cm}\)</span>、<span class="math notranslate nohighlight">\(1 \textrm{cm}\)</span>、<span class="math notranslate nohighlight">\(2 \textrm{cm}\)</span>
+等若干个区间里。假设我们向飞镖盘掷 <span class="math notranslate nohighlight">\(100\)</span> 支飞镖，如果其中有
+<span class="math notranslate nohighlight">\(20\)</span> 支落在 <span class="math notranslate nohighlight">\(2\textrm{cm}\)</span>
+对应的区间内，我们就断定：我们掷出的飞镖中有 <span class="math notranslate nohighlight">\(20\%\)</span> 落在距靶心
+<span class="math notranslate nohighlight">\(2 \textrm{cm}\)</span> 处。</p>
+<p>然而，仔细一想，这并不符合我们的问题！我们要的是恰好相等，而这些区间容纳的是所有落在比如
+<span class="math notranslate nohighlight">\(1.5\textrm{cm}\)</span> 到 <span class="math notranslate nohighlight">\(2.5\textrm{cm}\)</span> 之间的飞镖。</p>
+<p>我们并不气馁，继续推进。我们测量得更精确一些，比如分成
+<span class="math notranslate nohighlight">\(1.9\textrm{cm}\)</span>、<span class="math notranslate nohighlight">\(2.0\textrm{cm}\)</span>、<span class="math notranslate nohighlight">\(2.1\textrm{cm}\)</span>
+等区间，此时发现或许 <span class="math notranslate nohighlight">\(100\)</span> 支飞镖中有 <span class="math notranslate nohighlight">\(3\)</span> 支落在
+<span class="math notranslate nohighlight">\(2.0\textrm{cm}\)</span> 这个区间内。于是我们断定概率为 <span class="math notranslate nohighlight">\(3\%\)</span>。</p>
+<p>然而，这什么问题也没解决！我们只是把问题又往下推了一位小数。让我们抽象一点来看。设想我们知道前
+<span class="math notranslate nohighlight">\(k\)</span> 位数字与 <span class="math notranslate nohighlight">\(2.00000\ldots\)</span> 相符的概率，并想知道前
+<span class="math notranslate nohighlight">\(k+1\)</span> 位相符的概率。相当合理的一个假设是：第
+<span class="math notranslate nohighlight">\({k+1}^{\textrm{th}}\)</span> 位本质上是从集合
+<span class="math notranslate nohighlight">\(\{0, 1, 2, \ldots, 9\}\)</span>
+中随机选取的。至少，我们无法设想存在一个有物理意义的过程，会迫使距靶心的微米数偏爱以
+<span class="math notranslate nohighlight">\(7\)</span> 而不是 <span class="math notranslate nohighlight">\(3\)</span> 结尾。</p>
+<p>这意味着，我们要求的每一位额外精度，本质上都应使相符的概率除以
+<span class="math notranslate nohighlight">\(10\)</span>。换言之，我们可以期望</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-0">
+<span class="eqno">(22.6.1)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-0" title="此公式的永久链接">¶</a></span>\[P(\textrm{distance is}\; 2.00\ldots, \;\textrm{to}\; k \;\textrm{digits} ) \approx p\cdot10^{-k}.\]</div>
+<p>值 <span class="math notranslate nohighlight">\(p\)</span> 本质上编码了前几位数字的情形，而 <span class="math notranslate nohighlight">\(10^{-k}\)</span>
+则处理其余部分。</p>
+<p>请注意，如果我们把位置精确到小数点后 <span class="math notranslate nohighlight">\(k=4\)</span>
+位，那就意味着我们知道该值落在比如说 <span class="math notranslate nohighlight">\([1.99995,2.00005]\)</span>
+这个区间内，而这个区间的长度为
+<span class="math notranslate nohighlight">\(2.00005-1.99995 = 10^{-4}\)</span>。于是，如果把该区间的长度记为
+<span class="math notranslate nohighlight">\(\epsilon\)</span>，我们可以说</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-1">
+<span class="eqno">(22.6.2)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-1" title="此公式的永久链接">¶</a></span>\[P(\textrm{distance is in an}\; \epsilon\textrm{-sized interval around}\; 2 ) \approx \epsilon \cdot p.\]</div>
+<p>让我们把这一步再推到极致。我们一直只考虑点
+<span class="math notranslate nohighlight">\(2\)</span>，从没考虑过其他点。其他点在本质上并没有什么不同，但
+<span class="math notranslate nohighlight">\(p\)</span>
+的取值很可能不同。我们至少可以期望：掷飞镖的人更可能击中靠近中心的点，比如
+<span class="math notranslate nohighlight">\(2\textrm{cm}\)</span> 而不是 <span class="math notranslate nohighlight">\(20\textrm{cm}\)</span>。因此，<span class="math notranslate nohighlight">\(p\)</span>
+的值并非固定不变，而应依赖于点 <span class="math notranslate nohighlight">\(x\)</span>。这告诉我们，应当期望</p>
+<div class="math notranslate nohighlight" id="equation-eq-pdf-deriv">
+<span class="eqno">(22.6.3)<a class="headerlink" href="#equation-eq-pdf-deriv" title="此公式的永久链接">¶</a></span>\[P(\textrm{distance is in an}\; \epsilon \textrm{-sized interval around}\; x ) \approx \epsilon \cdot p(x).\]</div>
+<p>事实上，<a class="reference internal" href="#equation-eq-pdf-deriv">(22.6.3)</a>
+恰好定义了<em>概率密度函数</em>（probability density
+function）。它是一个函数
+<span class="math notranslate nohighlight">\(p(x)\)</span>，编码了击中某一点附近相对于另一点附近的相对概率。让我们可视化一下这样的函数可能长什么样。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-1-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-1-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-1-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-1-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">torch</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">pi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># Define pi in torch</span>
+
+<span class="c1"># Plot the probability density function for some random variable</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">+</span> \
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'Density'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-1-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mxnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">np</span><span class="p">,</span> <span class="n">npx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">mxnet</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">npx</span><span class="o">.</span><span class="n">set_np</span><span class="p">()</span>
+
+<span class="c1"># Plot the probability density function for some random variable</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> \
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'Density'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-1-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">tensorflow</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">pi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># Define pi in TensorFlow</span>
+
+<span class="c1"># Plot the probability density function for some random variable</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">+</span> \
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'Density'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>函数值较大的位置，表示我们更可能在那里找到随机取值。低矮的部分则是我们不太可能找到随机取值的区域。</p>
+</section>
+<section id="id4">
+<h3><span class="section-number">22.6.1.2. </span>概率密度函数<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<p>现在让我们进一步研究这一点。对于随机变量
+<span class="math notranslate nohighlight">\(X\)</span>，我们已经直观地看到概率密度函数是什么：密度函数是一个函数
+<span class="math notranslate nohighlight">\(p(x)\)</span>，满足</p>
+<div class="math notranslate nohighlight" id="equation-eq-pdf-def">
+<span class="eqno">(22.6.4)<a class="headerlink" href="#equation-eq-pdf-def" title="此公式的永久链接">¶</a></span>\[P(X \; \textrm{is in an}\; \epsilon \textrm{-sized interval around}\; x ) \approx \epsilon \cdot p(x).\]</div>
+<p>但这对 <span class="math notranslate nohighlight">\(p(x)\)</span> 的性质意味着什么呢？</p>
+<p>第一，概率从不为负，因此我们也应期望 <span class="math notranslate nohighlight">\(p(x) \ge 0\)</span>。</p>
+<p>第二，让我们设想把 <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> 切成无穷多个宽度为
+<span class="math notranslate nohighlight">\(\epsilon\)</span> 的窄条，比如窄条
+<span class="math notranslate nohighlight">\((\epsilon\cdot i, \epsilon \cdot (i+1)]\)</span>。对其中每一个窄条，由
+<a class="reference internal" href="#equation-eq-pdf-def">(22.6.4)</a> 可知概率近似为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-2">
+<span class="eqno">(22.6.5)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-2" title="此公式的永久链接">¶</a></span>\[P(X \; \textrm{is in an}\; \epsilon\textrm{-sized interval around}\; x ) \approx \epsilon \cdot p(\epsilon \cdot i),\]</div>
+<p>所以对所有窄条求和应当得到</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-3">
+<span class="eqno">(22.6.6)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-3" title="此公式的永久链接">¶</a></span>\[P(X\in\mathbb{R}) \approx \sum_i \epsilon \cdot p(\epsilon\cdot i).\]</div>
+<p>这不过是 <a class="reference internal" href="integral-calculus.html#sec-integral-calculus"><span class="std std-numref">22.5节</span></a>
+中讨论过的积分近似，因此我们可以说</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-4">
+<span class="eqno">(22.6.7)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-4" title="此公式的永久链接">¶</a></span>\[P(X\in\mathbb{R}) = \int_{-\infty}^{\infty} p(x) \; dx.\]</div>
+<p>我们知道
+<span class="math notranslate nohighlight">\(P(X\in\mathbb{R}) = 1\)</span>，因为随机变量必定取<em>某个</em>数，于是可以断定对任何密度都有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-5">
+<span class="eqno">(22.6.8)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-5" title="此公式的永久链接">¶</a></span>\[\int_{-\infty}^{\infty} p(x) \; dx = 1.\]</div>
+<p>事实上，进一步深究还会发现，对任意的 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span>，都有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-6">
+<span class="eqno">(22.6.9)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-6" title="此公式的永久链接">¶</a></span>\[P(X\in(a, b]) = \int _ {a}^{b} p(x) \; dx.\]</div>
+<p>我们可以像之前一样，在代码中借助同样的离散近似方法来近似这一点。此时，我们可以近似落入蓝色区域的概率。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-3-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-3-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-3-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-3-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Approximate probability using numerical integration</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">+</span>\
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">],</span> <span class="n">p</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="sa">f</span><span class="s1">'approximate Probability: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">epsilon</span><span class="o">*</span><span class="n">p</span><span class="p">[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span><span class="si">}</span><span class="s1">'</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-3-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Approximate probability using numerical integration</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> \
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">],</span> <span class="n">p</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="sa">f</span><span class="s1">'approximate Probability: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">epsilon</span><span class="o">*</span><span class="n">p</span><span class="p">[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span><span class="si">}</span><span class="s1">'</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-3-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Approximate probability using numerical integration</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">+</span>\
+    <span class="mf">0.8</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">],</span> <span class="n">p</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="sa">f</span><span class="s1">'approximate Probability: </span><span class="si">{</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">epsilon</span><span class="o">*</span><span class="n">p</span><span class="p">[</span><span class="mi">300</span><span class="p">:</span><span class="mi">800</span><span class="p">])</span><span class="si">}</span><span class="s1">'</span>
+</pre></div>
+</div>
+</div></div><p>事实证明，这两条性质恰好刻画出所有可能的概率密度函数（常见的缩写是
+<em>p.d.f.</em>）。它们是非负函数 <span class="math notranslate nohighlight">\(p(x) \ge 0\)</span>，且满足</p>
+<div class="math notranslate nohighlight" id="equation-eq-pdf-int-one">
+<span class="eqno">(22.6.10)<a class="headerlink" href="#equation-eq-pdf-int-one" title="此公式的永久链接">¶</a></span>\[\int_{-\infty}^{\infty} p(x) \; dx = 1.\]</div>
+<p>我们通过积分来解释这个函数，从而得到随机变量落在指定区间内的概率：</p>
+<div class="math notranslate nohighlight" id="equation-eq-pdf-int-int">
+<span class="eqno">(22.6.11)<a class="headerlink" href="#equation-eq-pdf-int-int" title="此公式的永久链接">¶</a></span>\[P(X\in(a, b]) = \int _ {a}^{b} p(x) \; dx.\]</div>
+<p>在 <a class="reference internal" href="distributions.html#sec-distributions"><span class="std std-numref">22.8节</span></a>
+中，我们会看到若干常见的分布，不过现在让我们继续在抽象层面讨论。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">22.6.1.3. </span>累积分布函数<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<p>在上一节中，我们看到了概率密度函数（p.d.f.）的概念。在实践中，这是讨论连续随机变量的一种常用方法，但它有一个显著的陷阱：p.d.f.
+的取值本身并不是概率，而是一个必须被积分才能得到概率的函数。密度大于
+<span class="math notranslate nohighlight">\(10\)</span> 本身并无问题，只要它大于 <span class="math notranslate nohighlight">\(10\)</span> 的区间长度不超过
+<span class="math notranslate nohighlight">\(1/10\)</span>
+即可。这可能有违直觉，因此人们常常也从<em>累积分布函数</em>（cumulative
+distribution function，c.d.f.）的角度来思考，而后者<em>确实</em>是概率。</p>
+<p>特别地，利用 <a class="reference internal" href="#equation-eq-pdf-int-int">(22.6.11)</a>，我们定义密度为 <span class="math notranslate nohighlight">\(p(x)\)</span>
+的随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的 c.d.f. 为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-7">
+<span class="eqno">(22.6.12)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-7" title="此公式的永久链接">¶</a></span>\[F(x) = \int _ {-\infty}^{x} p(x) \; dx = P(X \le x).\]</div>
+<p>让我们观察几条性质。</p>
+<ul class="simple">
+<li><p>当 <span class="math notranslate nohighlight">\(x\rightarrow -\infty\)</span> 时，<span class="math notranslate nohighlight">\(F(x) \rightarrow 0\)</span>。</p></li>
+<li><p>当 <span class="math notranslate nohighlight">\(x\rightarrow \infty\)</span> 时，<span class="math notranslate nohighlight">\(F(x) \rightarrow 1\)</span>。</p></li>
+<li><p><span class="math notranslate nohighlight">\(F(x)\)</span> 是非减的（<span class="math notranslate nohighlight">\(y &gt; x \implies F(y) \ge F(x)\)</span>）。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(X\)</span> 是连续随机变量，那么 <span class="math notranslate nohighlight">\(F(x)\)</span>
+是连续的（没有跳跃）。</p></li>
+</ul>
+<p>关于第四条性质，请注意如果 <span class="math notranslate nohighlight">\(X\)</span>
+是离散的，这一条就不成立，比如它以概率 <span class="math notranslate nohighlight">\(1/2\)</span> 分别取 <span class="math notranslate nohighlight">\(0\)</span> 和
+<span class="math notranslate nohighlight">\(1\)</span> 时。此时</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-8">
+<span class="eqno">(22.6.13)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-8" title="此公式的永久链接">¶</a></span>\[\begin{split}F(x) = \begin{cases}
+0 &amp; x &lt; 0, \\
+\frac{1}{2} &amp; x &lt; 1, \\
+1 &amp; x \ge 1.
+\end{cases}\end{split}\]</div>
+<p>在这个例子中，我们看到了使用 c.d.f.
+的一个好处：它能在同一框架下处理连续或离散的随机变量，甚至二者的混合（抛一枚硬币：若为正面，返回掷骰子的点数；若为反面，返回飞镖掷出后距靶心的距离）。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">22.6.1.4. </span>均值<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<p>假设我们处理的是一个随机变量
+<span class="math notranslate nohighlight">\(X\)</span>。分布本身可能很难解释。若能简洁地概括随机变量的行为，往往很有用。帮助我们刻画随机变量行为的数称为<em>汇总统计量</em>（summary
+statistics）。其中最常遇到的是<em>均值</em>（mean）、<em>方差</em>（variance）和<em>标准差</em>（standard
+deviation）。</p>
+<p><em>均值</em>编码了随机变量的平均值。如果我们有一个离散随机变量
+<span class="math notranslate nohighlight">\(X\)</span>，它以概率 <span class="math notranslate nohighlight">\(p_i\)</span> 取值
+<span class="math notranslate nohighlight">\(x_i\)</span>，那么均值由加权平均给出：把每个取值乘以随机变量取该值的概率，再求和：</p>
+<div class="math notranslate nohighlight" id="equation-eq-exp-def">
+<span class="eqno">(22.6.14)<a class="headerlink" href="#equation-eq-exp-def" title="此公式的永久链接">¶</a></span>\[\mu_X = E[X] = \sum_i x_i p_i.\]</div>
+<p>我们对均值的解释（尽管要谨慎）应是：它本质上告诉我们随机变量倾向于位于何处。</p>
+<p>作为一个本节将反复考察的极简例子，令 <span class="math notranslate nohighlight">\(X\)</span>
+为这样的随机变量：它以概率 <span class="math notranslate nohighlight">\(p\)</span> 取值 <span class="math notranslate nohighlight">\(a-2\)</span>，以概率
+<span class="math notranslate nohighlight">\(p\)</span> 取值 <span class="math notranslate nohighlight">\(a+2\)</span>，以概率 <span class="math notranslate nohighlight">\(1-2p\)</span> 取值 <span class="math notranslate nohighlight">\(a\)</span>。利用
+<a class="reference internal" href="#equation-eq-exp-def">(22.6.14)</a> 可以算出，对 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(p\)</span>
+的任意可能取值，均值都是</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-9">
+<span class="eqno">(22.6.15)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-9" title="此公式的永久链接">¶</a></span>\[\mu_X = E[X] = \sum_i x_i p_i = (a-2)p + a(1-2p) + (a+2)p = a.\]</div>
+<p>于是我们看到均值为 <span class="math notranslate nohighlight">\(a\)</span>。这与直觉相符，因为 <span class="math notranslate nohighlight">\(a\)</span>
+正是我们用来居中随机变量的位置。</p>
+<p>由于这些性质很有用，让我们总结几条。</p>
+<ul class="simple">
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和数 <span class="math notranslate nohighlight">\(a\)</span> 与 <span class="math notranslate nohighlight">\(b\)</span>，有
+<span class="math notranslate nohighlight">\(\mu_{aX+b} = a\mu_X + b\)</span>。</p></li>
+<li><p>如果有两个随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span>，则
+<span class="math notranslate nohighlight">\(\mu_{X+Y} = \mu_X+\mu_Y\)</span>。</p></li>
+</ul>
+<p>均值有助于理解随机变量的平均行为，但仅有均值甚至不足以获得完整的直观理解。每笔交易赚
+<span class="math notranslate nohighlight">\(\$10 \pm \$1\)</span> 与赚 <span class="math notranslate nohighlight">\(\$10 \pm \$15\)</span>
+大不相同，尽管两者的平均值相同。后者的波动程度大得多，因此代表着大得多的风险。所以，要理解随机变量的行为，我们至少还需要一个指标：某种衡量随机变量波动范围的量度。</p>
+</section>
+<section id="id7">
+<h3><span class="section-number">22.6.1.5. </span>方差<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<p>这促使我们考虑随机变量的<em>方差</em>。它是随机变量偏离均值的程度的定量度量。考虑表达式
+<span class="math notranslate nohighlight">\(X - \mu_X\)</span>。这是随机变量与其均值之间的偏差。该值可正可负，因此我们需要做点什么让它变为正值，以便度量偏差的大小。</p>
+<p>一个合理的尝试是考察
+<span class="math notranslate nohighlight">\(\left|X-\mu_X\right|\)</span>，这确实引出一个有用的量，称为<em>平均绝对偏差</em>（mean
+absolute
+deviation），然而由于与其他数学和统计学领域的联系，人们常常采用另一种做法。</p>
+<p>具体地说，人们考察 <span class="math notranslate nohighlight">\((X-\mu_X)^2.\)</span>
+如果我们取均值来看这个量的典型大小，就得到方差</p>
+<div class="math notranslate nohighlight" id="equation-eq-var-def">
+<span class="eqno">(22.6.16)<a class="headerlink" href="#equation-eq-var-def" title="此公式的永久链接">¶</a></span>\[\sigma_X^2 = \textrm{Var}(X) = E\left[(X-\mu_X)^2\right] = E[X^2] - \mu_X^2.\]</div>
+<p><a class="reference internal" href="#equation-eq-var-def">(22.6.16)</a>
+中的最后一个等式，可以通过展开中间的定义并利用期望的性质得到。</p>
+<p>让我们回到例子，其中 <span class="math notranslate nohighlight">\(X\)</span> 是以概率 <span class="math notranslate nohighlight">\(p\)</span> 取值
+<span class="math notranslate nohighlight">\(a-2\)</span>、以概率 <span class="math notranslate nohighlight">\(p\)</span> 取值 <span class="math notranslate nohighlight">\(a+2\)</span>、以概率 <span class="math notranslate nohighlight">\(1-2p\)</span>
+取值 <span class="math notranslate nohighlight">\(a\)</span> 的随机变量。此时 <span class="math notranslate nohighlight">\(\mu_X = a\)</span>，因此我们只需计算
+<span class="math notranslate nohighlight">\(E\left[X^2\right]\)</span>。这很容易做到：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-10">
+<span class="eqno">(22.6.17)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-10" title="此公式的永久链接">¶</a></span>\[E\left[X^2\right] = (a-2)^2p + a^2(1-2p) + (a+2)^2p = a^2 + 8p.\]</div>
+<p>于是，由 <a class="reference internal" href="#equation-eq-var-def">(22.6.16)</a> 我们看到方差为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-11">
+<span class="eqno">(22.6.18)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-11" title="此公式的永久链接">¶</a></span>\[\sigma_X^2 = \textrm{Var}(X) = E[X^2] - \mu_X^2 = a^2 + 8p - a^2 = 8p.\]</div>
+<p>这个结果同样言之成理。<span class="math notranslate nohighlight">\(p\)</span> 的最大可能取值是
+<span class="math notranslate nohighlight">\(1/2\)</span>，对应着用抛硬币的方式选取 <span class="math notranslate nohighlight">\(a-2\)</span> 或
+<span class="math notranslate nohighlight">\(a+2\)</span>。此时方差为 <span class="math notranslate nohighlight">\(4\)</span>，对应着 <span class="math notranslate nohighlight">\(a-2\)</span> 和 <span class="math notranslate nohighlight">\(a+2\)</span>
+都距均值 <span class="math notranslate nohighlight">\(2\)</span> 个单位，而 <span class="math notranslate nohighlight">\(2^2 = 4\)</span>。在另一个极端，如果
+<span class="math notranslate nohighlight">\(p=0\)</span>，那么这个随机变量总是取 <span class="math notranslate nohighlight">\(0\)</span>，因此它完全没有方差。</p>
+<p>下面列出方差的一些性质：</p>
+<ul class="simple">
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span>，<span class="math notranslate nohighlight">\(\textrm{Var}(X) \ge 0\)</span>，且
+<span class="math notranslate nohighlight">\(\textrm{Var}(X) = 0\)</span> 当且仅当 <span class="math notranslate nohighlight">\(X\)</span> 为常数。</p></li>
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和数 <span class="math notranslate nohighlight">\(a\)</span> 与 <span class="math notranslate nohighlight">\(b\)</span>，有
+<span class="math notranslate nohighlight">\(\textrm{Var}(aX+b) = a^2\textrm{Var}(X)\)</span>。</p></li>
+<li><p>如果有两个<em>相互独立</em>的随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span>，则
+<span class="math notranslate nohighlight">\(\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y)\)</span>。</p></li>
+</ul>
+<p>在解释这些值时，可能会遇到一点小麻烦。具体地说，让我们设想在这一计算中始终追踪单位会发生什么。假设我们处理的是网页上给商品打出的星级评分。那么
+<span class="math notranslate nohighlight">\(a\)</span>、<span class="math notranslate nohighlight">\(a-2\)</span> 和 <span class="math notranslate nohighlight">\(a+2\)</span> 都以星为单位度量。类似地，均值
+<span class="math notranslate nohighlight">\(\mu_X\)</span>
+也以星为单位（因为它是加权平均）。然而，到了方差这里，我们立刻遇到一个问题：我们要考察的
+<span class="math notranslate nohighlight">\((X-\mu_X)^2\)</span>
+的单位是<em>星的平方</em>。这意味着方差本身无法与原始测量值相比。为了让它可解释，我们需要回到原来的单位。</p>
+</section>
+<section id="id8">
+<h3><span class="section-number">22.6.1.6. </span>标准差<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h3>
+<p>这个汇总统计量总可以通过取平方根从方差中推出！于是我们定义<em>标准差</em>（standard
+deviation）为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-12">
+<span class="eqno">(22.6.19)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-12" title="此公式的永久链接">¶</a></span>\[\sigma_X = \sqrt{\textrm{Var}(X)}.\]</div>
+<p>在我们的例子中，这意味着现在标准差为
+<span class="math notranslate nohighlight">\(\sigma_X = 2\sqrt{2p}\)</span>。如果在前面的评论例子中处理的是以星为单位的量，那么
+<span class="math notranslate nohighlight">\(\sigma_X\)</span> 也以星为单位。</p>
+<p>关于方差的性质可以改述为标准差的性质。</p>
+<ul class="simple">
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span>，<span class="math notranslate nohighlight">\(\sigma_{X} \ge 0\)</span>。</p></li>
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和数 <span class="math notranslate nohighlight">\(a\)</span> 与 <span class="math notranslate nohighlight">\(b\)</span>，有
+<span class="math notranslate nohighlight">\(\sigma_{aX+b} = |a|\sigma_{X}\)</span></p></li>
+<li><p>如果有两个<em>相互独立</em>的随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span>，则
+<span class="math notranslate nohighlight">\(\sigma_{X+Y} = \sqrt{\sigma_{X}^2 + \sigma_{Y}^2}\)</span>。</p></li>
+</ul>
+<p>此时很自然会问：“如果标准差以原始随机变量的单位度量，它是否代表了我们能就这个随机变量画出的某种东西？”答案是响亮的“是”！事实上，就像均值告诉了我们随机变量的典型位置一样，标准差给出了该随机变量的典型变化范围。我们可以借助所谓的切比雪夫不等式（Chebyshev’s
+inequality）把这一点严格化：</p>
+<div class="math notranslate nohighlight" id="equation-eq-chebyshev">
+<span class="eqno">(22.6.20)<a class="headerlink" href="#equation-eq-chebyshev" title="此公式的永久链接">¶</a></span>\[P\left(X \not\in [\mu_X - \alpha\sigma_X, \mu_X + \alpha\sigma_X]\right) \le \frac{1}{\alpha^2}.\]</div>
+<p>或者用文字表述：当 <span class="math notranslate nohighlight">\(\alpha=10\)</span> 时，任何随机变量的样本中有
+<span class="math notranslate nohighlight">\(99\%\)</span> 落在均值 <span class="math notranslate nohighlight">\(10\)</span>
+个标准差以内。这为我们的标准汇总统计量提供了直接的解读。</p>
+<p>为了看清这一命题为何相当微妙，让我们再来看一看贯穿全节的例子，其中
+<span class="math notranslate nohighlight">\(X\)</span> 是以概率 <span class="math notranslate nohighlight">\(p\)</span> 取值 <span class="math notranslate nohighlight">\(a-2\)</span>、以概率 <span class="math notranslate nohighlight">\(p\)</span> 取值
+<span class="math notranslate nohighlight">\(a+2\)</span>、以概率 <span class="math notranslate nohighlight">\(1-2p\)</span> 取值 <span class="math notranslate nohighlight">\(a\)</span>
+的随机变量。我们看到均值为 <span class="math notranslate nohighlight">\(a\)</span>，标准差为
+<span class="math notranslate nohighlight">\(2\sqrt{2p}\)</span>。这意味着，如果取 <span class="math notranslate nohighlight">\(\alpha = 2\)</span>
+代入切比雪夫不等式 <a class="reference internal" href="#equation-eq-chebyshev">(22.6.20)</a>，就会看到表达式为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-13">
+<span class="eqno">(22.6.21)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-13" title="此公式的永久链接">¶</a></span>\[P\left(X \not\in [a - 4\sqrt{2p}, a + 4\sqrt{2p}]\right) \le \frac{1}{4}.\]</div>
+<p>这意味着对任意 <span class="math notranslate nohighlight">\(p\)</span> 值，该随机变量都有 <span class="math notranslate nohighlight">\(75\%\)</span>
+的时间落在这个区间内。现在请注意，当 <span class="math notranslate nohighlight">\(p \rightarrow 0\)</span>
+时，这个区间也收敛到单点 <span class="math notranslate nohighlight">\(a\)</span>。但我们知道随机变量只取
+<span class="math notranslate nohighlight">\(a-2, a\)</span> 和 <span class="math notranslate nohighlight">\(a+2\)</span>，因此最终我们能够确定 <span class="math notranslate nohighlight">\(a-2\)</span> 和
+<span class="math notranslate nohighlight">\(a+2\)</span> 会落在区间之外！问题在于，这会在什么 <span class="math notranslate nohighlight">\(p\)</span>
+值处发生。于是我们想求解：对什么 <span class="math notranslate nohighlight">\(p\)</span> 有
+<span class="math notranslate nohighlight">\(a+4\sqrt{2p} = a+2\)</span>？解得
+<span class="math notranslate nohighlight">\(p=1/8\)</span>，这<em>恰好</em>是可能发生这种情况的第一个 <span class="math notranslate nohighlight">\(p\)</span>
+值，且不违反我们“分布中至多 <span class="math notranslate nohighlight">\(1/4\)</span>
+的样本会落在区间之外”的论断（<span class="math notranslate nohighlight">\(1/8\)</span> 在左，<span class="math notranslate nohighlight">\(1/8\)</span> 在右）。</p>
+<p>让我们可视化这一点。我们将用三根竖直的柱来表示取这三个值的概率，柱高与概率成比例。区间将画成中间的一条水平线。第一幅图展示
+<span class="math notranslate nohighlight">\(p &gt; 1/8\)</span> 时的情形，此时区间安全地包含所有点。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-5-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-5-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-5-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-5-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a helper to plot these figures</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_chebyshev</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">([</span><span class="n">a</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">],</span> <span class="n">use_line_collection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'p.m.f.'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span>
+                   <span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'p = </span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plot interval when p &gt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-5-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a helper to plot these figures</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_chebyshev</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">([</span><span class="n">a</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">],</span> <span class="n">use_line_collection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'p.m.f.'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span>
+                   <span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'p = </span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plot interval when p &gt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-5-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a helper to plot these figures</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_chebyshev</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">([</span><span class="n">a</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">],</span> <span class="n">use_line_collection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'p.m.f.'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span>
+                   <span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">),</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'p = </span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plot interval when p &gt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></div><p>第二幅图表明，当 <span class="math notranslate nohighlight">\(p = 1/8\)</span>
+时，区间恰好触及那两个点。这说明该不等式是<em>紧的</em>，因为在保持不等式成立的前提下，不可能取更小的区间。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-7-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-7-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-7-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-7-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p = 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.125</span><span class="p">))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-7-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p = 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-7-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p = 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.125</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></div><p>第三幅图表明，当 <span class="math notranslate nohighlight">\(p &lt; 1/8\)</span>
+时，区间只包含中心点。这并不违反不等式，因为我们只需保证不超过
+<span class="math notranslate nohighlight">\(1/4\)</span> 的概率落在区间之外，这意味着一旦
+<span class="math notranslate nohighlight">\(p &lt; 1/8\)</span>，<span class="math notranslate nohighlight">\(a-2\)</span> 和 <span class="math notranslate nohighlight">\(a+2\)</span> 这两点就可以被舍弃了。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-9-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-9-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-9-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-9-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p &lt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-9-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p &lt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-9-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot interval when p &lt; 1/8</span>
+<span class="n">plot_chebyshev</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></div></section>
+<section id="id9">
+<h3><span class="section-number">22.6.1.7. </span>连续情形下的均值与方差<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p>以上讨论都是针对离散随机变量的，但连续随机变量的情形类似。为了直观地理解这一点，设想我们把实数轴划分成长度为
+<span class="math notranslate nohighlight">\(\epsilon\)</span> 的区间
+<span class="math notranslate nohighlight">\((\epsilon i, \epsilon (i+1)]\)</span>。这样一来，我们的连续随机变量就被离散化了，就可以利用
+<a class="reference internal" href="#equation-eq-exp-def">(22.6.14)</a> 说</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-14">
+<span class="eqno">(22.6.22)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-14" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+\mu_X &amp; \approx \sum_{i} (\epsilon i)P(X \in (\epsilon i, \epsilon (i+1)]) \\
+&amp; \approx \sum_{i} (\epsilon i)p_X(\epsilon i)\epsilon, \\
+\end{aligned}\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(p_X\)</span> 是 <span class="math notranslate nohighlight">\(X\)</span> 的密度。这是对 <span class="math notranslate nohighlight">\(xp_X(x)\)</span>
+的积分的一个近似，因此我们可以得出结论</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-15">
+<span class="eqno">(22.6.23)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-15" title="此公式的永久链接">¶</a></span>\[\mu_X = \int_{-\infty}^\infty xp_X(x) \; dx.\]</div>
+<p>类似地，利用 <a class="reference internal" href="#equation-eq-var-def">(22.6.16)</a>，方差可以写成</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-16">
+<span class="eqno">(22.6.24)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-16" title="此公式的永久链接">¶</a></span>\[\sigma^2_X = E[X^2] - \mu_X^2 = \int_{-\infty}^\infty x^2p_X(x) \; dx - \left(\int_{-\infty}^\infty xp_X(x) \; dx\right)^2.\]</div>
+<p>上面关于均值、方差和标准差的一切陈述在此情形下仍然适用。例如，如果我们考虑密度为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-17">
+<span class="eqno">(22.6.25)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-17" title="此公式的永久链接">¶</a></span>\[\begin{split}p(x) = \begin{cases}
+1 &amp; x \in [0,1], \\
+0 &amp; \textrm{otherwise}.
+\end{cases}\end{split}\]</div>
+<p>的随机变量，可以算出</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-18">
+<span class="eqno">(22.6.26)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-18" title="此公式的永久链接">¶</a></span>\[\mu_X = \int_{-\infty}^\infty xp(x) \; dx = \int_0^1 x \; dx = \frac{1}{2}.\]</div>
+<p>以及</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-19">
+<span class="eqno">(22.6.27)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-19" title="此公式的永久链接">¶</a></span>\[\sigma_X^2 = \int_{-\infty}^\infty x^2p(x) \; dx - \left(\frac{1}{2}\right)^2 = \frac{1}{3} - \frac{1}{4} = \frac{1}{12}.\]</div>
+<p>作为一个警示，让我们再考察一个例子，即所谓的<em>柯西分布</em>（Cauchy
+distribution）。它的 p.d.f. 为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-20">
+<span class="eqno">(22.6.28)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-20" title="此公式的永久链接">¶</a></span>\[p(x) = \frac{1}{1+x^2}.\]</div>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-11-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-11-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-11-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-11-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the Cauchy distribution p.d.f.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'p.d.f.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-11-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the Cauchy distribution p.d.f.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'p.d.f.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-11-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the Cauchy distribution p.d.f.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'p.d.f.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>这个函数看起来无害，而且查一下积分表就会发现它下方的面积为一，因此它确实定义了一个连续随机变量。</p>
+<p>为了看清问题出在哪里，让我们试着计算它的方差。这将涉及利用
+<a class="reference internal" href="#equation-eq-var-def">(22.6.16)</a> 计算</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-21">
+<span class="eqno">(22.6.29)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-21" title="此公式的永久链接">¶</a></span>\[\int_{-\infty}^\infty \frac{x^2}{1+x^2}\; dx.\]</div>
+<p>被积函数看起来像这样：</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-13-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-13-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-13-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-13-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the integrand needed to compute the variance</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'integrand'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-13-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the integrand needed to compute the variance</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'integrand'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-13-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the integrand needed to compute the variance</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'integrand'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>这个函数下方的面积显然是无穷大，因为它本质上就是常数一，只是在零点附近有一个小凹陷；而且我们确实可以证明</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-22">
+<span class="eqno">(22.6.30)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-22" title="此公式的永久链接">¶</a></span>\[\int_{-\infty}^\infty \frac{x^2}{1+x^2}\; dx = \infty.\]</div>
+<p>这意味着它没有定义良好的有限方差。</p>
+<p>然而，再深入看下去，还会得到一个更令人不安的结果。让我们试着利用
+<a class="reference internal" href="#equation-eq-exp-def">(22.6.14)</a> 计算均值。使用换元积分公式，我们看到</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-23">
+<span class="eqno">(22.6.31)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-23" title="此公式的永久链接">¶</a></span>\[\mu_X = \int_{-\infty}^{\infty} \frac{x}{1+x^2} \; dx = \frac{1}{2}\int_1^\infty \frac{1}{u} \; du.\]</div>
+<p>里面的积分正是对数的定义，因此它本质上是
+<span class="math notranslate nohighlight">\(\log(\infty) = \infty\)</span>，所以根本没有定义良好的平均值！</p>
+<p>机器学习科学家在定义模型时会让我们通常不必处理这些问题，绝大多数情况下处理的都是具有良好定义的均值和方差的随机变量。然而，偶尔也有一些<em>重尾</em>（heavy
+tails）随机变量（即那些取大值的概率足够大、以致均值或方差未定义的随机变量）在物理系统建模中很有用，因此值得了解它们的存在。</p>
+</section>
+<section id="id10">
+<h3><span class="section-number">22.6.1.8. </span>联合密度函数<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<p>以上工作都假设我们处理的是单个实值随机变量。但如果我们处理的是两个或更多可能高度相关的随机变量呢？这种情况在机器学习中才是常态：设想像
+<span class="math notranslate nohighlight">\(R_{i, j}\)</span> 这样的随机变量，它编码图像中 <span class="math notranslate nohighlight">\((i, j)\)</span>
+坐标处像素的红色值；或者 <span class="math notranslate nohighlight">\(P_t\)</span>，它是时刻 <span class="math notranslate nohighlight">\(t\)</span>
+的股票价格对应的随机变量。相邻像素的颜色往往相似，相邻时刻的价格往往相近。我们不能把它们当作彼此独立的随机变量并指望建立起成功的模型（我们将在
+<a class="reference internal" href="naive-bayes.html#sec-naive-bayes"><span class="std std-numref">22.9节</span></a>
+中看到一个因这种假设而表现不佳的模型）。我们需要发展出处理这些相关连续随机变量的数学语言。</p>
+<p>值得庆幸的是，借助 <a class="reference internal" href="integral-calculus.html#sec-integral-calculus"><span class="std std-numref">22.5节</span></a>
+中的多重积分，我们可以发展出这样的语言。为简单起见，假设我们有两个可能相关的随机变量
+<span class="math notranslate nohighlight">\(X, Y\)</span>。那么，与单变量情形类似，我们可以提出这样的问题：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-24">
+<span class="eqno">(22.6.32)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-24" title="此公式的永久链接">¶</a></span>\[P(X \;\textrm{is in an}\; \epsilon \textrm{-sized interval around}\; x \; \textrm{and} \;Y \;\textrm{is in an}\; \epsilon \textrm{-sized interval around}\; y ).\]</div>
+<p>与单变量情形类似的推理表明，它应当近似为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-25">
+<span class="eqno">(22.6.33)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-25" title="此公式的永久链接">¶</a></span>\[P(X \;\textrm{is in an}\; \epsilon \textrm{-sized interval around}\; x \; \textrm{and} \;Y \;\textrm{is in an}\; \epsilon \textrm{-sized interval around}\; y ) \approx \epsilon^{2}p(x, y),\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(p(x, y)\)</span> 是某个函数。它被称为 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span>
+的联合密度。与我们在单变量情形看到的一样，它具有类似的性质。即：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p(x, y) \ge 0\)</span>；</p></li>
+<li><p><span class="math notranslate nohighlight">\(\int _ {\mathbb{R}^2} p(x, y) \;dx \;dy = 1\)</span>；</p></li>
+<li><p><span class="math notranslate nohighlight">\(P((X, Y) \in \mathcal{D}) = \int _ {\mathcal{D}} p(x, y) \;dx \;dy\)</span>。</p></li>
+</ul>
+<p>这样，我们就能处理多个可能相关的随机变量。如果我们想处理多于两个的随机变量，可以通过考虑
+<span class="math notranslate nohighlight">\(p(\mathbf{x}) = p(x_1, \ldots, x_n)\)</span>，把多元密度扩展到任意多个坐标。非负性以及总积分为一这两条性质仍然成立。</p>
+</section>
+<section id="id11">
+<h3><span class="section-number">22.6.1.9. </span>边缘分布<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<p>处理多个变量时，我们常常希望能够忽略这些关系，转而问：“这一个变量是如何分布的？”这样的分布称为<em>边缘分布</em>（marginal
+distribution）。</p>
+<p>具体地说，假设我们有两个随机变量 <span class="math notranslate nohighlight">\(X, Y\)</span>，其联合密度为
+<span class="math notranslate nohighlight">\(p _ {X, Y}(x, y)\)</span>。我们将用下标来指明密度对应的是哪些随机变量。求边缘分布的问题，就是拿着这个函数去求出
+<span class="math notranslate nohighlight">\(p _ X(x)\)</span>。</p>
+<p>与大多数事情一样，最好回到直观图像来判断应该成立什么。回想密度的定义：它是函数
+<span class="math notranslate nohighlight">\(p _ X\)</span>，使得</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-26">
+<span class="eqno">(22.6.34)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-26" title="此公式的永久链接">¶</a></span>\[P(X \in [x, x+\epsilon]) \approx \epsilon \cdot p _ X(x).\]</div>
+<p>这里没有提到 <span class="math notranslate nohighlight">\(Y\)</span>，但如果我们得到的只是
+<span class="math notranslate nohighlight">\(p _{X, Y}\)</span>，就需要以某种方式把 <span class="math notranslate nohighlight">\(Y\)</span>
+纳入进来。我们可以先观察到，这等同于</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-27">
+<span class="eqno">(22.6.35)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-27" title="此公式的永久链接">¶</a></span>\[P(X \in [x, x+\epsilon] \textrm{, and } Y \in \mathbb{R}) \approx \epsilon \cdot p _ X(x).\]</div>
+<p>我们的密度并不直接告诉我们这种情况下会发生什么，我们还需要把 <span class="math notranslate nohighlight">\(y\)</span>
+也划分成小区间，因此可以把它写成</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-28">
+<span class="eqno">(22.6.36)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-28" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+\epsilon \cdot p _ X(x) &amp; \approx \sum _ {i} P(X \in [x, x+\epsilon] \textrm{, and } Y \in [\epsilon \cdot i, \epsilon \cdot (i+1)]) \\
+&amp; \approx \sum _ {i} \epsilon^{2} p _ {X, Y}(x, \epsilon\cdot i).
+\end{aligned}\end{split}\]</div>
+<figure class="align-default" id="id16">
+<span id="fig-marginal"></span><img alt="../_images/marginal.svg" src="../_images/marginal.svg" /><figcaption>
+<p><span class="caption-number">图22.6.1 </span><span class="caption-text">沿概率数组的各列求和，我们就能得到只针对沿 <span class="math notranslate nohighlight">\(\mathit{x}\)</span>
+轴所表示的随机变量的边缘分布。</span><a class="headerlink" href="#id16" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>这告诉我们要把一条直线上的一串小方格上的密度值加起来，如
+<a class="reference internal" href="#fig-marginal"><span class="std std-numref">图22.6.1</span></a> 所示。事实上，从两边约去一个 epsilon
+因子，并认出右边的和是关于 <span class="math notranslate nohighlight">\(y\)</span> 的积分之后，我们可以得出结论</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-29">
+<span class="eqno">(22.6.37)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-29" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+ p _ X(x) &amp;  \approx \sum _ {i} \epsilon p _ {X, Y}(x, \epsilon\cdot i) \\
+ &amp; \approx \int_{-\infty}^\infty p_{X, Y}(x, y) \; dy.
+\end{aligned}\end{split}\]</div>
+<p>于是我们看到</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-30">
+<span class="eqno">(22.6.38)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-30" title="此公式的永久链接">¶</a></span>\[p _ X(x) = \int_{-\infty}^\infty p_{X, Y}(x, y) \; dy.\]</div>
+<p>这告诉我们，要得到边缘分布，就要对我们不关心的那些变量求积分。这一过程通常被称为对不需要的变量<em>积分消去</em>（integrating
+out）或<em>边缘化消去</em>（marginalized out）。</p>
+</section>
+<section id="id12">
+<h3><span class="section-number">22.6.1.10. </span>协方差<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h3>
+<p>处理多个随机变量时，还有一个值得了解的汇总统计量：<em>协方差</em>（covariance）。它度量两个随机变量一起波动的程度。</p>
+<p>假设我们有两个随机变量 <span class="math notranslate nohighlight">\(X\)</span> 和
+<span class="math notranslate nohighlight">\(Y\)</span>。首先假定它们是离散的，以概率 <span class="math notranslate nohighlight">\(p_{ij}\)</span> 取值
+<span class="math notranslate nohighlight">\((x_i, y_j)\)</span>。此时，协方差定义为</p>
+<div class="math notranslate nohighlight" id="equation-eq-cov-def">
+<span class="eqno">(22.6.39)<a class="headerlink" href="#equation-eq-cov-def" title="此公式的永久链接">¶</a></span>\[\sigma_{XY} = \textrm{Cov}(X, Y) = \sum_{i, j} (x_i - \mu_X) (y_j-\mu_Y) p_{ij}. = E[XY] - E[X]E[Y].\]</div>
+<p>为了直观地思考它：考虑下面这对随机变量。假设 <span class="math notranslate nohighlight">\(X\)</span> 取值为 <span class="math notranslate nohighlight">\(1\)</span>
+和 <span class="math notranslate nohighlight">\(3\)</span>，<span class="math notranslate nohighlight">\(Y\)</span> 取值为 <span class="math notranslate nohighlight">\(-1\)</span> 和
+<span class="math notranslate nohighlight">\(3\)</span>。假设我们有如下概率</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-31">
+<span class="eqno">(22.6.40)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-31" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+P(X = 1 \; \textrm{and} \; Y = -1) &amp; = \frac{p}{2}, \\
+P(X = 1 \; \textrm{and} \; Y = 3) &amp; = \frac{1-p}{2}, \\
+P(X = 3 \; \textrm{and} \; Y = -1) &amp; = \frac{1-p}{2}, \\
+P(X = 3 \; \textrm{and} \; Y = 3) &amp; = \frac{p}{2},
+\end{aligned}\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(p\)</span> 是 <span class="math notranslate nohighlight">\([0,1]\)</span> 中一个可由我们选取的参数。注意，如果
+<span class="math notranslate nohighlight">\(p=1\)</span>，那么两者总是同时取各自的最小值或最大值；如果
+<span class="math notranslate nohighlight">\(p=0\)</span>，那么它们必定同时取彼此翻转后的值（一方大时另一方小，反之亦然）。如果
+<span class="math notranslate nohighlight">\(p=1/2\)</span>，那么四种可能性出现的概率都相同，两者之间不应有任何关联。让我们计算协方差。首先注意
+<span class="math notranslate nohighlight">\(\mu_X = 2\)</span>、<span class="math notranslate nohighlight">\(\mu_Y = 1\)</span>，因此可以利用
+<a class="reference internal" href="#equation-eq-cov-def">(22.6.39)</a> 计算：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-32">
+<span class="eqno">(22.6.41)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-32" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+\textrm{Cov}(X, Y) &amp; = \sum_{i, j} (x_i - \mu_X) (y_j-\mu_Y) p_{ij} \\
+&amp; = (1-2)(-1-1)\frac{p}{2} + (1-2)(3-1)\frac{1-p}{2} + (3-2)(-1-1)\frac{1-p}{2} + (3-2)(3-1)\frac{p}{2} \\
+&amp; = 4p-2.
+\end{aligned}\end{split}\]</div>
+<p>当 <span class="math notranslate nohighlight">\(p=1\)</span>（两者同时取最大正值或最大负值的情形）时，协方差为
+<span class="math notranslate nohighlight">\(2\)</span>。当 <span class="math notranslate nohighlight">\(p=0\)</span>（两者彼此翻转的情形）时，协方差为
+<span class="math notranslate nohighlight">\(-2\)</span>。最后，当 <span class="math notranslate nohighlight">\(p=1/2\)</span>（两者无关的情形）时，协方差为
+<span class="math notranslate nohighlight">\(0\)</span>。于是我们看到，协方差度量了这两个随机变量之间的关联程度。</p>
+<p>关于协方差还有一点需要提醒：它只度量线性关系。像 <span class="math notranslate nohighlight">\(X = Y^2\)</span>
+这样更复杂的关系，其中 <span class="math notranslate nohighlight">\(Y\)</span> 等概率地从 <span class="math notranslate nohighlight">\(\{-2, -1, 0, 1, 2\}\)</span>
+中随机选取，就可能被漏掉。事实上，简单计算一下就会发现，尽管其中一个变量是另一个变量的确定性函数，这两个随机变量的协方差却为零。</p>
+<p>对连续随机变量而言，情况大体相同。此时我们已经对离散与连续之间的转换相当熟悉了，因此我们将不加推导地给出
+<a class="reference internal" href="#equation-eq-cov-def">(22.6.39)</a> 的连续版本。</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-33">
+<span class="eqno">(22.6.42)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-33" title="此公式的永久链接">¶</a></span>\[\sigma_{XY} = \int_{\mathbb{R}^2} (x-\mu_X)(y-\mu_Y)p(x, y) \;dx \;dy.\]</div>
+<p>为了可视化，让我们看一组协方差可调的随机变量。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-15-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-15-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-15-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-15-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable covariance</span>
+<span class="n">covs</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cov = </span><span class="si">{</span><span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-15-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable covariance</span>
+<span class="n">covs</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">500</span><span class="p">))</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cov = </span><span class="si">{</span><span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-15-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable covariance</span>
+<span class="n">covs</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="p">))</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cov = </span><span class="si">{</span><span class="n">covs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div><p>让我们看看协方差的一些性质：</p>
+<ul class="simple">
+<li><p>对任意随机变量
+<span class="math notranslate nohighlight">\(X\)</span>，<span class="math notranslate nohighlight">\(\textrm{Cov}(X, X) = \textrm{Var}(X)\)</span>。</p></li>
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X, Y\)</span> 和数 <span class="math notranslate nohighlight">\(a\)</span> 与
+<span class="math notranslate nohighlight">\(b\)</span>，<span class="math notranslate nohighlight">\(\textrm{Cov}(aX+b, Y) = \textrm{Cov}(X, aY+b) = a\textrm{Cov}(X, Y)\)</span>。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(X\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span> 相互独立，那么
+<span class="math notranslate nohighlight">\(\textrm{Cov}(X, Y) = 0\)</span>。</p></li>
+</ul>
+<p>此外，我们可以用协方差来推广之前看到的一个关系。回想一下，如果 <span class="math notranslate nohighlight">\(X\)</span>
+和 <span class="math notranslate nohighlight">\(Y\)</span> 是两个相互独立的随机变量，那么</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-34">
+<span class="eqno">(22.6.43)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-34" title="此公式的永久链接">¶</a></span>\[\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y).\]</div>
+<p>有了协方差的知识，我们可以推广这一关系。事实上，一些代数运算可以表明，一般情况下</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-35">
+<span class="eqno">(22.6.44)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-35" title="此公式的永久链接">¶</a></span>\[\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y) + 2\textrm{Cov}(X, Y).\]</div>
+<p>这使我们能把方差求和法则推广到相关的随机变量。</p>
+</section>
+<section id="id13">
+<h3><span class="section-number">22.6.1.11. </span>相关性<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<p>正如我们在均值和方差的情形中所做的那样，现在让我们考虑单位。如果
+<span class="math notranslate nohighlight">\(X\)</span> 以某种单位度量（比如英寸），而 <span class="math notranslate nohighlight">\(Y\)</span>
+以另一种单位度量（比如美元），那么协方差就以这两种单位的乘积
+<span class="math notranslate nohighlight">\(\textrm{inches} \times \textrm{dollars}\)</span>
+度量。这些单位可能难以解释。此时我们往往想要一个无量纲的关联度量。事实上，我们常常并不关心精确的定量相关性，而是问相关性是否同向、以及关系有多强。</p>
+<p>为了看清什么才是合理的，让我们做一个思想实验。假设我们把以英寸和美元度量的随机变量改成以英寸和美分度量。此时随机变量
+<span class="math notranslate nohighlight">\(Y\)</span> 被乘以 <span class="math notranslate nohighlight">\(100\)</span>。如果按定义推导一遍，这意味着
+<span class="math notranslate nohighlight">\(\textrm{Cov}(X, Y)\)</span> 会被乘以
+<span class="math notranslate nohighlight">\(100\)</span>。于是我们看到，此时单位的改变使协方差变化为原来的
+<span class="math notranslate nohighlight">\(100\)</span>
+倍。因此，要找到与单位无关的相关性度量，我们需要除以另一个同样会被放大
+<span class="math notranslate nohighlight">\(100\)</span>
+倍的量。事实上我们有一个明确的候选者：标准差！的确，如果我们定义<em>相关系数</em>（correlation
+coefficient）为</p>
+<div class="math notranslate nohighlight" id="equation-eq-cor-def">
+<span class="eqno">(22.6.45)<a class="headerlink" href="#equation-eq-cor-def" title="此公式的永久链接">¶</a></span>\[\rho(X, Y) = \frac{\textrm{Cov}(X, Y)}{\sigma_{X}\sigma_{Y}},\]</div>
+<p>就会看到这是一个无量纲的值。稍作数学推导便可证明，这个数介于 <span class="math notranslate nohighlight">\(-1\)</span>
+和 <span class="math notranslate nohighlight">\(1\)</span> 之间，其中 <span class="math notranslate nohighlight">\(1\)</span> 表示最大正相关，而 <span class="math notranslate nohighlight">\(-1\)</span>
+表示最大负相关。</p>
+<p>回到上面那个明确的离散例子，可以看到
+<span class="math notranslate nohighlight">\(\sigma_X = 1\)</span>、<span class="math notranslate nohighlight">\(\sigma_Y = 2\)</span>，因此利用
+<a class="reference internal" href="#equation-eq-cor-def">(22.6.45)</a> 可以算出这两个随机变量之间的相关性为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-36">
+<span class="eqno">(22.6.46)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-36" title="此公式的永久链接">¶</a></span>\[\rho(X, Y) = \frac{4p-2}{1\cdot 2} = 2p-1.\]</div>
+<p>它现在介于 <span class="math notranslate nohighlight">\(-1\)</span> 和 <span class="math notranslate nohighlight">\(1\)</span> 之间，其行为符合预期：<span class="math notranslate nohighlight">\(1\)</span>
+表示最相关，<span class="math notranslate nohighlight">\(-1\)</span> 表示相关性最小。</p>
+<p>再举一个例子，考虑 <span class="math notranslate nohighlight">\(X\)</span> 为任意随机变量，<span class="math notranslate nohighlight">\(Y=aX+b\)</span> 为
+<span class="math notranslate nohighlight">\(X\)</span> 的任意线性确定性函数。于是可以算出</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-37">
+<span class="eqno">(22.6.47)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-37" title="此公式的永久链接">¶</a></span>\[\sigma_{Y} = \sigma_{aX+b} = |a|\sigma_{X},\]</div>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-38">
+<span class="eqno">(22.6.48)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-38" title="此公式的永久链接">¶</a></span>\[\textrm{Cov}(X, Y) = \textrm{Cov}(X, aX+b) = a\textrm{Cov}(X, X) = a\textrm{Var}(X),\]</div>
+<p>从而由 <a class="reference internal" href="#equation-eq-cor-def">(22.6.45)</a> 可得</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-39">
+<span class="eqno">(22.6.49)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-39" title="此公式的永久链接">¶</a></span>\[\rho(X, Y) = \frac{a\textrm{Var}(X)}{|a|\sigma_{X}^2} = \frac{a}{|a|} = \textrm{sign}(a).\]</div>
+<p>于是我们看到，对任意 <span class="math notranslate nohighlight">\(a &gt; 0\)</span> 相关性为 <span class="math notranslate nohighlight">\(+1\)</span>，对任意
+<span class="math notranslate nohighlight">\(a &lt; 0\)</span> 相关性为
+<span class="math notranslate nohighlight">\(-1\)</span>，这说明相关性度量的是两个随机变量相关联的程度与方向，而不是波动所取的尺度。</p>
+<p>让我们再次画出一组相关性可调的随机变量。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-17-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-17-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-17-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-17-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable correlations</span>
+<span class="n">cors</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span>
+                                 <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cor = </span><span class="si">{</span><span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-17-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable correlations</span>
+<span class="n">cors</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cor = </span><span class="si">{</span><span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-17-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a few random variables adjustable correlations</span>
+<span class="n">cors</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span> <span class="o">-</span>
+                                 <span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="p">))</span>
+
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'X'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Y'</span><span class="p">)</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'cor = </span><span class="si">{</span><span class="n">cors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div><p>下面列出相关性的一些性质。</p>
+<ul class="simple">
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X\)</span>，<span class="math notranslate nohighlight">\(\rho(X, X) = 1\)</span>。</p></li>
+<li><p>对任意随机变量 <span class="math notranslate nohighlight">\(X, Y\)</span> 和数 <span class="math notranslate nohighlight">\(a\)</span> 与
+<span class="math notranslate nohighlight">\(b\)</span>，<span class="math notranslate nohighlight">\(\rho(aX+b, Y) = \rho(X, aY+b) = \rho(X, Y)\)</span>。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(X\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span> 相互独立且方差非零，那么
+<span class="math notranslate nohighlight">\(\rho(X, Y) = 0\)</span>。</p></li>
+</ul>
+<p>最后一点提示：你可能会觉得其中一些公式似曾相识。事实上，如果在假设
+<span class="math notranslate nohighlight">\(\mu_X = \mu_Y = 0\)</span> 的情况下把一切展开，就会看到它是</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-40">
+<span class="eqno">(22.6.50)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-40" title="此公式的永久链接">¶</a></span>\[\rho(X, Y) = \frac{\sum_{i, j} x_iy_ip_{ij}}{\sqrt{\sum_{i, j}x_i^2 p_{ij}}\sqrt{\sum_{i, j}y_j^2 p_{ij}}}.\]</div>
+<p>这看起来像是若干个项的乘积之和除以若干项之和的平方根。这正是两个向量
+<span class="math notranslate nohighlight">\(\mathbf{v}, \mathbf{w}\)</span> 之间夹角余弦的公式，只不过不同坐标按
+<span class="math notranslate nohighlight">\(p_{ij}\)</span> 加权：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-appendix-mathematics-for-deep-learning-random-variables-41">
+<span class="eqno">(22.6.51)<a class="headerlink" href="#equation-chapter-appendix-mathematics-for-deep-learning-random-variables-41" title="此公式的永久链接">¶</a></span>\[\cos(\theta) = \frac{\mathbf{v}\cdot \mathbf{w}}{\|\mathbf{v}\|\|\mathbf{w}\|} = \frac{\sum_{i} v_iw_i}{\sqrt{\sum_{i}v_i^2}\sqrt{\sum_{i}w_i^2}}.\]</div>
+<p>事实上，如果我们把范数看作与标准差相关，把相关性看作夹角的余弦，那么从几何中获得的大量直觉都可以用于思考随机变量。</p>
+</section>
+</section>
+<section id="id14">
+<h2><span class="section-number">22.6.2. </span>小结<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h2>
+<ul class="simple">
+<li><p>连续随机变量是可以取连续统中值的随机变量。它们有一些技术上的困难，使其处理起来比离散随机变量更具挑战性。</p></li>
+<li><p>概率密度函数使我们能够处理连续随机变量：它给出一个函数，该函数在某区间上曲线下方的面积给出了在该区间内找到一个样本点的概率。</p></li>
+<li><p>累积分布函数是观察到随机变量小于给定阈值的概率。它提供了一个有用的替代视角，把离散变量和连续变量统一起来。</p></li>
+<li><p>均值是随机变量的平均值。</p></li>
+<li><p>方差是随机变量与其均值之差的平方的期望。</p></li>
+<li><p>标准差是方差的平方根。它可以看作度量随机变量可能取值范围的大小。</p></li>
+<li><p>切比雪夫不等式让我们把这一直觉严格化：它给出一个显式区间，随机变量在大多数时候都落于其中。</p></li>
+<li><p>联合密度使我们能够处理相关的随机变量。我们可以对联合密度关于不想要的随机变量求积分来做边缘化，从而得到所需随机变量的分布。</p></li>
+<li><p>协方差和相关系数提供了一种度量两个相关随机变量之间任何线性关系的方法。</p></li>
+</ul>
+</section>
+<section id="id15">
+<h2><span class="section-number">22.6.3. </span>习题<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h2>
+<ol class="arabic simple">
+<li><p>假设有一个随机变量，其密度在 <span class="math notranslate nohighlight">\(x \ge 1\)</span> 时为
+<span class="math notranslate nohighlight">\(p(x) = \frac{1}{x^2}\)</span>，其他情况下为
+<span class="math notranslate nohighlight">\(p(x) = 0\)</span>。<span class="math notranslate nohighlight">\(P(X &gt; 2)\)</span> 是多少？</p></li>
+<li><p>拉普拉斯分布是一个密度由 <span class="math notranslate nohighlight">\(p(x = \frac{1}{2}e^{-|x|}\)</span>
+给出的随机变量。该函数的均值和标准差各是多少？提示：<span class="math notranslate nohighlight">\(\int_0^\infty xe^{-x} \; dx = 1\)</span>，<span class="math notranslate nohighlight">\(\int_0^\infty x^2e^{-x} \; dx = 2\)</span>。</p></li>
+<li><p>我在街上走到你面前说：“我有一个随机变量，均值为 <span class="math notranslate nohighlight">\(1\)</span>、标准差为
+<span class="math notranslate nohighlight">\(2\)</span>，而且我观测到 <span class="math notranslate nohighlight">\(25\%\)</span> 的样本取值大于
+<span class="math notranslate nohighlight">\(9\)</span>。”你相信我吗？为什么相信或为什么不相信？</p></li>
+<li><p>假设你有两个随机变量 <span class="math notranslate nohighlight">\(X, Y\)</span>，其联合密度在
+<span class="math notranslate nohighlight">\(x, y \in [0,1]\)</span> 时为
+<span class="math notranslate nohighlight">\(p_{XY}(x, y) = 4xy\)</span>，其他情况下为
+<span class="math notranslate nohighlight">\(p_{XY}(x, y) = 0\)</span>。<span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 的协方差是多少？</p></li>
+</ol>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar text"><a href="#pytorch-19-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-19-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-19-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-19-0"><p><a class="reference external" href="https://discuss.d2l.ai/t/1094">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="mxnet-19-1"><p><a class="reference external" href="https://discuss.d2l.ai/t/415">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="tensorflow-19-2"><p><a class="reference external" href="https://discuss.d2l.ai/t/1095">讨论</a></p>
+</div></div></section>
+</section>
+
+
+<!-- d2l-zh-footer -->
+<footer class="d2l-site-footer">
+  <p><strong>《动手学深度学习》简体中文全译本</strong> · 译自
+     <a href="https://d2l.ai/">Dive into Deep Learning</a> 1.0.3
+     （d2l-en@23d7a5a）</p>
+  <p>原文与插图 © 2023 D2L 作者，依
+     <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+     许可发布；本译本以相同许可共享。</p>
+  <p><a href="https://github.com/fau-linrui/dive-into-deep-learning-zh">译本仓库</a>
+     <span class="sep">·</span><a href="../index.html">返回目录</a>
+     <span class="sep">·</span>发现翻译问题？欢迎提交 Issue</p>
+</footer>
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">22.6. 随机变量</a><ul>
+<li><a class="reference internal" href="#id2">22.6.1. 连续随机变量</a><ul>
+<li><a class="reference internal" href="#id3">22.6.1.1. 从离散到连续</a></li>
+<li><a class="reference internal" href="#id4">22.6.1.2. 概率密度函数</a></li>
+<li><a class="reference internal" href="#id5">22.6.1.3. 累积分布函数</a></li>
+<li><a class="reference internal" href="#id6">22.6.1.4. 均值</a></li>
+<li><a class="reference internal" href="#id7">22.6.1.5. 方差</a></li>
+<li><a class="reference internal" href="#id8">22.6.1.6. 标准差</a></li>
+<li><a class="reference internal" href="#id9">22.6.1.7. 连续情形下的均值与方差</a></li>
+<li><a class="reference internal" href="#id10">22.6.1.8. 联合密度函数</a></li>
+<li><a class="reference internal" href="#id11">22.6.1.9. 边缘分布</a></li>
+<li><a class="reference internal" href="#id12">22.6.1.10. 协方差</a></li>
+<li><a class="reference internal" href="#id13">22.6.1.11. 相关性</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id14">22.6.2. 小结</a></li>
+<li><a class="reference internal" href="#id15">22.6.3. 习题</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="integral-calculus.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>22.5. 积分学</div>
+         </div>
+     </a>
+     <a id="button-next" href="maximum-likelihood.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>22.7. 最大似然</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+<!-- d2l-site-styles -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>2.6. 概率与统计 &#8212; 动手学深度学习</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2.7. 文档" href="lookup-api.html" />
+    <link rel="prev" title="2.5. 自动微分" href="autograd.html" /> 
+  <link rel="stylesheet" href="../_static/site.css" type="text/css" />
+<script src="../_static/site.js" defer></script>
+<!-- d2l-site-script -->
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">2. </span>预备知识</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">2.6. </span>概率与统计</a>
+        <span class="d2l-zh-badge">简体中文全译本</span></nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      快速搜索
+      </div>
+</form>
+        
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://d2l.ai">
+                  <i class="fas fa-book"></i>
+                  英文原书
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://github.com/fau-linrui/dive-into-deep-learning-zh">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://discuss.d2l.ai">
+                  <i class="fas fa-comments"></i>
+                  讨论社区
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. 预备知识</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. 预备知识</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_optimization/index.html">12. 优化算法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/convexity.html">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_optimization/lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <section id="sec-prob">
+<span id="id1"></span><h1><span class="section-number">2.6. </span>概率与统计<a class="headerlink" href="#sec-prob" title="此标题的永久链接">¶</a></h1>
+<p>无论如何， 机器学习都与不确定性有关。 在监督学习中，我们希望
+给定已知的某样东西（<em>特征</em>） 来预测未知的某样东西（<em>目标值</em>）。
+根据我们的目标， 我们可能试图预测 目标值最可能的值。
+或者，我们可能预测与目标值 期望距离最小的值。 而有时，我们不仅希望
+预测一个具体的值， 还希望<em>量化我们的不确定性</em>。
+例如，给定描述某位病人的 一些特征， 我们可能想知道他在接下来一年中
+心脏病发作的<em>可能性有多大</em>。 在无监督学习中， 我们常常关心不确定性。
+要判断一组测量是否异常， 知道在感兴趣的总体中
+观测到某些值的可能性有多大是有帮助的。 此外，在强化学习中，
+我们希望开发出 能在各种环境中智能行动的智能体。
+这需要对以下问题进行推理： 环境可能如何变化， 以及在响应每个可用动作时
+可能遇到什么奖励。</p>
+<p><em>概率</em>（probability）是 研究不确定性下推理的数学领域。
+给定某个过程的概率模型， 我们就可以对各种事件的可能性进行推理。
+用概率来描述 可重复事件 （如抛硬币）的频率， 是相当没有争议的。
+事实上，<em>频率学派</em>（frequentist）学者坚持
+一种<em>只</em>适用于此类可重复事件的 概率解释。
+相比之下，<em>贝叶斯学派</em>（Bayesian）学者 更广泛地使用概率的语言，
+来形式化不确定性下的推理。 贝叶斯概率 有两个独特之处：
+（i）对不可重复的事件 赋予信念程度， 例如，一座大坝
+<em>垮塌的概率</em>是多少？； （ii）主观性。虽然贝叶斯 概率为人们应当如何
+根据新证据更新信念提供了明确的规则， 但它允许不同的个体
+从不同的<em>先验</em>（prior）信念出发。
+<em>统计学</em>（statistics）帮助我们进行反向推理： 从数据的收集与组织开始，
+反推我们可能对生成数据的过程 得出什么推断。
+每当我们分析一个数据集、寻找模式， 希望这些模式可能刻画更广泛的总体时，
+我们都在运用统计思维。 许多课程、专业、论文、职业、院系、
+公司和机构都致力于 概率与统计的研究。 本节虽然只是略窥门径，
+但我们会提供 你开始构建模型所需的基础。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-1-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-1-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-1-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-1-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-1-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions.multinomial</span><span class="w"> </span><span class="kn">import</span> <span class="n">Multinomial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">torch</span> <span class="k">as</span> <span class="n">d2l</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-1-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mxnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">np</span><span class="p">,</span> <span class="n">npx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mxnet.numpy.random</span><span class="w"> </span><span class="kn">import</span> <span class="n">multinomial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">mxnet</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">npx</span><span class="o">.</span><span class="n">set_np</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="jax-1-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">jnp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">jax</span> <span class="k">as</span> <span class="n">d2l</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-1-3"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow_probability</span><span class="w"> </span><span class="kn">import</span> <span class="n">distributions</span> <span class="k">as</span> <span class="n">tfd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">tensorflow</span> <span class="k">as</span> <span class="n">d2l</span>
+</pre></div>
+</div>
+</div></div><section id="id2">
+<h2><span class="section-number">2.6.1. </span>一个简单的例子：抛硬币<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>设想我们打算抛一枚硬币， 并想量化看到正面 （相对于反面）的可能性有多大。
+如果硬币是<em>公平的</em>， 那么两种结果 （正面和反面） 的可能性相同。
+此外，如果我们打算抛这枚硬币<span class="math notranslate nohighlight">\(n\)</span>次， 那么我们<em>期望</em>看到的
+正面比例，应当恰好等于 <em>期望的</em>反面比例。 看待这一点的一种直观方式
+是利用对称性： 对于每一种可能的结果，
+即出现<span class="math notranslate nohighlight">\(n_\textrm{h}\)</span>个正面和<span class="math notranslate nohighlight">\(n_\textrm{t} = (n - n_\textrm{h})\)</span>个反面，
+都存在一个同样可能的结果，
+即出现<span class="math notranslate nohighlight">\(n_\textrm{t}\)</span>个正面和<span class="math notranslate nohighlight">\(n_\textrm{h}\)</span>个反面。
+注意，只有当平均而言 我们期望看到<span class="math notranslate nohighlight">\(1/2\)</span>的抛掷出现正面、
+<span class="math notranslate nohighlight">\(1/2\)</span>出现反面时，这才可能。
+当然，如果你以每次<span class="math notranslate nohighlight">\(n=1000000\)</span>次抛掷 反复做这个实验，
+你可能永远也见不到
+恰好<span class="math notranslate nohighlight">\(n_\textrm{h} = n_\textrm{t}\)</span>的那一次试验。</p>
+<p>在形式上，量<span class="math notranslate nohighlight">\(1/2\)</span>称为<em>概率</em>（probability），
+在这里它刻画了 任意一次抛掷出现正面的确定性程度。
+概率为感兴趣的结果（称为<em>事件</em>（event））
+赋予介于<span class="math notranslate nohighlight">\(0\)</span>和<span class="math notranslate nohighlight">\(1\)</span>之间的分数。
+这里感兴趣的事件是<span class="math notranslate nohighlight">\(\textrm{heads}\)</span>，
+我们用<span class="math notranslate nohighlight">\(P(\textrm{heads})\)</span>表示相应的概率。
+概率为<span class="math notranslate nohighlight">\(1\)</span>表示绝对的确定性 （想象一枚两面都是正面的假硬币），
+概率为<span class="math notranslate nohighlight">\(0\)</span>表示不可能 （例如，如果两面都是反面）。
+频率<span class="math notranslate nohighlight">\(n_\textrm{h}/n\)</span>和<span class="math notranslate nohighlight">\(n_\textrm{t}/n\)</span>不是概率，
+而是<em>统计量</em>（statistics）。 概率是<em>理论上的</em>量，
+构成了数据生成过程的基础。 这里，概率<span class="math notranslate nohighlight">\(1/2\)</span>
+是硬币本身的一种属性。 相比之下，统计量是<em>经验性的</em>量，
+由观测数据的函数计算得到。 我们对概率量和统计量的兴趣
+不可分割地交织在一起。
+我们常常设计特殊统计量，称为<em>估计量</em>（estimator），
+它在给定数据集的情况下产生模型参数
+（例如概率）的<em>估计</em>（estimate）。 此外，当这些估计量满足
+一个称为<em>一致性</em>（consistency）的良好性质时， 我们的估计将收敛
+到相应的概率。 反过来，这些推断出的概率
+又告诉我们，未来可能遇到的来自同一总体的数据 具有怎样的统计性质。</p>
+<p>假设我们偶然得到一枚真实的硬币，
+但不知道它真实的<span class="math notranslate nohighlight">\(P(\textrm{heads})\)</span>。 要用统计方法研究这个量，
+我们需要（i）收集一些数据； （ii）设计一个估计量。
+这里的数据获取很容易： 我们可以抛很多次硬币， 并记录所有结果。
+在形式上，从某个潜在随机过程中 抽取实现值称为<em>采样</em>（sampling）。
+正如你可能已经猜到的， 一种自然的估计量 是观测到的<em>正面</em>次数
+与总抛掷次数之比。</p>
+<p>现在，假设这枚硬币实际上是公平的，
+即<span class="math notranslate nohighlight">\(P(\textrm{heads}) = 0.5\)</span>。 要模拟公平硬币的抛掷，
+我们可以调用任何随机数生成器。 要抽取概率为<span class="math notranslate nohighlight">\(0.5\)</span>的事件的样本，
+有一些简单的方法。 例如，Python的<code class="docutils literal notranslate"><span class="pre">random.random</span></code>
+产生区间<span class="math notranslate nohighlight">\([0,1]\)</span>中的数，
+它落在任意子区间<span class="math notranslate nohighlight">\([a, b] \subset [0,1]\)</span>中的概率
+等于<span class="math notranslate nohighlight">\(b-a\)</span>。 因此，通过检验返回的浮点数是否大于<code class="docutils literal notranslate"><span class="pre">0.5</span></code>，
+我们可以以<code class="docutils literal notranslate"><span class="pre">0.5</span></code>的概率分别得到<code class="docutils literal notranslate"><span class="pre">0</span></code>和<code class="docutils literal notranslate"><span class="pre">1</span></code>：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_tosses</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">heads</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tosses</span><span class="p">)])</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">num_tosses</span> <span class="o">-</span> <span class="n">heads</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"heads, tails: "</span><span class="p">,</span> <span class="p">[</span><span class="n">heads</span><span class="p">,</span> <span class="n">tails</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>更一般地，我们可以模拟 从任何具有有限个可能结果的变量
+（例如抛硬币或掷骰子）中进行多次抽取， 方法是调用multinomial函数，
+把第一个参数设为抽取次数， 第二个参数设为与每个可能结果
+相关联的概率列表。 要模拟公平硬币的十次抛掷，
+我们指定概率向量<code class="docutils literal notranslate"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></code>， 把索引0解释为正面、
+索引1解释为反面。 该函数返回一个向量，
+其长度等于可能结果的数目（这里为2）， 其中第一个分量告诉我们
+正面出现的次数， 第二个分量告诉我们 反面出现的次数。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-5-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-5-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-5-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-5-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-5-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fair_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">Multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-5-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fair_probs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="n">multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="jax-5-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fair_probs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="c1"># jax.random does not have multinomial distribution implemented</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-5-3"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fair_probs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">tfd</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div><p>每次运行这个采样过程时， 你都会得到一个可能与前一次结果 不同的新随机值。
+除以抛掷次数， 就得到了数据中每种结果的<em>频率</em>（frequency）。
+注意，这些频率 和它们所要估计的概率一样， 之和为<span class="math notranslate nohighlight">\(1\)</span>。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-7-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-7-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-7-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-7-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-7-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-7-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="jax-7-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-7-3"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tfd</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> <span class="o">/</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div></div><p>这里，尽管我们模拟的硬币是公平的
+（概率<code class="docutils literal notranslate"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></code>是我们自己设定的），
+正面和反面的计数却可能并不相同。 这是因为我们只抽取了相对少量的样本。
+如果我们没有自己实现这个模拟， 而只看到结果，
+我们怎么知道这枚硬币是稍微不公平， 还是与<span class="math notranslate nohighlight">\(1/2\)</span>的可能偏差
+只是小样本量造成的假象呢？ 让我们看看模拟10,000次抛掷时会发生什么。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-9-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-9-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-9-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-9-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-9-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-9-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">multinomial</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="jax-9-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-9-3"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div></div><p>一般来说，对于重复事件 （如抛硬币）的平均值， 随着重复次数的增加，
+我们的估计保证会收敛 到真实的潜在概率。 这一现象的数学表述
+称为<em>大数定律</em>（law of large numbers），
+而<em>中心极限定理</em>（central limit theorem） 告诉我们，在许多情况下，
+随着样本量<span class="math notranslate nohighlight">\(n\)</span>的增大，
+这些误差应当以<span class="math notranslate nohighlight">\((1/\sqrt{n})\)</span>的速率下降。 让我们通过研究估计值
+如何随着抛掷次数从1增加到10,000而变化， 来获得更多的直观认识。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-11-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-11-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-11-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-11-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-11-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">10000</span><span class="p">,))</span>
+<span class="n">cum_counts</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">cum_counts</span> <span class="o">/</span> <span class="n">cum_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">estimates</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=heads)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=tails)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Samples'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Estimated probability'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-11-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">cum_counts</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">cum_counts</span> <span class="o">/</span> <span class="n">cum_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=heads)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=tails)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Samples'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Estimated probability'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="jax-11-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">cum_counts</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">cum_counts</span> <span class="o">/</span> <span class="n">cum_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=heads)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=tails)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Samples'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Estimated probability'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-11-3"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fair_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">cum_counts</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">cum_counts</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">cum_counts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">estimates</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=heads)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">estimates</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">"P(coin=tails)"</span><span class="p">))</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Samples'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Estimated probability'</span><span class="p">)</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div></div><p>每条实线对应于硬币的两个取值之一， 给出在每一组实验之后，
+硬币出现该取值的估计概率。 黑色虚线给出了真实的潜在概率。
+随着我们通过进行更多实验获得更多数据， 这些曲线会收敛到真实概率。
+你可能已经开始看出 统计学家们所关注的 更高级问题的轮廓：
+这种收敛有多快？ 如果我们已经测试过 同一工厂生产的许多硬币，
+又该如何把这些信息纳入进来？</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">2.6.2. </span>更正式的处理<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h2>
+<p>我们已经走了相当远：提出 一个概率模型、 生成合成数据、 运行统计估计量、
+从经验上评估收敛性， 并报告误差指标（检查偏差）。 然而，要想走得更远，
+我们需要更加精确。</p>
+<p>在处理随机性时， 我们把可能结果的集合记为<span class="math notranslate nohighlight">\(\mathcal{S}\)</span>，
+并称之为<em>样本空间</em>（sample space）或<em>结果空间</em>（outcome
+space）。 这里，每个元素都是一个不同的可能<em>结果</em>（outcome）。
+在抛一枚硬币的情况下，
+<span class="math notranslate nohighlight">\(\mathcal{S} = \{\textrm{heads}, \textrm{tails}\}\)</span>。
+对于单个骰子，<span class="math notranslate nohighlight">\(\mathcal{S} = \{1, 2, 3, 4, 5, 6\}\)</span>。
+抛两枚硬币时，可能的结果为
+<span class="math notranslate nohighlight">\(\{(\textrm{heads}, \textrm{heads}), (\textrm{heads}, \textrm{tails}), (\textrm{tails}, \textrm{heads}), (\textrm{tails}, \textrm{tails})\}\)</span>。
+<em>事件</em>（event）是样本空间的子集。 例如，事件“第一次抛硬币出现正面”
+对应于集合<span class="math notranslate nohighlight">\(\{(\textrm{heads}, \textrm{heads}), (\textrm{heads}, \textrm{tails})\}\)</span>。
+只要随机实验的结果<span class="math notranslate nohighlight">\(z\)</span>
+满足<span class="math notranslate nohighlight">\(z \in \mathcal{A}\)</span>，事件<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>就发生了。
+对于掷一次骰子，我们可以定义事件
+“看到<span class="math notranslate nohighlight">\(5\)</span>”（<span class="math notranslate nohighlight">\(\mathcal{A} = \{5\}\)</span>）
+和“看到奇数”（<span class="math notranslate nohighlight">\(\mathcal{B} = \{1, 3, 5\}\)</span>）。
+在这种情况下，如果骰子掷出<span class="math notranslate nohighlight">\(5\)</span>，
+我们会说<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>和<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>都发生了。
+另一方面，如果<span class="math notranslate nohighlight">\(z = 3\)</span>， 那么<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>没有发生，
+但<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>发生了。</p>
+<p><em>概率</em>函数把事件
+映射为实数值<span class="math notranslate nohighlight">\({P: \mathcal{A} \subseteq \mathcal{S} \rightarrow [0,1]}\)</span>。
+在给定样本空间<span class="math notranslate nohighlight">\(\mathcal{S}\)</span>中，
+事件<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>的概率记为<span class="math notranslate nohighlight">\(P(\mathcal{A})\)</span>，
+它具有以下性质：</p>
+<ul class="simple">
+<li><p>任何事件<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>的概率都是非负实数，即<span class="math notranslate nohighlight">\(P(\mathcal{A}) \geq 0\)</span>；</p></li>
+<li><p>整个样本空间的概率为<span class="math notranslate nohighlight">\(1\)</span>，即<span class="math notranslate nohighlight">\(P(\mathcal{S}) = 1\)</span>；</p></li>
+<li><p>对于任意可数的事件序列<span class="math notranslate nohighlight">\(\mathcal{A}_1, \mathcal{A}_2, \ldots\)</span>，如果它们<em>互斥</em>（即对所有<span class="math notranslate nohighlight">\(i \neq j\)</span>都有<span class="math notranslate nohighlight">\(\mathcal{A}_i \cap \mathcal{A}_j = \emptyset\)</span>），那么其中任一事件发生的概率等于它们各自概率之和，即<span class="math notranslate nohighlight">\(P(\bigcup_{i=1}^{\infty} \mathcal{A}_i) = \sum_{i=1}^{\infty} P(\mathcal{A}_i)\)</span>。</p></li>
+</ul>
+<p>概率论的这些公理 由 <span id="id4">Kolmogorov (<a class="reference internal" href="../chapter_references/zreferences.html#id152" title="Kolmogorov, A. (1933). Sulla determinazione empirica di una legge di distribuzione. Inst. Ital. Attuari, Giorn., 4, 83–91.">1933</a>)</span> 提出，
+可以用来快速推导出许多重要的结论。 例如，由此可以直接得出：
+任何事件<span class="math notranslate nohighlight">\(\mathcal{A}\)</span><em>或</em>其补集<span class="math notranslate nohighlight">\(\mathcal{A}'\)</span>发生的概率为1
+（因为<span class="math notranslate nohighlight">\(\mathcal{A} \cup \mathcal{A}' = \mathcal{S}\)</span>）。
+我们还可以证明<span class="math notranslate nohighlight">\(P(\emptyset) = 0\)</span>，
+因为<span class="math notranslate nohighlight">\(1 = P(\mathcal{S} \cup \mathcal{S}') = P(\mathcal{S} \cup \emptyset) = P(\mathcal{S}) + P(\emptyset) = 1 + P(\emptyset)\)</span>。
+因此，任何事件<span class="math notranslate nohighlight">\(\mathcal{A}\)</span>
+<em>和</em>其补集<span class="math notranslate nohighlight">\(\mathcal{A}'\)</span>同时发生的概率
+为<span class="math notranslate nohighlight">\(P(\mathcal{A} \cap \mathcal{A}') = 0\)</span>。
+通俗地说，这告诉我们不可能事件 发生的概率为零。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">2.6.3. </span>随机变量<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h2>
+<p>当我们谈到诸如骰子掷出奇数、 或第一次抛硬币出现正面这样的事件时，
+我们已经在使用<em>随机变量</em>（random variable）的概念。
+在形式上，随机变量是从 某个潜在样本空间 到一组（可能很多个）值的映射。
+你可能会想，随机变量 与样本空间有何不同， 因为二者都是结果的集合。
+重要的是，随机变量可以比 原始的样本空间粗糙得多。
+即使潜在的样本空间是无限的，
+例如<span class="math notranslate nohighlight">\(0\)</span>和<span class="math notranslate nohighlight">\(1\)</span>之间线段上的点，
+我们也可以定义像“大于0.5”这样的二值随机变量。 此外，多个随机变量
+可以共享同一个潜在样本空间。 例如，“我家的警报是否响起” 和“我家是否被盗”
+都是二值随机变量， 它们共享同一个潜在样本空间。
+因此，知道一个随机变量取的值， 可以告诉我们关于另一个随机变量
+可能取值的一些信息。 知道警报响了， 我们可能会怀疑家里很可能被盗了。</p>
+<p>随机变量取得的每个值 都对应于潜在样本空间的一个子集。
+因此，随机变量<span class="math notranslate nohighlight">\(X\)</span>
+取值为<span class="math notranslate nohighlight">\(v\)</span>（记为<span class="math notranslate nohighlight">\(X=v\)</span>）这一发生情况是一个<em>事件</em>，
+而<span class="math notranslate nohighlight">\(P(X=v)\)</span>表示它的概率。 有时这种记号会显得笨拙，
+在上下文清楚时我们可以滥用记号。
+例如，我们可以用<span class="math notranslate nohighlight">\(P(X)\)</span>宽泛地指
+<span class="math notranslate nohighlight">\(X\)</span>的<em>分布</em>（distribution），即
+告诉我们<span class="math notranslate nohighlight">\(X\)</span>取任一给定值的概率的函数。 另一些时候，我们会写出
+<span class="math notranslate nohighlight">\(P(X,Y) = P(X) P(Y)\)</span>这样的表达式，
+作为对随机变量<span class="math notranslate nohighlight">\(X\)</span>和<span class="math notranslate nohighlight">\(Y\)</span>可取的所有值
+都成立的一个陈述的简写，也就是说，
+对所有<span class="math notranslate nohighlight">\(i,j\)</span>都有<span class="math notranslate nohighlight">\(P(X=i \textrm{ and } Y=j) = P(X=i)P(Y=j)\)</span>。
+还有些时候，当随机变量从上下文中
+可以清楚地看出时，我们滥用记号写成<span class="math notranslate nohighlight">\(P(v)\)</span>。
+由于概率论中的事件是样本空间中结果的集合，
+我们可以指定随机变量取值的范围。
+例如，<span class="math notranslate nohighlight">\(P(1 \leq X \leq 3)\)</span>表示事件<span class="math notranslate nohighlight">\(\{1 \leq X \leq 3\}\)</span>的概率。</p>
+<p>注意，<em>离散</em>（discrete）随机变量， 如抛硬币或掷骰子，
+与<em>连续</em>（continuous）随机变量， 如从总体中随机抽取的
+某人的体重和身高， 之间存在微妙的差别。 对于后者，我们很少真正关心
+某人的确切身高。 此外，如果我们进行足够精确的测量，
+就会发现地球上没有两个人 身高完全相同。 事实上，测量足够精细的话，
+你醒来时和入睡时的身高都不会相同。 问某人身高恰好为
+1.801392782910287192米的精确概率 是没有多大意义的。
+相反，我们通常更关心的， 是能够说出某人的身高 是否落在某个给定区间内，
+比如在1.79米到1.81米之间。
+在这些情况下，我们处理的是概率<em>密度</em>（density）。 身高恰好为1.80米的
+概率为零，但密度非零。 要算出分配给某个区间的概率，
+我们必须对该区间上的密度 取<em>积分</em>（integral）。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">2.6.4. </span>多个随机变量<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h2>
+<p>你可能已经注意到，我们在上一节中 都无法回避涉及
+多个随机变量之间相互作用的陈述
+（回想一下<span class="math notranslate nohighlight">\(P(X,Y) = P(X) P(Y)\)</span>）。 机器学习的大部分内容
+都关心这类关系。 这里，样本空间将是 感兴趣的总体，
+比如与某企业有交易的顾客、 互联网上的照片， 或者生物学家所知的蛋白质。
+每个随机变量将表示 不同属性的（未知）值。
+每当我们从总体中抽取一个个体时， 我们观测到每个随机变量的一个实现值。
+由于随机变量取的值 对应于样本空间的子集， 而这些子集可能重叠、部分重叠
+或完全不相交， 所以知道一个随机变量取的值， 会使我们更新信念，
+关于另一个随机变量的哪些值可能出现。 如果一位病人走进医院，
+我们观察到他有呼吸困难 并且丧失了嗅觉，
+那么我们会认为他感染COVID-19的可能性， 比他没有呼吸困难、
+嗅觉完全正常时更大。</p>
+<p>在处理多个随机变量时， 我们可以为这些变量能够联合取到的
+每一种取值组合构造事件。
+为每种组合（例如<span class="math notranslate nohighlight">\(A=a\)</span>和<span class="math notranslate nohighlight">\(B=b\)</span>） 赋予概率的概率函数，
+称为<em>联合概率</em>（joint probability）函数， 它简单地返回分配给
+样本空间中相应子集交集的概率。 随机变量<span class="math notranslate nohighlight">\(A\)</span>和<span class="math notranslate nohighlight">\(B\)</span>
+分别取值<span class="math notranslate nohighlight">\(a\)</span>和<span class="math notranslate nohighlight">\(b\)</span>这一事件 所对应的<em>联合概率</em>，
+记为<span class="math notranslate nohighlight">\(P(A = a, B = b)\)</span>， 其中的逗号表示“并且”。
+注意，对任意值<span class="math notranslate nohighlight">\(a\)</span>和<span class="math notranslate nohighlight">\(b\)</span>， 都有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-0">
+<span class="eqno">(2.6.1)<a class="headerlink" href="#equation-chapter-preliminaries-probability-0" title="此公式的永久链接">¶</a></span>\[P(A=a, B=b) \leq P(A=a) \textrm{ and } P(A=a, B=b) \leq P(B = b),\]</div>
+<p>因为要使<span class="math notranslate nohighlight">\(A=a\)</span>和<span class="math notranslate nohighlight">\(B=b\)</span>发生， <span class="math notranslate nohighlight">\(A=a\)</span>必须发生，
+<em>并且</em><span class="math notranslate nohighlight">\(B=b\)</span>也必须发生。 有趣的是，联合概率
+告诉了我们从概率意义上 关于这些随机变量所能知道的一切，
+并且可以用来导出许多其他有用的量，
+包括恢复各个分布<span class="math notranslate nohighlight">\(P(A)\)</span>和<span class="math notranslate nohighlight">\(P(B)\)</span>。
+要恢复<span class="math notranslate nohighlight">\(P(A=a)\)</span>，我们只需
+对随机变量<span class="math notranslate nohighlight">\(B\)</span>能取的所有值<span class="math notranslate nohighlight">\(v\)</span>
+求和<span class="math notranslate nohighlight">\(P(A=a, B=v)\)</span>： <span class="math notranslate nohighlight">\(P(A=a) = \sum_v P(A=a, B=v)\)</span>。</p>
+<p>比值<span class="math notranslate nohighlight">\(\frac{P(A=a, B=b)}{P(A=a)} \leq 1\)</span> 非常重要。
+它称为<em>条件概率</em>（conditional probability），
+并通过“<span class="math notranslate nohighlight">\(\mid\)</span>”符号表示：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-1">
+<span class="eqno">(2.6.2)<a class="headerlink" href="#equation-chapter-preliminaries-probability-1" title="此公式的永久链接">¶</a></span>\[P(B=b \mid A=a) = P(A=a,B=b)/P(A=a).\]</div>
+<p>它告诉我们，一旦以<span class="math notranslate nohighlight">\(A=a\)</span>发生为条件，
+与事件<span class="math notranslate nohighlight">\(B=b\)</span>相关联的新概率。 我们可以把这个条件概率看作
+只把注意力限制在与<span class="math notranslate nohighlight">\(A=a\)</span>相关联的 样本空间子集上，
+然后重新规范化， 使所有概率之和为1。 条件概率实际上就是普通的概率，
+因此只要我们把所有项 都以同一事件为条件、
+从而把注意力限制在同一样本空间上， 它就满足所有公理。
+例如，对于不相交的事件
+<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>和<span class="math notranslate nohighlight">\(\mathcal{B}'\)</span>，有
+<span class="math notranslate nohighlight">\(P(\mathcal{B} \cup \mathcal{B}' \mid A = a) = P(\mathcal{B} \mid A = a) + P(\mathcal{B}' \mid A = a)\)</span>。</p>
+<p>利用条件概率的定义， 我们可以推导出著名的<em>贝叶斯定理</em>（Bayes’
+theorem）。 根据构造，我们有<span class="math notranslate nohighlight">\(P(A, B) = P(B\mid A) P(A)\)</span>
+和<span class="math notranslate nohighlight">\(P(A, B) = P(A\mid B) P(B)\)</span>。 把两个等式结合起来，得到
+<span class="math notranslate nohighlight">\(P(B\mid A) P(A) = P(A\mid B) P(B)\)</span>，因此</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-2">
+<span class="eqno">(2.6.3)<a class="headerlink" href="#equation-chapter-preliminaries-probability-2" title="此公式的永久链接">¶</a></span>\[P(A \mid B) = \frac{P(B\mid A) P(A)}{P(B)}.\]</div>
+<p>这个简单的等式具有深远的意义， 因为它使我们能够颠倒条件作用的方向。
+如果我们知道如何估计<span class="math notranslate nohighlight">\(P(B\mid A)\)</span>、<span class="math notranslate nohighlight">\(P(A)\)</span>和<span class="math notranslate nohighlight">\(P(B)\)</span>，
+那么就可以估计<span class="math notranslate nohighlight">\(P(A\mid B)\)</span>。
+我们常常发现直接估计其中一项比较容易， 而估计另一项比较困难，
+这时贝叶斯定理就可以帮上忙。 例如，如果我们知道某种疾病症状的发生率，
+以及该疾病和症状各自的总体发生率， 就可以根据症状确定
+某人患该疾病的可能性。
+在某些情况下，我们可能无法直接获得<span class="math notranslate nohighlight">\(P(B)\)</span>， 例如症状的发生率。
+这时，贝叶斯定理的一个简化版本就派上了用场：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-3">
+<span class="eqno">(2.6.4)<a class="headerlink" href="#equation-chapter-preliminaries-probability-3" title="此公式的永久链接">¶</a></span>\[P(A \mid B) \propto P(B \mid A) P(A).\]</div>
+<p>由于我们知道<span class="math notranslate nohighlight">\(P(A \mid B)\)</span>必须规范化为<span class="math notranslate nohighlight">\(1\)</span>，
+即<span class="math notranslate nohighlight">\(\sum_a P(A=a \mid B) = 1\)</span>， 我们可以用它来计算</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-4">
+<span class="eqno">(2.6.5)<a class="headerlink" href="#equation-chapter-preliminaries-probability-4" title="此公式的永久链接">¶</a></span>\[P(A \mid B) = \frac{P(B \mid A) P(A)}{\sum_a P(B \mid A=a) P(A = a)}.\]</div>
+<p>在贝叶斯统计中，我们把观察者看作 持有一些（主观的）先验信念——
+关于可用假设合理性的信念， 编码在<em>先验</em>（prior）<span class="math notranslate nohighlight">\(P(H)\)</span>中——
+以及一个<em>似然函数</em>（likelihood function），
+它说明在给定各类假设<span class="math notranslate nohighlight">\(P(E \mid H)\)</span>的情况下，
+观测到所收集证据的任一取值的可能性有多大。 于是，贝叶斯定理被解释为：
+告诉我们如何根据可用的证据<span class="math notranslate nohighlight">\(E\)</span>
+更新初始的<em>先验</em><span class="math notranslate nohighlight">\(P(H)\)</span>， 从而得到<em>后验</em>（posterior）信念
+<span class="math notranslate nohighlight">\(P(H \mid E) = \frac{P(E \mid H) P(H)}{P(E)}\)</span>。
+通俗地说，这可以表述为 “后验等于先验乘以似然，再除以证据”。
+现在，由于证据<span class="math notranslate nohighlight">\(P(E)\)</span>对所有假设都相同，
+我们只需对所有假设进行规范化即可。</p>
+<p>注意，<span class="math notranslate nohighlight">\(\sum_a P(A=a \mid B) = 1\)</span>还允许我们
+对随机变量进行<em>边缘化</em>（marginalize）。也就是说，我们可以从像<span class="math notranslate nohighlight">\(P(A, B)\)</span>这样的联合分布中去掉某些变量。毕竟，我们有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-5">
+<span class="eqno">(2.6.6)<a class="headerlink" href="#equation-chapter-preliminaries-probability-5" title="此公式的永久链接">¶</a></span>\[\sum_a P(B \mid A=a) P(A=a) = \sum_a P(B, A=a) = P(B).\]</div>
+<p><em>独立性</em>（independence）是另一个根本重要的概念， 它构成了统计学中
+许多重要思想的支柱。 简而言之，如果以<span class="math notranslate nohighlight">\(A\)</span>的取值为条件
+不会对与<span class="math notranslate nohighlight">\(B\)</span>相关联的概率分布 造成任何改变，反之亦然，
+那么两个变量就是<em>独立的</em>（independent）。
+更正式地说，独立性（记为<span class="math notranslate nohighlight">\(A \perp B\)</span>）
+要求<span class="math notranslate nohighlight">\(P(A \mid B) = P(A)\)</span>，从而要求
+<span class="math notranslate nohighlight">\(P(A,B) = P(A \mid B) P(B) = P(A) P(B)\)</span>。
+独立性往往是一个合适的假设。 例如，如果随机变量<span class="math notranslate nohighlight">\(A\)</span>
+表示抛一枚公平硬币的结果， 而随机变量<span class="math notranslate nohighlight">\(B\)</span>
+表示抛另一枚硬币的结果， 那么知道<span class="math notranslate nohighlight">\(A\)</span>是否出现正面，
+不应影响<span class="math notranslate nohighlight">\(B\)</span>出现正面的概率。</p>
+<p>当独立性在我们从某个潜在分布中 连续抽取数据时成立
+（这使我们能够得出有力的统计结论），
+或者当它在我们数据中的各个变量之间成立、
+使我们能够使用编码了这种独立结构的 更简单模型时， 独立性尤其有用。
+另一方面，估计随机变量之间的依赖关系 往往正是学习的目的。
+我们之所以关心估计给定症状下患病的概率， 正是因为我们认为疾病和症状
+<em>不是</em>独立的。</p>
+<p>注意，由于条件概率是真正的概率， 独立性和依赖性的概念也适用于它们。
+两个随机变量<span class="math notranslate nohighlight">\(A\)</span>和<span class="math notranslate nohighlight">\(B\)</span>
+在给定第三个变量<span class="math notranslate nohighlight">\(C\)</span>时是<em>条件独立的</em>（conditionally
+independent），
+当且仅当<span class="math notranslate nohighlight">\(P(A, B \mid C) = P(A \mid C)P(B \mid C)\)</span>。
+有趣的是，两个变量可能总体上是独立的，
+但在以第三个变量为条件时就变得不独立。
+当两个随机变量<span class="math notranslate nohighlight">\(A\)</span>和<span class="math notranslate nohighlight">\(B\)</span>
+对应于某个第三个变量<span class="math notranslate nohighlight">\(C\)</span>的原因时， 这种情况经常发生。
+例如，骨折和肺癌在一般人群中可能是独立的， 但如果以住院为条件，
+我们可能会发现骨折与肺癌负相关。 这是因为骨折 <em>解释掉了</em>（explains
+away）某人为什么住院， 从而降低了他们因患肺癌而住院的概率。</p>
+<p>反过来，两个不独立的随机变量 在以第三个变量为条件时也可能变得独立。
+当两个原本无关的事件 有共同原因时，这种情况经常发生。
+在小学生中，鞋码和阅读水平高度相关， 但如果以年龄为条件，
+这种相关性就消失了。</p>
+</section>
+<section id="subsec-probability-hiv-app">
+<span id="id7"></span><h2><span class="section-number">2.6.5. </span>一个例子<a class="headerlink" href="#subsec-probability-hiv-app" title="此标题的永久链接">¶</a></h2>
+<p>让我们来检验一下所学的技能。 假设一位医生给病人做HIV检测。
+这项检测相当准确，如果病人健康却被报告为患病， 那么只有1%的概率出错，
+也就是说，健康病人中有1%的检测结果为阳性。 此外，如果病人确实感染了HIV，
+这项检测从不会漏检。 我们用<span class="math notranslate nohighlight">\(D_1 \in \{0, 1\}\)</span>表示诊断结果
+（<span class="math notranslate nohighlight">\(0\)</span>表示阴性，<span class="math notranslate nohighlight">\(1\)</span>表示阳性），
+用<span class="math notranslate nohighlight">\(H \in \{0, 1\}\)</span>表示HIV感染状况。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>条件概率</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(H=1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(H=0\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(P(D_1 = 1 \mid H)\)</span></p></td>
+<td><p>1</p></td>
+<td><p>0.01</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(P(D_1 = 0 \mid H)\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0.99</p></td>
+</tr>
+</tbody>
+</table>
+<p>注意，各列之和均为1（但行之和不是）， 因为它们都是条件概率。
+让我们计算检测结果为阳性时 病人感染HIV的概率，
+即<span class="math notranslate nohighlight">\(P(H = 1 \mid D_1 = 1)\)</span>。 直观上，这取决于该疾病的常见程度，
+因为它会影响误报的数量。
+假设该人群基本上没有这种疾病，例如<span class="math notranslate nohighlight">\(P(H=1) = 0.0015\)</span>。
+要应用贝叶斯定理，我们需要应用边缘化来确定</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-6">
+<span class="eqno">(2.6.7)<a class="headerlink" href="#equation-chapter-preliminaries-probability-6" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+P(D_1 = 1)
+=&amp; P(D_1=1, H=0) + P(D_1=1, H=1)  \\
+=&amp; P(D_1=1 \mid H=0) P(H=0) + P(D_1=1 \mid H=1) P(H=1) \\
+=&amp; 0.011485.
+\end{aligned}\end{split}\]</div>
+<p>这让我们得到</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-7">
+<span class="eqno">(2.6.8)<a class="headerlink" href="#equation-chapter-preliminaries-probability-7" title="此公式的永久链接">¶</a></span>\[P(H = 1 \mid D_1 = 1) = \frac{P(D_1=1 \mid H=1) P(H=1)}{P(D_1=1)} = 0.1306.\]</div>
+<p>换句话说，尽管检测相当准确， 病人实际感染HIV的概率只有13.06%。
+正如我们所见，概率可能违背直觉。
+病人在收到如此可怕的消息后应该怎么做呢？ 病人很可能会请医生
+再做一次检测以弄清楚情况。 第二次检测具有不同的特性，
+而且不如第一次那么好。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>条件概率</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(H=1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(H=0\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(P(D_2 = 1 \mid H)\)</span></p></td>
+<td><p>0.98</p></td>
+<td><p>0.03</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(P(D_2 = 0 \mid H)\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p>0.97</p></td>
+</tr>
+</tbody>
+</table>
+<p>不幸的是，第二次检测结果也是阳性。 让我们在假设条件独立的前提下，
+计算应用贝叶斯定理所需的各个概率：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-8">
+<span class="eqno">(2.6.9)<a class="headerlink" href="#equation-chapter-preliminaries-probability-8" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+P(D_1 = 1, D_2 = 1 \mid H = 0)
+&amp; = P(D_1 = 1 \mid H = 0) P(D_2 = 1 \mid H = 0)
+=&amp; 0.0003, \\
+P(D_1 = 1, D_2 = 1 \mid H = 1)
+&amp; = P(D_1 = 1 \mid H = 1) P(D_2 = 1 \mid H = 1)
+=&amp; 0.98.
+\end{aligned}\end{split}\]</div>
+<p>现在我们可以应用边缘化，得到 两项检测结果均为阳性的概率：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-9">
+<span class="eqno">(2.6.10)<a class="headerlink" href="#equation-chapter-preliminaries-probability-9" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+&amp;P(D_1 = 1, D_2 = 1)\\
+&amp;= P(D_1 = 1, D_2 = 1, H = 0) + P(D_1 = 1, D_2 = 1, H = 1)  \\
+&amp;= P(D_1 = 1, D_2 = 1 \mid H = 0)P(H=0) + P(D_1 = 1, D_2 = 1 \mid H = 1)P(H=1)\\
+&amp;= 0.00176955.
+\end{aligned}\end{split}\]</div>
+<p>最后，在两项检测均为阳性的情况下， 病人感染HIV的概率为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-10">
+<span class="eqno">(2.6.11)<a class="headerlink" href="#equation-chapter-preliminaries-probability-10" title="此公式的永久链接">¶</a></span>\[P(H = 1 \mid D_1 = 1, D_2 = 1)
+= \frac{P(D_1 = 1, D_2 = 1 \mid H=1) P(H=1)}{P(D_1 = 1, D_2 = 1)}
+= 0.8307.\]</div>
+<p>也就是说，第二次检测让我们 更有信心地相信情况并非一切正常。
+尽管第二次检测的准确率 明显低于第一次， 但它仍然显著改进了我们的估计。
+两项检测彼此条件独立这一假设， 对于我们能够给出更准确的估计至关重要。
+考虑一个极端情形： 我们把同一个检测做两次。
+在这种情况下，我们预期两次结果相同，
+因此再跑一次相同的检测不会带来任何额外的信息。
+敏锐的读者可能已经注意到， 这一诊断过程就像一个隐藏在明处的分类器：
+随着我们获得更多特征（检测结果）， 我们判断病人是否健康的能力会提高。</p>
+</section>
+<section id="id8">
+<h2><span class="section-number">2.6.6. </span>期望<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h2>
+<p>通常，做决策不仅需要看 分配给各个事件的概率，
+还需要把它们组合成有用的聚合量， 从而为我们提供指导。
+例如，当随机变量取连续的标量值时，
+我们往往关心<em>平均</em>而言应该期望什么值。
+这个量正式地称为<em>期望</em>（expectation）。 如果我们进行投资，
+第一个关心的量 可能就是我们能期望的回报， 即对所有可能结果求平均
+（并按相应的概率加权）。 例如，假设一项投资有50%的概率 完全失败，
+有40%的概率带来2<span class="math notranslate nohighlight">\(\times\)</span>的回报，
+有10%的概率带来10<span class="math notranslate nohighlight">\(\times\)</span>的回报10<span class="math notranslate nohighlight">\(\times\)</span>。
+要计算期望回报， 我们对所有回报求和，每一项 乘以它发生的概率。
+这得到期望 <span class="math notranslate nohighlight">\(0.5 \cdot 0 + 0.4 \cdot 2 + 0.1 \cdot 10 = 1.8\)</span>。
+因此期望回报是1.8<span class="math notranslate nohighlight">\(\times\)</span>。</p>
+<p>一般来说，随机变量<span class="math notranslate nohighlight">\(X\)</span>的<em>期望</em>（expectation）（或平均值）
+定义为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-11">
+<span class="eqno">(2.6.12)<a class="headerlink" href="#equation-chapter-preliminaries-probability-11" title="此公式的永久链接">¶</a></span>\[E[X] = E_{x \sim P}[x] = \sum_{x} x P(X = x).\]</div>
+<p>同样，对于密度，我们得到<span class="math notranslate nohighlight">\(E[X] = \int x \;dp(x)\)</span>。
+有时我们关心<span class="math notranslate nohighlight">\(x\)</span>的某个函数的期望值。 我们可以这样计算这些期望：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-12">
+<span class="eqno">(2.6.13)<a class="headerlink" href="#equation-chapter-preliminaries-probability-12" title="此公式的永久链接">¶</a></span>\[E_{x \sim P}[f(x)] = \sum_x f(x) P(x) \textrm{ and } E_{x \sim P}[f(x)] = \int f(x) p(x) \;dx\]</div>
+<p>分别对应离散概率和密度。 回到上面投资的例子，
+<span class="math notranslate nohighlight">\(f\)</span>可能是与回报相关联的<em>效用</em>（utility）（幸福感）。
+行为经济学家早就注意到， 相对于基准而言，
+人们从损失金钱中感受到的负效用， 要大于从赚到一美元中获得的效用。
+此外，金钱的价值往往呈次线性。 拥有10万美元与拥有零美元，
+可能意味着有钱付房租、吃得好、 享受优质医疗，
+与无家可归、饱受煎熬之间的差别。 另一方面，拥有20万美元
+相对于拥有10万美元所带来的收益， 则没有那么惊人。 这样的推理引出了
+那句老生常谈：“金钱的效用是对数的”。</p>
+<p>如果与全部损失相关联的效用是<span class="math notranslate nohighlight">\(-1\)</span>，
+而与<span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(2\)</span>和<span class="math notranslate nohighlight">\(10\)</span>的回报相关联的效用
+分别为<span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(2\)</span>和<span class="math notranslate nohighlight">\(4\)</span>， 那么投资的期望幸福感
+将是<span class="math notranslate nohighlight">\(0.5 \cdot (-1) + 0.4 \cdot 2 + 0.1 \cdot 4 = 0.7\)</span>
+（期望效用损失为30%）。 如果这确实是你的效用函数，
+那么你最好还是把钱存在银行里。</p>
+<p>对于财务决策， 我们可能还想衡量 一项投资有多<em>冒险</em>。
+这里，我们不仅关心期望值， 还关心实际值相对于该值 <em>波动</em>的程度。
+注意，我们不能直接取 实际值与期望值之差的期望。 这是因为差的期望
+等于期望之差， 即<span class="math notranslate nohighlight">\(E[X - E[X]] = E[X] - E[E[X]] = 0\)</span>。
+不过，我们可以考察 该差的任何非负函数的期望。
+随机变量的<em>方差</em>（variance）通过考察 <em>平方</em>差的期望值来计算：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-13">
+<span class="eqno">(2.6.14)<a class="headerlink" href="#equation-chapter-preliminaries-probability-13" title="此公式的永久链接">¶</a></span>\[\textrm{Var}[X] = E\left[(X - E[X])^2\right] = E[X^2] - E[X]^2.\]</div>
+<p>这里的等式是通过展开 <span class="math notranslate nohighlight">\((X - E[X])^2 = X^2 - 2 X E[X] + E[X]^2\)</span>
+并对每一项取期望得到的。 方差的平方根是另一个
+有用的量，称为<em>标准差</em>（standard deviation）。 虽然它与方差
+传达相同的信息（二者可以互相计算）， 但标准差有一个很好的性质：
+它与随机变量所表示的原始量 具有相同的单位。</p>
+<p>最后，随机变量的函数 的方差类似地定义为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-14">
+<span class="eqno">(2.6.15)<a class="headerlink" href="#equation-chapter-preliminaries-probability-14" title="此公式的永久链接">¶</a></span>\[\textrm{Var}_{x \sim P}[f(x)] = E_{x \sim P}[f^2(x)] - E_{x \sim P}[f(x)]^2.\]</div>
+<p>回到我们的投资例子， 现在可以计算该投资的方差。
+它由<span class="math notranslate nohighlight">\(0.5 \cdot 0 + 0.4 \cdot 2^2 + 0.1 \cdot 10^2 - 1.8^2 = 8.36\)</span>给出。
+无论从哪个意义上说，这都是一项有风险的投资。
+注意，按照数学惯例，均值和方差
+通常记为<span class="math notranslate nohighlight">\(\mu\)</span>和<span class="math notranslate nohighlight">\(\sigma^2\)</span>。
+当我们用它来参数化高斯分布时 尤其如此。</p>
+<p>正如我们为<em>标量</em>随机变量 引入期望和方差一样，
+我们也可以为向量值随机变量这样做。
+期望很容易，因为我们可以按元素地应用它。
+例如，<span class="math notranslate nohighlight">\(\boldsymbol{\mu} \stackrel{\textrm{def}}{=} E_{\mathbf{x} \sim P}[\mathbf{x}]\)</span>
+的坐标为<span class="math notranslate nohighlight">\(\mu_i = E_{\mathbf{x} \sim P}[x_i]\)</span>。
+<em>协方差</em>（covariance）要复杂一些。 我们通过取随机变量与其均值之差的
+<em>外积</em>的期望来定义它们：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-15">
+<span class="eqno">(2.6.16)<a class="headerlink" href="#equation-chapter-preliminaries-probability-15" title="此公式的永久链接">¶</a></span>\[\boldsymbol{\Sigma} \stackrel{\textrm{def}}{=} \textrm{Cov}_{\mathbf{x} \sim P}[\mathbf{x}] = E_{\mathbf{x} \sim P}\left[(\mathbf{x} - \boldsymbol{\mu}) (\mathbf{x} - \boldsymbol{\mu})^\top\right].\]</div>
+<p>矩阵<span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}\)</span>称为协方差矩阵。
+要看出它的作用，一种简单的方法是
+考虑某个与<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>大小相同的向量<span class="math notranslate nohighlight">\(\mathbf{v}\)</span>。
+由此可得</p>
+<div class="math notranslate nohighlight" id="equation-chapter-preliminaries-probability-16">
+<span class="eqno">(2.6.17)<a class="headerlink" href="#equation-chapter-preliminaries-probability-16" title="此公式的永久链接">¶</a></span>\[\mathbf{v}^\top \boldsymbol{\Sigma} \mathbf{v} = E_{\mathbf{x} \sim P}\left[\mathbf{v}^\top(\mathbf{x} - \boldsymbol{\mu}) (\mathbf{x} - \boldsymbol{\mu})^\top \mathbf{v}\right] = \textrm{Var}_{x \sim P}[\mathbf{v}^\top \mathbf{x}].\]</div>
+<p>因此，<span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}\)</span>使我们能够 通过简单的矩阵乘法，
+计算<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>的任何线性函数的方差。 非对角元素告诉我们
+各坐标之间的相关程度： 值为0表示不相关， 而较大的正值
+意味着它们相关性更强。</p>
+</section>
+<section id="id9">
+<h2><span class="section-number">2.6.7. </span>讨论<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h2>
+<p>在机器学习中，有许多事情是不确定的！
+给定输入时，标签的值可能是不确定的。 参数的估计值可能是不确定的。
+我们甚至可能不确定部署时到达的数据 是否与训练数据来自同一分布。</p>
+<p>所谓<em>偶然不确定性</em>（aleatoric uncertainty），
+我们指的是问题本身固有的不确定性， 它源于观测变量 未能解释的真实随机性。
+所谓<em>认知不确定性</em>（epistemic uncertainty），
+我们指的是关于模型参数的不确定性， 是那种我们有望通过收集更多数据
+来减少的不确定性。 我们可能对硬币出现正面的概率 存在认知不确定性，
+但即使我们知道了这个概率， 对于未来任何一次抛掷的结果，
+我们仍然存在偶然不确定性。 无论我们观察某人抛一枚公平硬币多久，
+我们对下一次抛掷出现正面的把握 永远不会高于或低于50%。
+这些术语来自力学建模
+（关于<a class="reference external" href="https://en.wikipedia.org/wiki/Uncertainty_quantification">不确定性量化</a>这一方面的综述，参见例如
+<span id="id10">Der Kiureghian and Ditlevsen (<a class="reference internal" href="../chapter_references/zreferences.html#id57" title="Der Kiureghian, A., &amp; Ditlevsen, O. (2009). Aleatory or epistemic? does it matter? Structural Safety, 31(2), 105–112.">2009</a>)</span> ）。 然而值得注意的是，
+这些术语构成了一种轻微的语言滥用。
+<em>认知</em>（epistemic）一词指任何与<em>知识</em>有关的东西，
+因此在哲学意义上， 所有不确定性都是认知的。</p>
+<p>我们看到，从某个未知概率分布中采样数据， 可以为我们提供可用于估计
+数据生成分布参数的信息。 话虽如此，做到这一点的速率可能相当慢。
+在我们抛硬币的例子（以及许多其他例子）中，
+我们能做的最好的就是设计估计量，
+使其以<span class="math notranslate nohighlight">\(1/\sqrt{n}\)</span>的速率收敛，
+其中<span class="math notranslate nohighlight">\(n\)</span>是样本量（例如抛掷次数）。
+这意味着，从10次观测增加到1000次观测 （通常是非常容易做到的事），
+我们能把不确定性降低十倍， 而接下来的1000次观测帮助相对较小，
+只能带来1.41倍的降低。 这是机器学习的一个持久特征：
+尽管常常存在容易获得的收益， 但要想进一步提升， 需要非常大量的数据，
+而且往往还需要巨大的计算量。
+关于这一事实在大规模语言模型上的经验性综述，参见
+<span id="id11">Revels <em>et al.</em> (<a class="reference internal" href="../chapter_references/zreferences.html#id237" title="Revels, J., Lubin, M., &amp; Papamarkou, T. (2016). Forward-mode automatic differentiation in Julia. ArXiv:1607.07892.">2016</a>)</span> 。</p>
+<p>我们还改进了用于统计建模的语言和工具。 在此过程中，我们学习了条件概率，
+以及统计学中最重要的等式之一——贝叶斯定理。
+它是一个有效的工具，可以把数据所传达的信息解耦为：
+通过似然项<span class="math notranslate nohighlight">\(P(B \mid A)\)</span>来处理
+观测<span class="math notranslate nohighlight">\(B\)</span>与参数选择<span class="math notranslate nohighlight">\(A\)</span>的契合程度，
+以及通过先验概率<span class="math notranslate nohighlight">\(P(A)\)</span>来衡量
+<span class="math notranslate nohighlight">\(A\)</span>的某一特定选择最初有多合理。
+特别地，我们看到了如何应用这一规则 为诊断结果赋予概率，
+依据既是检测的功效， <em>也</em>是疾病本身的流行率（即我们的先验）。</p>
+<p>最后，我们引入了第一组 关于特定概率分布效应的非平凡问题， 即期望和方差。
+虽然对于一个概率分布， 除了线性期望和二次期望之外还有许多其他量，
+但这两个量已经提供了 关于该分布可能行为的大量知识。
+例如，<a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev%27s_inequality">切比雪夫不等式</a>
+指出<span class="math notranslate nohighlight">\(P(|X - \mu| \geq k \sigma) \leq 1/k^2\)</span>，
+其中<span class="math notranslate nohighlight">\(\mu\)</span>是期望，<span class="math notranslate nohighlight">\(\sigma^2\)</span>是分布的方差，
+<span class="math notranslate nohighlight">\(k &gt; 1\)</span>是我们选定的置信参数。 它告诉我们，从某个分布中抽取的值
+以至少50%的概率 落在以期望为中心、
+区间为<span class="math notranslate nohighlight">\([-\sqrt{2} \sigma, \sqrt{2} \sigma]\)</span>的范围内。</p>
+</section>
+<section id="id12">
+<h2><span class="section-number">2.6.8. </span>练习<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h2>
+<ol class="arabic simple">
+<li><p>举一个例子，说明观测更多数据可以将关于结果的不确定性降低到任意低的水平。</p></li>
+<li><p>举一个例子，说明观测更多数据只能把不确定性降低到某个程度，之后就不再降低。解释为什么会这样，以及你预期这个临界点出现在哪里。</p></li>
+<li><p>我们通过实验演示了抛硬币时向均值收敛的现象。计算抽取<span class="math notranslate nohighlight">\(n\)</span>个样本后，对出现正面的概率的估计的方差。</p>
+<ol class="arabic simple">
+<li><p>该方差如何随观测数量的变化而变化？</p></li>
+<li><p>用切比雪夫不等式给出偏离期望的界。</p></li>
+<li><p>它与中心极限定理有什么关系？</p></li>
+</ol>
+</li>
+<li><p>假设我们从均值为零、方差为单位的概率分布中抽取<span class="math notranslate nohighlight">\(m\)</span>个样本<span class="math notranslate nohighlight">\(x_i\)</span>。计算平均值<span class="math notranslate nohighlight">\(z_m \stackrel{\textrm{def}}{=} m^{-1} \sum_{i=1}^m x_i\)</span>。我们可以对每个<span class="math notranslate nohighlight">\(z_m\)</span>独立地应用切比雪夫不等式吗？为什么不能？</p></li>
+<li><p>给定两个概率分别为<span class="math notranslate nohighlight">\(P(\mathcal{A})\)</span>和<span class="math notranslate nohighlight">\(P(\mathcal{B})\)</span>的事件，计算<span class="math notranslate nohighlight">\(P(\mathcal{A} \cup \mathcal{B})\)</span>和<span class="math notranslate nohighlight">\(P(\mathcal{A} \cap \mathcal{B})\)</span>的上下界。提示：用<a class="reference external" href="https://en.wikipedia.org/wiki/Venn_diagram">维恩图</a>画出这种情形。</p></li>
+<li><p>假设我们有一个随机变量序列，比如<span class="math notranslate nohighlight">\(A\)</span>、<span class="math notranslate nohighlight">\(B\)</span>和<span class="math notranslate nohighlight">\(C\)</span>，其中<span class="math notranslate nohighlight">\(B\)</span>只依赖于<span class="math notranslate nohighlight">\(A\)</span>，<span class="math notranslate nohighlight">\(C\)</span>只依赖于<span class="math notranslate nohighlight">\(B\)</span>，你能简化联合概率<span class="math notranslate nohighlight">\(P(A, B, C)\)</span>吗？提示：这是一个<a class="reference external" href="https://en.wikipedia.org/wiki/Markov_chain">马尔可夫链</a>。</p></li>
+<li><p>在 <a class="reference internal" href="#subsec-probability-hiv-app"><span class="std std-numref">2.6.5节</span></a>
+中，假设两项检测的结果并不独立。特别地，假设任一检测单独的假阳性率为10%、假阴性率为1%。也就是说，假设<span class="math notranslate nohighlight">\(P(D =1 \mid H=0) = 0.1\)</span>，且<span class="math notranslate nohighlight">\(P(D = 0 \mid H=1) = 0.01\)</span>。此外，假设对于<span class="math notranslate nohighlight">\(H = 1\)</span>（已感染）的情况，检测结果是条件独立的，即<span class="math notranslate nohighlight">\(P(D_1, D_2 \mid H=1) = P(D_1 \mid H=1) P(D_2 \mid H=1)\)</span>，但对于健康病人，结果之间通过<span class="math notranslate nohighlight">\(P(D_1 = D_2 = 1 \mid H=0) = 0.02\)</span>相耦合。</p>
+<ol class="arabic simple">
+<li><p>根据你目前掌握的信息，给出给定<span class="math notranslate nohighlight">\(H=0\)</span>时<span class="math notranslate nohighlight">\(D_1\)</span>和<span class="math notranslate nohighlight">\(D_2\)</span>的联合概率表。</p></li>
+<li><p>推导一次检测结果为阳性后病人患病的概率（<span class="math notranslate nohighlight">\(H=1\)</span>）。你可以假设与之前相同的基准概率<span class="math notranslate nohighlight">\(P(H=1) = 0.0015\)</span>。</p></li>
+<li><p>推导两次检测结果均为阳性后病人患病的概率（<span class="math notranslate nohighlight">\(H=1\)</span>）。</p></li>
+</ol>
+</li>
+<li><p>假设你是一家投资银行的资产经理，你可以选择一些股票<span class="math notranslate nohighlight">\(s_i\)</span>进行投资。你的投资组合中各只股票的权重<span class="math notranslate nohighlight">\(\alpha_i\)</span>之和需要为<span class="math notranslate nohighlight">\(1\)</span>。这些股票的平均回报为<span class="math notranslate nohighlight">\(\boldsymbol{\mu} = E_{\mathbf{s} \sim P}[\mathbf{s}]\)</span>，协方差为<span class="math notranslate nohighlight">\(\boldsymbol{\Sigma} = \textrm{Cov}_{\mathbf{s} \sim P}[\mathbf{s}]\)</span>。</p>
+<ol class="arabic simple">
+<li><p>计算给定投资组合<span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span>的期望回报。</p></li>
+<li><p>如果你想让投资组合的回报最大化，应该如何选择投资？</p></li>
+<li><p>计算投资组合的<em>方差</em>。</p></li>
+<li><p>构造一个优化问题：在把方差约束在上界之内的同时最大化回报。这就是获得诺贝尔奖的<a class="reference external" href="https://en.wikipedia.org/wiki/Markowitz_model">马科维茨投资组合</a>
+<span id="id13">(<a class="reference internal" href="../chapter_references/zreferences.html#id185" title="Mangram, M. E. (2013). A simplified perspective of the Markowitz portfolio theory. Global Journal of Business Research, 7(1), 59–70.">Mangram, 2013</a>)</span>。要解决它，你需要一个二次规划求解器，这远远超出了本书的范围。</p></li>
+</ol>
+</li>
+</ol>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar text"><a href="#pytorch-13-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-13-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#jax-13-2" onclick="tagClick('jax'); return false;" class="mdl-tabs__tab ">jax</a><a href="#tensorflow-13-3" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-13-0"><p><a class="reference external" href="https://discuss.d2l.ai/t/37">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="mxnet-13-1"><p><a class="reference external" href="https://discuss.d2l.ai/t/36">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="jax-13-2"><p><a class="reference external" href="https://discuss.d2l.ai/t/17971">讨论</a></p>
+</div><div class="mdl-tabs__panel " id="tensorflow-13-3"><p><a class="reference external" href="https://discuss.d2l.ai/t/198">讨论</a></p>
+</div></div></section>
+</section>
+
+
+<!-- d2l-zh-footer -->
+<footer class="d2l-site-footer">
+  <p><strong>《动手学深度学习》简体中文全译本</strong> · 译自
+     <a href="https://d2l.ai/">Dive into Deep Learning</a> 1.0.3
+     （d2l-en@23d7a5a）</p>
+  <p>原文与插图 © 2023 D2L 作者，依
+     <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+     许可发布；本译本以相同许可共享。</p>
+  <p><a href="https://github.com/fau-linrui/dive-into-deep-learning-zh">译本仓库</a>
+     <span class="sep">·</span><a href="../index.html">返回目录</a>
+     <span class="sep">·</span>发现翻译问题？欢迎提交 Issue</p>
+</footer>
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">2.6. 概率与统计</a><ul>
+<li><a class="reference internal" href="#id2">2.6.1. 一个简单的例子：抛硬币</a></li>
+<li><a class="reference internal" href="#id3">2.6.2. 更正式的处理</a></li>
+<li><a class="reference internal" href="#id5">2.6.3. 随机变量</a></li>
+<li><a class="reference internal" href="#id6">2.6.4. 多个随机变量</a></li>
+<li><a class="reference internal" href="#subsec-probability-hiv-app">2.6.5. 一个例子</a></li>
+<li><a class="reference internal" href="#id8">2.6.6. 期望</a></li>
+<li><a class="reference internal" href="#id9">2.6.7. 讨论</a></li>
+<li><a class="reference internal" href="#id12">2.6.8. 练习</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="autograd.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>2.5. 自动微分</div>
+         </div>
+     </a>
+     <a id="button-next" href="lookup-api.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>2.7. 文档</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>

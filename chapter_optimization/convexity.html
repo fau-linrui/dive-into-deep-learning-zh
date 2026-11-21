@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+<!-- d2l-site-styles -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>12.2. 凸性 &#8212; 动手学深度学习</title>
+
+    <link rel="stylesheet" href="../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/d2l.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/d2l.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="12.3. 梯度下降" href="gd.html" />
+    <link rel="prev" title="12.1. 优化与深度学习" href="optimization-intro.html" /> 
+  <link rel="stylesheet" href="../_static/site.css" type="text/css" />
+<script src="../_static/site.js" defer></script>
+<!-- d2l-site-script -->
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="index.html"><span class="section-number">12. </span>优化算法</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active"><span class="section-number">12.2. </span>凸性</a>
+        <span class="d2l-zh-badge">简体中文全译本</span></nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      快速搜索
+      </div>
+</form>
+        
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+          
+              <a  class="mdl-navigation__link" href="https://d2l.ai">
+                  <i class="fas fa-book"></i>
+                  英文原书
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://github.com/fau-linrui/dive-into-deep-learning-zh">
+                  <i class="fab fa-github"></i>
+                  GitHub
+              </a>
+          
+              <a  class="mdl-navigation__link" href="https://discuss.d2l.ai">
+                  <i class="fas fa-comments"></i>
+                  讨论社区
+              </a>
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">12. 优化算法</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">
+    
+          <!-- Title -->
+      <span class="mdl-layout-title">
+          <a class="title" href="../index.html">
+              <img class="logo" src="../_static/logo-with-text.png" alt="动手学深度学习"/>
+          </a>
+      </span>
+    
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preface/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_installation/index.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_notation/index.html">符号</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../chapter_introduction/index.html">1. 引言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_preliminaries/index.html">2. 预备知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/ndarray.html">2.1. 数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/pandas.html">2.2. 数据预处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/linear-algebra.html">2.3. 线性代数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/calculus.html">2.4. 微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/autograd.html">2.5. 自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/probability.html">2.6. 概率与统计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_preliminaries/lookup-api.html">2.7. 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-regression/index.html">3. 用于回归的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression.html">3.1. 线性回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/oo-design.html">3.2. 面向对象的设计与实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/synthetic-regression-data.html">3.3. 合成回归数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-scratch.html">3.4. 线性回归的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/linear-regression-concise.html">3.5. 线性回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/generalization.html">3.6. 泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-regression/weight-decay.html">3.7. 权重衰减</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_linear-classification/index.html">4. 用于分类的线性神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression.html">4.1. softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/image-classification-dataset.html">4.2. 图像分类数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/classification.html">4.3. 分类模型基类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-scratch.html">4.4. 从零开始实现 softmax 回归</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/softmax-regression-concise.html">4.5. softmax 回归的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/generalization-classification.html">4.6. 分类问题中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_linear-classification/environment-and-distribution-shift.html">4.7. 环境与分布偏移</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_multilayer-perceptrons/index.html">5. 多层感知机</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp.html">5.1. 多层感知机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/mlp-implementation.html">5.2. 多层感知机的实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/backprop.html">5.3. 前向传播、反向传播与计算图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/numerical-stability-and-init.html">5.4. 数值稳定性与初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/generalization-deep.html">5.5. 深度学习中的泛化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/dropout.html">5.6. 暂退法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_multilayer-perceptrons/kaggle-house-price.html">5.7. 在Kaggle上预测房价</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_builders-guide/index.html">6. 深度学习计算</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/model-construction.html">6.1. 层和模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/parameters.html">6.2. 参数管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/init-param.html">6.3. 参数初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/lazy-init.html">6.4. 延迟初始化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/custom-layer.html">6.5. 自定义层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/read-write.html">6.6. 读写文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_builders-guide/use-gpu.html">6.7. GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-neural-networks/index.html">7. 卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/why-conv.html">7.1. 从全连接层到卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/conv-layer.html">7.2. 图像的卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/padding-and-strides.html">7.3. 填充与步幅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/channels.html">7.4. 多输入多输出通道</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/pooling.html">7.5. 汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-neural-networks/lenet.html">7.6. 卷积神经网络（LeNet）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_convolutional-modern/index.html">8. 现代卷积神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/alexnet.html">8.1. 深度卷积神经网络（AlexNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/vgg.html">8.2. 使用块的网络（VGG）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/nin.html">8.3. 网络中的网络（NiN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/googlenet.html">8.4. 多分支网络（GoogLeNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/batch-norm.html">8.5. 批量规范化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/resnet.html">8.6. 残差网络（ResNet）与 ResNeXt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/densenet.html">8.7. 稠密连接网络（DenseNet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_convolutional-modern/cnn-design.html">8.8. 设计卷积网络架构</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-neural-networks/index.html">9. 循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/sequence.html">9.1. 处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/text-sequence.html">9.2. 将原始文本转换为序列数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/language-model.html">9.3. 语言模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn.html">9.4. 循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html">9.5. 循环神经网络的从零开始实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-concise.html">9.6. 循环神经网络的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-neural-networks/bptt.html">9.7. 通过时间反向传播</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recurrent-modern/index.html">10. 现代循环神经网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/lstm.html">10.1. 长短期记忆网络（LSTM）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/gru.html">10.2. 门控循环单元（GRU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/deep-rnn.html">10.3. 深度循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/bi-rnn.html">10.4. 双向循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/machine-translation-and-dataset.html">10.5. 机器翻译与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/encoder-decoder.html">10.6. 编码器-解码器架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/seq2seq.html">10.7. 机器翻译的序列到序列学习</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recurrent-modern/beam-search.html">10.8. 束搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/index.html">11. 注意力机制与 Transformer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/queries-keys-values.html">11.1. 查询、键和值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-pooling.html">11.2. 基于相似性的注意力汇聚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/attention-scoring-functions.html">11.3. 注意力评分函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/bahdanau-attention.html">11.4. Bahdanau 注意力机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/multihead-attention.html">11.5. 多头注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/self-attention-and-positional-encoding.html">11.6. 自注意力与位置编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/transformer.html">11.7. Transformer架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/vision-transformer.html">11.8. 视觉Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html">11.9. Transformer的大规模预训练</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">12. 优化算法</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="optimization-intro.html">12.1. 优化与深度学习</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">12.2. 凸性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gd.html">12.3. 梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgd.html">12.4. 随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minibatch-sgd.html">12.5. 小批量随机梯度下降</a></li>
+<li class="toctree-l2"><a class="reference internal" href="momentum.html">12.6. 动量法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adagrad.html">12.7. Adagrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmsprop.html">12.8. RMSProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adadelta.html">12.9. Adadelta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adam.html">12.10. Adam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lr-scheduler.html">12.11. 学习率调度</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computational-performance/index.html">13. 计算性能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hybridize.html">13.1. 编译器和解释器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/async-computation.html">13.2. 异步计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/auto-parallelism.html">13.3. 自动并行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/hardware.html">13.4. 硬件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus.html">13.5. 多 GPU 训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/multiple-gpus-concise.html">13.6. 多 GPU 训练的简洁实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computational-performance/parameterserver.html">13.7. 参数服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_computer-vision/index.html">14. 计算机视觉</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/image-augmentation.html">14.1. 图像增广</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fine-tuning.html">14.2. 微调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/bounding-box.html">14.3. 目标检测与边界框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/anchor.html">14.4. 锚框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/multiscale-object-detection.html">14.5. 多尺度目标检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/object-detection-dataset.html">14.6. 目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/ssd.html">14.7. 单发多框检测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/rcnn.html">14.8. 基于区域的卷积神经网络（R-CNN）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/semantic-segmentation-and-dataset.html">14.9. 语义分割与数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/transposed-conv.html">14.10. 转置卷积</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/fcn.html">14.11. 全卷积网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/neural-style.html">14.12. 神经样式迁移</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-cifar10.html">14.13. Kaggle 上的图像分类（CIFAR-10）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_computer-vision/kaggle-dog.html">14.14. Kaggle 上的狗品种识别（ImageNet 中的狗）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/index.html">15. 自然语言处理：预训练</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec.html">15.1. 词嵌入（word2vec）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/approx-training.html">15.2. 近似训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word-embedding-dataset.html">15.3. 预训练词嵌入的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/word2vec-pretraining.html">15.4. 预训练 word2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/glove.html">15.5. 全局向量的词嵌入（GloVe）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/subword-embedding.html">15.6. 子词嵌入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/similarity-analogy.html">15.7. 词的相似性和类比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert.html">15.8. 来自 Transformer 的双向编码器表示（BERT）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-dataset.html">15.9. 预训练 BERT 的数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-pretraining/bert-pretraining.html">15.10. 预训练 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_natural-language-processing-applications/index.html">16. 自然语言处理：应用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-and-dataset.html">16.1. 情感分析及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-rnn.html">16.2. 情感分析：使用循环神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/sentiment-analysis-cnn.html">16.3. 情感分析：使用卷积神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-and-dataset.html">16.4. 自然语言推断及数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-attention.html">16.5. 自然语言推断：使用注意力</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/finetuning-bert.html">16.6. 针对序列级和词元级应用微调 BERT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_natural-language-processing-applications/natural-language-inference-bert.html">16.7. 自然语言推断：微调 BERT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_reinforcement-learning/index.html">17. 强化学习</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/mdp.html">17.1. 马尔可夫决策过程（MDP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/value-iter.html">17.2. 值迭代</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_reinforcement-learning/qlearning.html">17.3. Q 学习</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_gaussian-processes/index.html">18. 高斯过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-intro.html">18.1. 高斯过程简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-priors.html">18.2. 高斯过程先验</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_gaussian-processes/gp-inference.html">18.3. 高斯过程推断</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_hyperparameter-optimization/index.html">19. 超参数优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-intro.html">19.1. 什么是超参数优化？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/hyperopt-api.html">19.2. 超参数优化 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/rs-async.html">19.3. 异步随机搜索</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-intro.html">19.4. 多保真度超参数优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_hyperparameter-optimization/sh-async.html">19.5. 异步逐次减半</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_generative-adversarial-networks/index.html">20. 生成对抗网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/gan.html">20.1. 生成对抗网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_generative-adversarial-networks/dcgan.html">20.2. 深度卷积生成对抗网络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_recommender-systems/index.html">21. 推荐系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/recsys-intro.html">21.1. 推荐系统概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/movielens.html">21.2. MovieLens 数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/mf.html">21.3. 矩阵分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/autorec.html">21.4. AutoRec：用自编码器进行评分预测</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ranking.html">21.5. 推荐系统的个性化排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/neumf.html">21.6. 面向个性化排序的神经协同过滤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/seqrec.html">21.7. 序列感知推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/ctr.html">21.8. 特征丰富的推荐系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/fm.html">21.9. 因子分解机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_recommender-systems/deepfm.html">21.10. 深度因子分解机</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/index.html">22. 附录：深度学习数学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/geometry-linear-algebraic-ops.html">22.1. 几何与线性代数运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/eigendecomposition.html">22.2. 特征分解</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/single-variable-calculus.html">22.3. 单变量微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html">22.4. 多元微积分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/integral-calculus.html">22.5. 积分学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/random-variables.html">22.6. 随机变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/maximum-likelihood.html">22.7. 最大似然</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/distributions.html">22.8. 分布</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/naive-bayes.html">22.9. 朴素贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/statistics.html">22.10. 统计学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-mathematics-for-deep-learning/information-theory.html">22.11. 信息论</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/index.html">23. 附录：深度学习工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/jupyter.html">23.1. 使用Jupyter 笔记本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/sagemaker.html">23.2. 使用Amazon SageMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/aws.html">23.3. 使用AWS EC2 实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/colab.html">23.4. 使用Google Colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/selecting-servers-gpus.html">23.5. 选择服务器和GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/contributing.html">23.6. 为本书做贡献</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/utils.html">23.7. 工具函数和类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chapter_appendix-tools-for-deep-learning/d2l.html">23.8. <code class="docutils literal notranslate"><span class="pre">d2l</span></code> API 文档</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../chapter_references/zreferences.html">参考文献</a></li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <section id="sec-convexity">
+<span id="id1"></span><h1><span class="section-number">12.2. </span>凸性<a class="headerlink" href="#sec-convexity" title="此标题的永久链接">¶</a></h1>
+<p>凸性在优化算法的设计中起着至关重要的作用。
+这主要是因为在这种情形下分析和测试算法要容易得多。 换句话说，
+如果算法即使在凸的设定下表现不佳，
+那么通常我们也不应指望在其他情形下看到好的结果。
+此外，尽管深度学习中的优化问题一般是非凸的，但它们在局部最小值附近往往表现出凸问题的一些性质。这可以引出令人兴奋的新优化变体，例如
+<span id="id2">(<a class="reference internal" href="../chapter_references/zreferences.html#id135" title="Izmailov, P., Podoprikhin, D., Garipov, T., Vetrov, D., &amp; Wilson, A. G. (2018). Averaging weights leads to wider optima and better generalization. ArXiv:1803.05407.">Izmailov <em>et al.</em>, 2018</a>)</span>。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-1-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-1-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-1-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-1-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits</span><span class="w"> </span><span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">torch</span> <span class="k">as</span> <span class="n">d2l</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-1-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits</span><span class="w"> </span><span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mxnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">np</span><span class="p">,</span> <span class="n">npx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">mxnet</span> <span class="k">as</span> <span class="n">d2l</span>
+
+<span class="n">npx</span><span class="o">.</span><span class="n">set_np</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-1-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits</span><span class="w"> </span><span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d2l</span><span class="w"> </span><span class="kn">import</span> <span class="n">tensorflow</span> <span class="k">as</span> <span class="n">d2l</span>
+</pre></div>
+</div>
+</div></div><section id="id3">
+<h2><span class="section-number">12.2.1. </span>定义<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h2>
+<p>在开始凸分析之前， 我们需要定义<em>凸集</em>（convex
+set）和<em>凸函数</em>（convex function）。
+它们引出了机器学习中常用的数学工具。</p>
+<section id="id4">
+<h3><span class="section-number">12.2.1.1. </span>凸集<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<p>集合是凸性的基础。简单地说，向量空间中的集合<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>是<em>凸</em>的，如果对于任意<span class="math notranslate nohighlight">\(a, b \in \mathcal{X}\)</span>，连接<span class="math notranslate nohighlight">\(a\)</span>和<span class="math notranslate nohighlight">\(b\)</span>的线段也位于<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>中。用数学术语来说，这意味着对于所有<span class="math notranslate nohighlight">\(\lambda \in [0, 1]\)</span>，都有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-0">
+<span class="eqno">(12.2.1)<a class="headerlink" href="#equation-chapter-optimization-convexity-0" title="此公式的永久链接">¶</a></span>\[\lambda  a + (1-\lambda)  b \in \mathcal{X} \textrm{ whenever } a, b \in \mathcal{X}.\]</div>
+<p>这听起来有点抽象。考虑
+<a class="reference internal" href="#fig-pacman"><span class="std std-numref">图12.2.1</span></a>。第一个集合不是凸的，因为存在不包含在其中的线段。
+另外两个集合没有这个问题。</p>
+<figure class="align-default" id="id17">
+<span id="fig-pacman"></span><img alt="../_images/pacman.svg" src="../_images/pacman.svg" /><figcaption>
+<p><span class="caption-number">图12.2.1 </span><span class="caption-text">第一个集合是非凸的，另外两个是凸的。</span><a class="headerlink" href="#id17" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>定义本身并不是特别有用，除非你能用它们做些什么。
+在这种情况下，我们可以考察交集，如 <a class="reference internal" href="#fig-convex-intersect"><span class="std std-numref">图12.2.2</span></a>
+所示。
+假设<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>和<span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>是凸集。那么<span class="math notranslate nohighlight">\(\mathcal{X} \cap \mathcal{Y}\)</span>也是凸的。要理解这一点，考虑任意<span class="math notranslate nohighlight">\(a, b \in \mathcal{X} \cap \mathcal{Y}\)</span>。由于<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>和<span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>是凸的，连接<span class="math notranslate nohighlight">\(a\)</span>和<span class="math notranslate nohighlight">\(b\)</span>的线段同时包含在<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>和<span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>中。因此，这条线段也必须包含在<span class="math notranslate nohighlight">\(\mathcal{X} \cap \mathcal{Y}\)</span>中，从而证明了我们的定理。</p>
+<figure class="align-default" id="id18">
+<span id="fig-convex-intersect"></span><img alt="../_images/convex-intersect.svg" src="../_images/convex-intersect.svg" /><figcaption>
+<p><span class="caption-number">图12.2.2 </span><span class="caption-text">两个凸集的交集是凸的。</span><a class="headerlink" href="#id18" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>我们可以毫不费力地加强这个结果：给定凸集<span class="math notranslate nohighlight">\(\mathcal{X}_i\)</span>，它们的交集<span class="math notranslate nohighlight">\(\cap_{i} \mathcal{X}_i\)</span>是凸的。
+为了看出逆命题不成立，考虑两个不相交的集合<span class="math notranslate nohighlight">\(\mathcal{X} \cap \mathcal{Y} = \emptyset\)</span>。现在取<span class="math notranslate nohighlight">\(a \in \mathcal{X}\)</span>和<span class="math notranslate nohighlight">\(b \in \mathcal{Y}\)</span>。<a class="reference internal" href="#fig-nonconvex"><span class="std std-numref">图12.2.3</span></a>
+中连接<span class="math notranslate nohighlight">\(a\)</span>和<span class="math notranslate nohighlight">\(b\)</span>的线段必然包含某个既不在<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>中也不在<span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>中的部分，因为我们假设了<span class="math notranslate nohighlight">\(\mathcal{X} \cap \mathcal{Y} = \emptyset\)</span>。因此，这条线段也不在<span class="math notranslate nohighlight">\(\mathcal{X} \cup \mathcal{Y}\)</span>中，从而证明了一般的凸集并集不必是凸的。</p>
+<figure class="align-default" id="id19">
+<span id="fig-nonconvex"></span><img alt="../_images/nonconvex.svg" src="../_images/nonconvex.svg" /><figcaption>
+<p><span class="caption-number">图12.2.3 </span><span class="caption-text">两个凸集的并集不必是凸的。</span><a class="headerlink" href="#id19" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>通常，深度学习中的问题定义在凸集上。例如，<span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>，
+即<span class="math notranslate nohighlight">\(d\)</span>维实数向量的集合，
+是凸集（毕竟，<span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>中任意两点之间的连线仍位于<span class="math notranslate nohighlight">\(\mathbb{R}^d\)</span>中）。在某些情况下，我们处理长度有界的变量，例如由<span class="math notranslate nohighlight">\(\{\mathbf{x} | \mathbf{x} \in \mathbb{R}^d \textrm{ and } \|\mathbf{x}\| \leq r\}\)</span>定义的半径为<span class="math notranslate nohighlight">\(r\)</span>的球。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">12.2.1.2. </span>凸函数<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<p>有了凸集，我们就可以引入<em>凸函数</em>（convex function）<span class="math notranslate nohighlight">\(f\)</span>。
+给定凸集<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>，函数<span class="math notranslate nohighlight">\(f: \mathcal{X} \to \mathbb{R}\)</span>是<em>凸</em>的，如果对于所有<span class="math notranslate nohighlight">\(x, x' \in \mathcal{X}\)</span>以及所有<span class="math notranslate nohighlight">\(\lambda \in [0, 1]\)</span>，都有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-1">
+<span class="eqno">(12.2.2)<a class="headerlink" href="#equation-chapter-optimization-convexity-1" title="此公式的永久链接">¶</a></span>\[\lambda f(x) + (1-\lambda) f(x') \geq f(\lambda x + (1-\lambda) x').\]</div>
+<p>为了说明这一点，让我们画出几个函数，并检查哪些函数满足这一要求。
+下面我们定义几个函数，既有凸函数也有非凸函数。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-3-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-3-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-3-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-3-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Convex</span>
+<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Nonconvex</span>
+<span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Convex</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">segment</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">use_svg_display</span><span class="p">()</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">]):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-3-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Convex</span>
+<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Nonconvex</span>
+<span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Convex</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">use_svg_display</span><span class="p">()</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">]):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-3-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Convex</span>
+<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Nonconvex</span>
+<span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Convex</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">segment</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">use_svg_display</span><span class="p">()</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">d2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">]):</span>
+    <span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>正如预期的那样，余弦函数是<em>非凸</em>的，而抛物线和指数函数是凸的。注意，要使该条件有意义，<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>是凸集这一要求是必需的。否则，<span class="math notranslate nohighlight">\(f(\lambda x + (1-\lambda) x')\)</span>的结果可能没有良好定义。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">12.2.1.3. </span>詹森不等式<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<p>给定一个凸函数<span class="math notranslate nohighlight">\(f\)</span>， 最有用的数学工具之一
+就是<em>詹森不等式</em>（Jensen’s inequality）。
+它相当于凸性定义的一种推广：</p>
+<div class="math notranslate nohighlight" id="equation-eq-jensens-inequality">
+<span class="eqno">(12.2.3)<a class="headerlink" href="#equation-eq-jensens-inequality" title="此公式的永久链接">¶</a></span>\[\sum_i \alpha_i f(x_i)  \geq f\left(\sum_i \alpha_i x_i\right)    \textrm{ and }    E_X[f(X)]  \geq f\left(E_X[X]\right),\]</div>
+<p>其中<span class="math notranslate nohighlight">\(\alpha_i\)</span>是非负实数，满足<span class="math notranslate nohighlight">\(\sum_i \alpha_i = 1\)</span>，且<span class="math notranslate nohighlight">\(X\)</span>是随机变量。
+换句话说，凸函数的期望不小于期望的凸函数，而后者通常是更简单的表达式。
+为了证明第一个不等式，我们每次对求和中的一项反复应用凸性的定义。</p>
+<p>詹森不等式的一个常见应用是
+用一个更简单的表达式来界定一个更复杂的表达式。 例如， 它可以应用于
+部分观测随机变量的对数似然。也就是说，我们使用</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-2">
+<span class="eqno">(12.2.4)<a class="headerlink" href="#equation-chapter-optimization-convexity-2" title="此公式的永久链接">¶</a></span>\[E_{Y \sim P(Y)}[-\log P(X \mid Y)] \geq -\log P(X),\]</div>
+<p>因为<span class="math notranslate nohighlight">\(\int P(Y) P(X \mid Y) dY = P(X)\)</span>。
+这可以用于变分方法。这里<span class="math notranslate nohighlight">\(Y\)</span>通常是未观测到的随机变量，<span class="math notranslate nohighlight">\(P(Y)\)</span>是对其可能如何分布的最佳猜测，而<span class="math notranslate nohighlight">\(P(X)\)</span>是对<span class="math notranslate nohighlight">\(Y\)</span>积分消去后得到的分布。例如，在聚类中<span class="math notranslate nohighlight">\(Y\)</span>可能是簇标签，而<span class="math notranslate nohighlight">\(P(X \mid Y)\)</span>是应用簇标签时的生成模型。</p>
+</section>
+</section>
+<section id="id7">
+<h2><span class="section-number">12.2.2. </span>性质<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h2>
+<p>凸函数有许多有用的性质。下面我们介绍其中几个常用的性质。</p>
+<section id="id8">
+<h3><span class="section-number">12.2.2.1. </span>局部最小值也是全局最小值<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h3>
+<p>首先，凸函数的局部最小值也是全局最小值。 我们可以用如下反证法证明。</p>
+<p>考虑定义在凸集<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>上的凸函数<span class="math notranslate nohighlight">\(f\)</span>。
+假设<span class="math notranslate nohighlight">\(x^{\ast} \in \mathcal{X}\)</span>是局部最小值：
+存在一个小的正值<span class="math notranslate nohighlight">\(p\)</span>，使得对于满足<span class="math notranslate nohighlight">\(0 &lt; |x - x^{\ast}| \leq p\)</span>的<span class="math notranslate nohighlight">\(x \in \mathcal{X}\)</span>，都有<span class="math notranslate nohighlight">\(f(x^{\ast}) &lt; f(x)\)</span>。</p>
+<p>假设局部最小值<span class="math notranslate nohighlight">\(x^{\ast}\)</span> 不是<span class="math notranslate nohighlight">\(f\)</span>的全局最小值：
+存在<span class="math notranslate nohighlight">\(x' \in \mathcal{X}\)</span>使得<span class="math notranslate nohighlight">\(f(x') &lt; f(x^{\ast})\)</span>。
+同时存在
+<span class="math notranslate nohighlight">\(\lambda \in [0, 1)\)</span>，例如<span class="math notranslate nohighlight">\(\lambda = 1 - \frac{p}{|x^{\ast} - x'|}\)</span>
+使得
+<span class="math notranslate nohighlight">\(0 &lt; |\lambda x^{\ast} + (1-\lambda) x' - x^{\ast}| \leq p\)</span>。</p>
+<p>然而， 根据凸函数的定义，我们有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-3">
+<span class="eqno">(12.2.5)<a class="headerlink" href="#equation-chapter-optimization-convexity-3" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned}
+    f(\lambda x^{\ast} + (1-\lambda) x') &amp;\leq \lambda f(x^{\ast}) + (1-\lambda) f(x') \\
+    &amp;&lt; \lambda f(x^{\ast}) + (1-\lambda) f(x^{\ast}) \\
+    &amp;= f(x^{\ast}),
+\end{aligned}\end{split}\]</div>
+<p>这与我们关于<span class="math notranslate nohighlight">\(x^{\ast}\)</span>是局部最小值的论断相矛盾。
+因此，不存在<span class="math notranslate nohighlight">\(x' \in \mathcal{X}\)</span>使得<span class="math notranslate nohighlight">\(f(x') &lt; f(x^{\ast})\)</span>。局部最小值<span class="math notranslate nohighlight">\(x^{\ast}\)</span>同时也是全局最小值。</p>
+<p>例如，凸函数<span class="math notranslate nohighlight">\(f(x) = (x-1)^2\)</span>在<span class="math notranslate nohighlight">\(x=1\)</span>处有一个局部最小值，它同时也是全局最小值。</p>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"><div class="mdl-tabs__tab-bar code"><a href="#pytorch-5-0" onclick="tagClick('pytorch'); return false;" class="mdl-tabs__tab is-active">pytorch</a><a href="#mxnet-5-1" onclick="tagClick('mxnet'); return false;" class="mdl-tabs__tab ">mxnet</a><a href="#tensorflow-5-2" onclick="tagClick('tensorflow'); return false;" class="mdl-tabs__tab ">tensorflow</a></div><div class="mdl-tabs__panel is-active" id="pytorch-5-0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'f(x)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="mxnet-5-1"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'f(x)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div class="mdl-tabs__panel " id="tensorflow-5-2"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">set_figsize</span><span class="p">()</span>
+<span class="n">d2l</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">segment</span><span class="p">)],</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'f(x)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div><p>凸函数的局部最小值也是全局最小值，这一事实非常方便。
+它意味着，如果我们在最小化函数，就不会“卡住”。
+不过请注意，这并不意味着全局最小值不可能多于一个，也不意味着它一定存在。例如，函数<span class="math notranslate nohighlight">\(f(x) = \mathrm{max}(|x|-1, 0)\)</span>在区间<span class="math notranslate nohighlight">\([-1, 1]\)</span>上取得其最小值。相反，函数<span class="math notranslate nohighlight">\(f(x) = \exp(x)\)</span>在<span class="math notranslate nohighlight">\(\mathbb{R}\)</span>上不取得最小值：当<span class="math notranslate nohighlight">\(x \to -\infty\)</span>时它渐近于<span class="math notranslate nohighlight">\(0\)</span>，但不存在<span class="math notranslate nohighlight">\(x\)</span>使得<span class="math notranslate nohighlight">\(f(x) = 0\)</span>。</p>
+</section>
+<section id="id9">
+<h3><span class="section-number">12.2.2.2. </span>凸函数的下水平集是凸的<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p>我们可以通过凸函数的<em>下水平集</em>（below set）方便地 定义凸集。
+具体地说，
+给定定义在凸集<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>上的凸函数<span class="math notranslate nohighlight">\(f\)</span>，
+任意下水平集</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-4">
+<span class="eqno">(12.2.6)<a class="headerlink" href="#equation-chapter-optimization-convexity-4" title="此公式的永久链接">¶</a></span>\[\mathcal{S}_b \stackrel{\textrm{def}}{=} \{x | x \in \mathcal{X} \textrm{ and } f(x) \leq b\}\]</div>
+<p>都是凸的。</p>
+<p>让我们快速证明这一点。回想一下，对于任意<span class="math notranslate nohighlight">\(x, x' \in \mathcal{S}_b\)</span>，我们需要证明只要<span class="math notranslate nohighlight">\(\lambda \in [0, 1]\)</span>，就有<span class="math notranslate nohighlight">\(\lambda x + (1-\lambda) x' \in \mathcal{S}_b\)</span>。
+由于<span class="math notranslate nohighlight">\(f(x) \leq b\)</span>且<span class="math notranslate nohighlight">\(f(x') \leq b\)</span>，
+根据凸性的定义，我们有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-5">
+<span class="eqno">(12.2.7)<a class="headerlink" href="#equation-chapter-optimization-convexity-5" title="此公式的永久链接">¶</a></span>\[f(\lambda x + (1-\lambda) x') \leq \lambda f(x) + (1-\lambda) f(x') \leq b.\]</div>
+</section>
+<section id="id10">
+<h3><span class="section-number">12.2.2.3. </span>凸性与二阶导数<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<p>只要函数<span class="math notranslate nohighlight">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>的二阶导数存在，就很容易检验<span class="math notranslate nohighlight">\(f\)</span>是否为凸函数。
+我们只需检查<span class="math notranslate nohighlight">\(f\)</span>的黑塞矩阵是否为半正定：<span class="math notranslate nohighlight">\(\nabla^2f \succeq 0\)</span>，即，
+将黑塞矩阵<span class="math notranslate nohighlight">\(\nabla^2f\)</span>记为<span class="math notranslate nohighlight">\(\mathbf{H}\)</span>时，
+<span class="math notranslate nohighlight">\(\mathbf{x}^\top \mathbf{H} \mathbf{x} \geq 0\)</span>
+对所有<span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^n\)</span>成立。
+例如，函数<span class="math notranslate nohighlight">\(f(\mathbf{x}) = \frac{1}{2} \|\mathbf{x}\|^2\)</span>是凸的，因为<span class="math notranslate nohighlight">\(\nabla^2 f = \mathbf{1}\)</span>，即它的黑塞矩阵是单位矩阵。</p>
+<p>形式上，一个二阶可微的一维函数<span class="math notranslate nohighlight">\(f: \mathbb{R} \rightarrow \mathbb{R}\)</span>是凸的，
+当且仅当其二阶导数<span class="math notranslate nohighlight">\(f'' \geq 0\)</span>。对于任意二阶可微的多维函数<span class="math notranslate nohighlight">\(f: \mathbb{R}^{n} \rightarrow \mathbb{R}\)</span>，
+它是凸的当且仅当其黑塞矩阵<span class="math notranslate nohighlight">\(\nabla^2f \succeq 0\)</span>。</p>
+<p>首先，我们需要证明一维情形。 为了看出 <span class="math notranslate nohighlight">\(f\)</span>的凸性蕴含
+<span class="math notranslate nohighlight">\(f'' \geq 0\)</span>，我们利用以下事实：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-6">
+<span class="eqno">(12.2.8)<a class="headerlink" href="#equation-chapter-optimization-convexity-6" title="此公式的永久链接">¶</a></span>\[\frac{1}{2} f(x + \epsilon) + \frac{1}{2} f(x - \epsilon) \geq f\left(\frac{x + \epsilon}{2} + \frac{x - \epsilon}{2}\right) = f(x).\]</div>
+<p>由于二阶导数由有限差分的极限给出，因此可以推出</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-7">
+<span class="eqno">(12.2.9)<a class="headerlink" href="#equation-chapter-optimization-convexity-7" title="此公式的永久链接">¶</a></span>\[f''(x) = \lim_{\epsilon \to 0} \frac{f(x+\epsilon) + f(x - \epsilon) - 2f(x)}{\epsilon^2} \geq 0.\]</div>
+<p>为了看出 <span class="math notranslate nohighlight">\(f'' \geq 0\)</span>蕴含<span class="math notranslate nohighlight">\(f\)</span>是凸的，
+我们利用以下事实：<span class="math notranslate nohighlight">\(f'' \geq 0\)</span>蕴含<span class="math notranslate nohighlight">\(f'\)</span>是单调不减函数。设<span class="math notranslate nohighlight">\(a &lt; x &lt; b\)</span>是<span class="math notranslate nohighlight">\(\mathbb{R}\)</span>中的三个点，
+其中<span class="math notranslate nohighlight">\(x = (1-\lambda)a + \lambda b\)</span>且<span class="math notranslate nohighlight">\(\lambda \in (0, 1)\)</span>。
+根据中值定理，
+存在<span class="math notranslate nohighlight">\(\alpha \in [a, x]\)</span>和<span class="math notranslate nohighlight">\(\beta \in [x, b]\)</span>， 使得</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-8">
+<span class="eqno">(12.2.10)<a class="headerlink" href="#equation-chapter-optimization-convexity-8" title="此公式的永久链接">¶</a></span>\[f'(\alpha) = \frac{f(x) - f(a)}{x-a} \textrm{ and } f'(\beta) = \frac{f(b) - f(x)}{b-x}.\]</div>
+<p>由单调性<span class="math notranslate nohighlight">\(f'(\beta) \geq f'(\alpha)\)</span>，因此</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-9">
+<span class="eqno">(12.2.11)<a class="headerlink" href="#equation-chapter-optimization-convexity-9" title="此公式的永久链接">¶</a></span>\[\frac{x-a}{b-a}f(b) + \frac{b-x}{b-a}f(a) \geq f(x).\]</div>
+<p>由于<span class="math notranslate nohighlight">\(x = (1-\lambda)a + \lambda b\)</span>， 我们有</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-10">
+<span class="eqno">(12.2.12)<a class="headerlink" href="#equation-chapter-optimization-convexity-10" title="此公式的永久链接">¶</a></span>\[\lambda f(b) + (1-\lambda)f(a) \geq f((1-\lambda)a + \lambda b),\]</div>
+<p>从而证明了凸性。</p>
+<p>其次，在证明多维情形之前， 我们需要一个引理：
+<span class="math notranslate nohighlight">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>
+是凸的，当且仅当对所有<span class="math notranslate nohighlight">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^n\)</span></p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-11">
+<span class="eqno">(12.2.13)<a class="headerlink" href="#equation-chapter-optimization-convexity-11" title="此公式的永久链接">¶</a></span>\[g(z) \stackrel{\textrm{def}}{=} f(z \mathbf{x} + (1-z)  \mathbf{y}) \textrm{ where } z \in [0,1]\]</div>
+<p>是凸的。</p>
+<p>为了证明<span class="math notranslate nohighlight">\(f\)</span>的凸性蕴含<span class="math notranslate nohighlight">\(g\)</span>是凸的，
+我们可以证明对于所有<span class="math notranslate nohighlight">\(a, b, \lambda \in [0, 1]\)</span>（因此
+<span class="math notranslate nohighlight">\(0 \leq \lambda a + (1-\lambda) b \leq 1\)</span>）</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-12">
+<span class="eqno">(12.2.14)<a class="headerlink" href="#equation-chapter-optimization-convexity-12" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned} &amp;g(\lambda a + (1-\lambda) b)\\
+=&amp;f\left(\left(\lambda a + (1-\lambda) b\right)\mathbf{x} + \left(1-\lambda a - (1-\lambda) b\right)\mathbf{y} \right)\\
+=&amp;f\left(\lambda \left(a \mathbf{x} + (1-a)  \mathbf{y}\right)  + (1-\lambda) \left(b \mathbf{x} + (1-b)  \mathbf{y}\right) \right)\\
+\leq&amp; \lambda f\left(a \mathbf{x} + (1-a)  \mathbf{y}\right)  + (1-\lambda) f\left(b \mathbf{x} + (1-b)  \mathbf{y}\right) \\
+=&amp; \lambda g(a) + (1-\lambda) g(b).
+\end{aligned}\end{split}\]</div>
+<p>为了证明逆命题， 我们可以证明对于 所有<span class="math notranslate nohighlight">\(\lambda \in [0, 1]\)</span></p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-13">
+<span class="eqno">(12.2.15)<a class="headerlink" href="#equation-chapter-optimization-convexity-13" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned} &amp;f(\lambda \mathbf{x} + (1-\lambda) \mathbf{y})\\
+=&amp;g(\lambda \cdot 1 + (1-\lambda) \cdot 0)\\
+\leq&amp; \lambda g(1)  + (1-\lambda) g(0) \\
+=&amp; \lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}).
+\end{aligned}\end{split}\]</div>
+<p>最后， 利用上面的引理和一维情形的结果， 多维情形 可以如下证明。
+多维函数<span class="math notranslate nohighlight">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>是凸的
+当且仅当对所有<span class="math notranslate nohighlight">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^n\)</span>，<span class="math notranslate nohighlight">\(g(z) \stackrel{\textrm{def}}{=} f(z \mathbf{x} + (1-z) \mathbf{y})\)</span>（其中<span class="math notranslate nohighlight">\(z \in [0,1]\)</span>）
+是凸的。 根据一维情形， 这成立当且仅当
+<span class="math notranslate nohighlight">\(g'' = (\mathbf{x} - \mathbf{y})^\top \mathbf{H}(\mathbf{x} - \mathbf{y}) \geq 0\)</span>（<span class="math notranslate nohighlight">\(\mathbf{H} \stackrel{\textrm{def}}{=} \nabla^2f\)</span>）
+对所有<span class="math notranslate nohighlight">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^n\)</span>成立，
+而根据半正定矩阵的定义，这等价于<span class="math notranslate nohighlight">\(\mathbf{H} \succeq 0\)</span>。</p>
+</section>
+</section>
+<section id="id11">
+<h2><span class="section-number">12.2.3. </span>约束<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h2>
+<p>凸优化的一个良好性质是它可以高效地处理约束。也就是说，它允许我们求解<em>约束优化</em>（constrained
+optimization）问题，其形式为：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-14">
+<span class="eqno">(12.2.16)<a class="headerlink" href="#equation-chapter-optimization-convexity-14" title="此公式的永久链接">¶</a></span>\[\begin{split}\begin{aligned} \mathop{\textrm{minimize~}}_{\mathbf{x}} &amp; f(\mathbf{x}) \\
+    \textrm{ subject to } &amp; c_i(\mathbf{x}) \leq 0 \textrm{ for all } i \in \{1, \ldots, n\},
+\end{aligned}\end{split}\]</div>
+<p>其中<span class="math notranslate nohighlight">\(f\)</span>是目标，函数<span class="math notranslate nohighlight">\(c_i\)</span>是约束函数。为了理解它的作用，考虑<span class="math notranslate nohighlight">\(c_1(\mathbf{x}) = \|\mathbf{x}\|_2 - 1\)</span>的情形。此时参数<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>被约束在单位球内。如果第二个约束是<span class="math notranslate nohighlight">\(c_2(\mathbf{x}) = \mathbf{v}^\top \mathbf{x} + b\)</span>，那么这对应于所有位于一个半空间上的<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>。同时满足两个约束相当于在球中选取一个切片。</p>
+<section id="id12">
+<h3><span class="section-number">12.2.3.1. </span>拉格朗日函数<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h3>
+<p>一般来说，求解约束优化问题很困难。解决该问题的一种方法源于物理学，其直觉相当简单。想象一个盒子里的球。球会滚到最低的位置，重力会被盒子侧壁对球施加的力所平衡。简而言之，目标函数的梯度（即重力）将被约束函数的梯度抵消（球必须留在盒子内，因为墙壁会“推回”）。
+注意，有些约束可能不是活跃的： 未被球触及的墙壁 无法对球施加任何力。</p>
+<p>跳过<em>拉格朗日函数</em>（Lagrangian）<span class="math notranslate nohighlight">\(L\)</span>的推导， 上述推理
+可以通过以下鞍点优化问题来表达：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-15">
+<span class="eqno">(12.2.17)<a class="headerlink" href="#equation-chapter-optimization-convexity-15" title="此公式的永久链接">¶</a></span>\[L(\mathbf{x}, \alpha_1, \ldots, \alpha_n) = f(\mathbf{x}) + \sum_{i=1}^n \alpha_i c_i(\mathbf{x}) \textrm{ where } \alpha_i \geq 0.\]</div>
+<p>这里变量<span class="math notranslate nohighlight">\(\alpha_i\)</span>（<span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>）就是所谓的<em>拉格朗日乘子</em>（Lagrange
+multiplier），它们确保约束被正确执行。它们的取值恰好大到足以确保对所有<span class="math notranslate nohighlight">\(i\)</span>都有<span class="math notranslate nohighlight">\(c_i(\mathbf{x}) \leq 0\)</span>。例如，对于任何自然满足<span class="math notranslate nohighlight">\(c_i(\mathbf{x}) &lt; 0\)</span>的<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>，我们最终会选择<span class="math notranslate nohighlight">\(\alpha_i = 0\)</span>。此外，这是一个鞍点优化问题：我们希望关于所有<span class="math notranslate nohighlight">\(\alpha_i\)</span><em>最大化</em><span class="math notranslate nohighlight">\(L\)</span>，同时关于<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>对它<em>最小化</em>。有大量文献解释如何得到函数<span class="math notranslate nohighlight">\(L(\mathbf{x}, \alpha_1, \ldots, \alpha_n)\)</span>。就我们的目的而言，只需知道<span class="math notranslate nohighlight">\(L\)</span>的鞍点就是原始约束优化问题被最优求解的位置。</p>
+</section>
+<section id="id13">
+<h3><span class="section-number">12.2.3.2. </span>惩罚<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<p>至少<em>近似地</em>满足约束优化问题的一种方法是改编拉格朗日函数<span class="math notranslate nohighlight">\(L\)</span>。
+我们不是满足<span class="math notranslate nohighlight">\(c_i(\mathbf{x}) \leq 0\)</span>，而是简单地把<span class="math notranslate nohighlight">\(\alpha_i c_i(\mathbf{x})\)</span>加到目标函数<span class="math notranslate nohighlight">\(f(x)\)</span>上。这可以确保约束不会被过度违反。</p>
+<p>事实上，我们一直都在使用这个技巧。考虑 <a class="reference internal" href="../chapter_linear-regression/weight-decay.html#sec-weight-decay"><span class="std std-numref">3.7节</span></a>
+中的权重衰减。在其中，我们将<span class="math notranslate nohighlight">\(\frac{\lambda}{2} \|\mathbf{w}\|^2\)</span>加到目标函数上，以确保<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>不会变得太大。从约束优化的角度来看，可以看出这将确保对于某个半径<span class="math notranslate nohighlight">\(r\)</span>有<span class="math notranslate nohighlight">\(\|\mathbf{w}\|^2 - r^2 \leq 0\)</span>。调整<span class="math notranslate nohighlight">\(\lambda\)</span>的值可以让我们改变<span class="math notranslate nohighlight">\(\mathbf{w}\)</span>的大小。</p>
+<p>一般来说，添加惩罚是确保近似满足约束的一种好方法。在实践中，这比精确满足要鲁棒得多。此外，对于非凸问题，那些使精确方法在凸情形下如此有吸引力的性质（例如最优性）大多不再成立。</p>
+</section>
+<section id="id14">
+<h3><span class="section-number">12.2.3.3. </span>投影<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h3>
+<p>满足约束的另一种策略是投影。同样，我们之前已经遇到过它们，例如在处理
+<a class="reference internal" href="../chapter_recurrent-neural-networks/rnn-scratch.html#sec-rnn-scratch"><span class="std std-numref">9.5节</span></a>
+中的梯度裁剪时。在那里，我们通过以下方式确保梯度的长度以<span class="math notranslate nohighlight">\(\theta\)</span>为界：</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-16">
+<span class="eqno">(12.2.18)<a class="headerlink" href="#equation-chapter-optimization-convexity-16" title="此公式的永久链接">¶</a></span>\[\mathbf{g} \leftarrow \mathbf{g} \cdot \mathrm{min}(1, \theta/\|\mathbf{g}\|).\]</div>
+<p>事实证明，这是<span class="math notranslate nohighlight">\(\mathbf{g}\)</span>到半径为<span class="math notranslate nohighlight">\(\theta\)</span>的球上的一个<em>投影</em>。更一般地说，凸集<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>上的投影定义为</p>
+<div class="math notranslate nohighlight" id="equation-chapter-optimization-convexity-17">
+<span class="eqno">(12.2.19)<a class="headerlink" href="#equation-chapter-optimization-convexity-17" title="此公式的永久链接">¶</a></span>\[\textrm{Proj}_\mathcal{X}(\mathbf{x}) = \mathop{\mathrm{argmin}}_{\mathbf{x}' \in \mathcal{X}} \|\mathbf{x} - \mathbf{x}'\|,\]</div>
+<p>它是<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>中最接近<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>的点。</p>
+<figure class="align-default" id="id20">
+<span id="fig-projections"></span><img alt="../_images/projections.svg" src="../_images/projections.svg" /><figcaption>
+<p><span class="caption-number">图12.2.4 </span><span class="caption-text">凸投影。</span><a class="headerlink" href="#id20" title="此图像的永久链接">¶</a></p>
+</figcaption>
+</figure>
+<p>投影的数学定义可能听起来有点抽象。<a class="reference internal" href="#fig-projections"><span class="std std-numref">图12.2.4</span></a>
+对此作了较为清楚的解释。其中我们有两个凸集：一个圆和一个菱形。
+同时位于两个集合内部的点（黄色）在投影过程中保持不变。
+位于两个集合外部的点（黑色）被投影到
+集合内部最接近原始点（黑色）的点（红色）上。
+虽然对<span class="math notranslate nohighlight">\(\ell_2\)</span>球来说这会保持方向不变，但一般情况下未必如此，从菱形的情形可以看出这一点。</p>
+<p>凸投影的用途之一是计算稀疏权重向量。此时我们将权重向量投影到<span class="math notranslate nohighlight">\(\ell_1\)</span>球上，
+这是 <a class="reference internal" href="#fig-projections"><span class="std std-numref">图12.2.4</span></a> 中菱形情形的推广。</p>
+</section>
+</section>
+<section id="id15">
+<h2><span class="section-number">12.2.4. </span>小结<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h2>
+<p>在深度学习的背景下，凸函数的主要作用是启发优化算法，并帮助我们详细理解这些算法。在接下来的内容中，我们将看到如何据此推导梯度下降和随机梯度下降。</p>
+<ul class="simple">
+<li><p>凸集的交集是凸的。并集则不是。</p></li>
+<li><p>凸函数的期望不小于期望的凸函数（詹森不等式）。</p></li>
+<li><p>一个二阶可微函数是凸的，当且仅当其黑塞矩阵（二阶导数矩阵）是半正定的。</p></li>
+<li><p>凸约束可以通过拉格朗日函数来添加。在实践中，我们也可以简单地用惩罚项把它们加到目标函数中。</p></li>
+<li><p>投影映射到凸集中最接近原始点的点。</p></li>
+</ul>
+</section>
+<section id="id16">
+<h2><span class="section-number">12.2.5. </span>练习<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h2>
+<ol class="arabic simple">
+<li><p>假设我们想通过画出集合内各点之间的所有连线，并检查这些连线是否包含在集合内，来验证集合的凸性。</p>
+<ol class="arabic simple">
+<li><p>证明只需检查边界上的点就足够了。</p></li>
+<li><p>证明只需检查集合的顶点就足够了。</p></li>
+</ol>
+</li>
+<li><p>用<span class="math notranslate nohighlight">\(\mathcal{B}_p[r] \stackrel{\textrm{def}}{=} \{\mathbf{x} | \mathbf{x} \in \mathbb{R}^d \textrm{ and } \|\mathbf{x}\|_p \leq r\}\)</span>表示使用<span class="math notranslate nohighlight">\(p\)</span>-范数的半径为<span class="math notranslate nohighlight">\(r\)</span>的球。证明对所有<span class="math notranslate nohighlight">\(p \geq 1\)</span>，<span class="math notranslate nohighlight">\(\mathcal{B}_p[r]\)</span>都是凸的。</p></li>
+<li><p>给定凸函数<span class="math notranslate nohighlight">\(f\)</span>和<span class="math notranslate nohighlight">\(g\)</span>，证明<span class="math notranslate nohighlight">\(\mathrm{max}(f, g)\)</span>也是凸的。证明<span class="math notranslate nohighlight">\(\mathrm{min}(f, g)\)</span>不是凸的。</p></li>
+<li><p>证明 softmax 函数的规范化是凸的。更具体地说，证明
+<span class="math notranslate nohighlight">\(f(x) = \log \sum_i \exp(x_i)\)</span>的凸性。</p></li>
+<li><p>证明线性子空间，即<span class="math notranslate nohighlight">\(\mathcal{X} = \{\mathbf{x} | \mathbf{W} \mathbf{x} = \mathbf{b}\}\)</span>，是凸集。</p></li>
+<li><p>证明在线性子空间满足<span class="math notranslate nohighlight">\(\mathbf{b} = \mathbf{0}\)</span>的情形下，投影<span class="math notranslate nohighlight">\(\textrm{Proj}_\mathcal{X}\)</span>可以写成<span class="math notranslate nohighlight">\(\mathbf{M} \mathbf{x}\)</span>的形式，其中<span class="math notranslate nohighlight">\(\mathbf{M}\)</span>是某个矩阵。</p></li>
+<li><p>证明对于二阶可微的凸函数<span class="math notranslate nohighlight">\(f\)</span>，可以写成<span class="math notranslate nohighlight">\(f(x + \epsilon) = f(x) + \epsilon f'(x) + \frac{1}{2} \epsilon^2 f''(x + \xi)\)</span>，其中<span class="math notranslate nohighlight">\(\xi \in [0, \epsilon]\)</span>。</p></li>
+<li><p>给定凸集<span class="math notranslate nohighlight">\(\mathcal{X}\)</span>和两个向量<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>和<span class="math notranslate nohighlight">\(\mathbf{y}\)</span>，证明投影永远不会增大距离，即<span class="math notranslate nohighlight">\(\|\mathbf{x} - \mathbf{y}\| \geq \|\textrm{Proj}_\mathcal{X}(\mathbf{x}) - \textrm{Proj}_\mathcal{X}(\mathbf{y})\|\)</span>。</p></li>
+</ol>
+<p><a class="reference external" href="https://discuss.d2l.ai/t/350">讨论</a></p>
+</section>
+</section>
+
+
+<!-- d2l-zh-footer -->
+<footer class="d2l-site-footer">
+  <p><strong>《动手学深度学习》简体中文全译本</strong> · 译自
+     <a href="https://d2l.ai/">Dive into Deep Learning</a> 1.0.3
+     （d2l-en@23d7a5a）</p>
+  <p>原文与插图 © 2023 D2L 作者，依
+     <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+     许可发布；本译本以相同许可共享。</p>
+  <p><a href="https://github.com/fau-linrui/dive-into-deep-learning-zh">译本仓库</a>
+     <span class="sep">·</span><a href="../index.html">返回目录</a>
+     <span class="sep">·</span>发现翻译问题？欢迎提交 Issue</p>
+</footer>
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">12.2. 凸性</a><ul>
+<li><a class="reference internal" href="#id3">12.2.1. 定义</a><ul>
+<li><a class="reference internal" href="#id4">12.2.1.1. 凸集</a></li>
+<li><a class="reference internal" href="#id5">12.2.1.2. 凸函数</a></li>
+<li><a class="reference internal" href="#id6">12.2.1.3. 詹森不等式</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">12.2.2. 性质</a><ul>
+<li><a class="reference internal" href="#id8">12.2.2.1. 局部最小值也是全局最小值</a></li>
+<li><a class="reference internal" href="#id9">12.2.2.2. 凸函数的下水平集是凸的</a></li>
+<li><a class="reference internal" href="#id10">12.2.2.3. 凸性与二阶导数</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id11">12.2.3. 约束</a><ul>
+<li><a class="reference internal" href="#id12">12.2.3.1. 拉格朗日函数</a></li>
+<li><a class="reference internal" href="#id13">12.2.3.2. 惩罚</a></li>
+<li><a class="reference internal" href="#id14">12.2.3.3. 投影</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15">12.2.4. 小结</a></li>
+<li><a class="reference internal" href="#id16">12.2.5. 练习</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="optimization-intro.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>12.1. 优化与深度学习</div>
+         </div>
+     </a>
+     <a id="button-next" href="gd.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>12.3. 梯度下降</div>
+        </div>
+     </a>
+  </div>
+        
+        </main>
+    </div>
+  </body>
+</html>
