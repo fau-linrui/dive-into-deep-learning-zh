@@ -19,6 +19,8 @@
 
 > **译本说明**：本仓库是英文版 *Dive into Deep Learning*（即《动手学深度学习》，D2L.ai）的中文全译本，翻译底本为 [d2l-ai/d2l-en](https://github.com/d2l-ai/d2l-en) 的提交 `23d7a5aecceee57d1292c56e90cce307f183bb0a`（release 1.0.3）。
 
+> **在线阅读**：<https://fau-linrui.github.io/dive-into-deep-learning-zh/>（与 d2l.ai 同款的在线图书站点，支持全书搜索与 PyTorch / MXNet / JAX / TensorFlow 代码切换）
+
 这本开源教材代表着我们的一种尝试：让深度学习变得平易近人，并向读者传授概念、背景知识与代码。全书以 Jupyter 笔记本撰写，将讲解性的图示、数学和交互式示例与自包含的代码无缝地融合在一起。
 
 我们的目标是提供一份这样的资源：
